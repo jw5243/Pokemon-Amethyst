@@ -228,7 +228,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/PokemonJavaV3.iml" filepath="$PROJECT_DIR$/PokemonJavaV3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Pokemon.iml" filepath="$PROJECT_DIR$/Pokemon.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
       <module fileurl="file://$PROJECT_DIR$/desktop/desktop.iml" filepath="$PROJECT_DIR$/desktop/desktop.iml" />
     </modules>
