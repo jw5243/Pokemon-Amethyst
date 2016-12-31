@@ -1,0 +1,19 @@
+
+Players.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+UserSheet
+  rotate: false
+  xy: 1, 1
+  size: 527, 288
+  orig: 567, 299
+  offset: 24, 0
+  index: -1
+BattleUserSheet
+  rotate: false
+  xy: 530, 8
+  size: 390, 281
+  orig: 390, 281
+  offset: 0, 0
+  index: -1

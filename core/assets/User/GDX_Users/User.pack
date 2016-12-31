@@ -1,0 +1,26 @@
+
+User.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+UserSheet
+  rotate: false
+  xy: 1, 167
+  size: 567, 299
+  orig: 567, 299
+  offset: 0, 0
+  index: -1
+BattleUserSheet
+  rotate: false
+  xy: 570, 185
+  size: 390, 281
+  orig: 390, 281
+  offset: 0, 0
+  index: -1
+SpriteSheetUser
+  rotate: false
+  xy: 1, 1
+  size: 346, 164
+  orig: 346, 164
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,2 @@
+Bulbasaur; Seed Pokemon; 1; 2; 87.5; GRASS, POISON; 2' 4"; 15.2 lbs; 25; 5120; When HP is below 1/3rd its maximum, power of Grass-type moves is increased by 50%.; MEDIUM_SLOW; 70; 1:Acid; SPECIAL_ATTACK:1; 45, 49, 49, 65, 65, 45
+Ivysaur; Seed Pokemon; 2; 3; 87.5; GRASS, POISON; 3' 3"; 28.7 lbs; 45; 5120; When HP is below 1/3rd its maximum, power of Grass-type moves is increased by 50%.; MEDIUM_SLOW; 70; 2:Acid, 5:Absorb; SPECIAL_ATTACK:1, SPECIAL_DEFENSE:1; 60, 62, 63, 80, 80, 60
