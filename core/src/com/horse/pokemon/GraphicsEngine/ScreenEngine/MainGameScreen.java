@@ -10,8 +10,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -28,7 +26,6 @@ public class MainGameScreen implements Screen {
     private TmxMapLoader               mapLoader;
     private TiledMap                   map;
     private OrthogonalTiledMapRenderer renderer;
-    private World                      world;
     private User                       user;
     private Stage                      stage;
     private AudioData                  sound;
@@ -44,7 +41,6 @@ public class MainGameScreen implements Screen {
         setMapLoader(new TmxMapLoader());
         setMap(getMapLoader().load("Maps\\StartMap.tmx"));
         setRenderer(new OrthogonalTiledMapRenderer(getMap()));
-        setWorld(new World(new Vector2(0, 0), true));
         MapCreator mapCreator = new MapCreator(this, getMap());
         setUser(new User(this, mapCreator));
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
@@ -95,14 +91,6 @@ public class MainGameScreen implements Screen {
     
     public void setMap(TiledMap map) {
         this.map = map;
-    }
-    
-    public World getWorld() {
-        return world;
-    }
-    
-    public void setWorld(World world) {
-        this.world = world;
     }
     
     public Viewport getViewport() {
@@ -171,7 +159,6 @@ public class MainGameScreen implements Screen {
     public void dispose() {
         getMap().dispose();
         getRenderer().dispose();
-        getWorld().dispose();
         getHud().dispose();
         getStage().dispose();
         sound.getAudio().dispose();
@@ -207,8 +194,6 @@ public class MainGameScreen implements Screen {
     
     private void update(float deltaTime) {
         handleInput(deltaTime);
-        
-        getWorld().step(1 / 60f, 6, 2);
         
         getUser().update(deltaTime);
         
