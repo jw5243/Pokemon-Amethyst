@@ -1,6 +1,7 @@
 package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -41,8 +42,7 @@ public class MainGameScreen implements Screen {
         setMapLoader(new TmxMapLoader());
         setMap(getMapLoader().load("Maps\\StartMap.tmx"));
         setRenderer(new OrthogonalTiledMapRenderer(getMap()));
-        MapCreator mapCreator = new MapCreator(this, getMap());
-        setUser(new User(this, mapCreator));
+        setUser(new User(this, new MapCreator(this, getMap())));
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
         );
@@ -116,6 +116,9 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void render(float delta) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
+        }
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

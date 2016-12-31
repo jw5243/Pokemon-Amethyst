@@ -4,21 +4,31 @@ import com.badlogic.gdx.math.Vector2;
 import com.horse.pokemon.Engine;
 
 public class BackgroundSetup {
-    private static final Vector2 BACKGROUND_POSITION = new Vector2(0, 0);
-    private static final Vector2 ENEMY_BASE_POSITION = new Vector2(0, 0);
-    private static final Vector2 USER_BASE_POSITION = new Vector2(0, 0);
+    private static final Vector2 SCREEN_TO_BACKGROUND_SIZE_RATIO =
+            new Vector2(Engine.getvWidth() / BackgroundData.getStandardBackgroundSize().x,
+                        Engine.getvHeight() / BackgroundData.getStandardBackgroundSize().y
+            );
+    private static final Vector2 BACKGROUND_POSITION             = new Vector2(0, 0);
+    private static final Vector2 ENEMY_BASE_POSITION             =
+            new Vector2(Engine.getvWidth() - BackgroundData.getStandardEnemyBaseSize().x,
+                        Engine.getvHeight() - BackgroundData.getStandardEnemyBaseSize().y
+            );
+    private static final Vector2 USER_BASE_POSITION              = new Vector2(0, 0);
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
-    
     public BackgroundSetup(Engine engine, BackgroundInformation backgroundInformation) {
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
     }
     
+    public static Vector2 getScreenToBackgroundSizeRatio() {
+        return SCREEN_TO_BACKGROUND_SIZE_RATIO;
+    }
+    
     public static Vector2 getBackgroundPosition() {
         return BACKGROUND_POSITION;
     }
-
+    
     public static Vector2 getEnemyBasePosition() {
         return ENEMY_BASE_POSITION;
     }
@@ -52,7 +62,9 @@ public class BackgroundSetup {
         );
         getEngine().getBatch()
                    .draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBasePosition().x,
-                         getEnemyBasePosition().y
+                         getEnemyBasePosition().y,
+                         BackgroundData.getStandardEnemyBaseSize().x * getScreenToBackgroundSizeRatio().x,
+                         BackgroundData.getStandardEnemyBaseSize().y * getScreenToBackgroundSizeRatio().y
                    );
         getEngine().getBatch()
                    .draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBasePosition().x,
