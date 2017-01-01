@@ -58,7 +58,6 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         getUserSprite().setRegion(getUserStand()[1]);
         
         resetPosition();
-        System.out.println(getPositionY());
         
         handleInput = new HandleInput((float dt) -> {
             if(isAligned()) {

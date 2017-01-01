@@ -50,18 +50,13 @@ public class Dialog extends Actor implements Disposable {
             CharacterWriter characterWriter =
                     new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
             
-            //if(characterWriter.getCharacterWidth() != DialogCharacter.getDefaultWidth()) {
-            //    setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() - (characterWriter.getCharacterWidth() / 2));
-            //    characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
-            //}
-            
             getStage().addActor(characterWriter);
             
-            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() >= getxSize()) {
-                setCurrentCharacterXPosition(getxPosition());
-                setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
+            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() >= getxPosition() + getxSize()) {
+                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
             } else {
-                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth());
+                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
             }
         }
     }
