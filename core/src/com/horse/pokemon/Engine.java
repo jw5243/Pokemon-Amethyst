@@ -3,14 +3,15 @@ package com.horse.pokemon;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.horse.pokemon.BattleEngine.BackgroundData;
 import com.horse.pokemon.BattleEngine.BattleScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 
 public class Engine extends Game {
-    private static final int V_WIDTH           = 1024;
-    private static final int V_HEIGHT          = 576;
+    private static final int V_WIDTH           = (int)(BackgroundData.getStandardBackgroundSize().x);
+    private static final int V_HEIGHT          = (int)(BackgroundData.getStandardBackgroundSize().y);
     private static final int TILE_SIZE         = 16;
-    private static final int CAMERA_ZOOM_SCALE = 3;
+    private static final int CAMERA_ZOOM_SCALE = 2;
     
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;

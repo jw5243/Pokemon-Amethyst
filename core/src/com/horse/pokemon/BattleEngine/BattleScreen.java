@@ -35,7 +35,7 @@ public class BattleScreen implements Screen {
     
     @Override
     public void render(float delta) {
-        getBackgroundSetup().render(delta);
+        getBackgroundSetup().render();
     }
     
     @Override

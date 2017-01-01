@@ -54,7 +54,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         
         initializeAnimation();
         
-        setBounds(0, 0, Engine.getTileSize() - 8, Engine.getTileSize() - 8);
+        setBounds(0, 0, Engine.getTileSize() / 2, Engine.getTileSize() / 2);
         getUserSprite().setRegion(getUserStand()[1]);
         
         resetPosition();

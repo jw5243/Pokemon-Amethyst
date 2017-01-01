@@ -11,9 +11,9 @@ public class BackgroundSetup {
     private static final Vector2 BACKGROUND_POSITION             = new Vector2(0, 0);
     private static final Vector2 ENEMY_BASE_POSITION             =
             new Vector2(Engine.getvWidth() - BackgroundData.getStandardEnemyBaseSize().x,
-                        Engine.getvHeight() - BackgroundData.getStandardEnemyBaseSize().y
+                        Engine.getvHeight() - (BackgroundData.getStandardEnemyBaseSize().y * 1.2f)
             );
-    private static final Vector2 USER_BASE_POSITION              = new Vector2(0, 0);
+    private static final Vector2 USER_BASE_POSITION              = new Vector2(-128, 0);
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
     
@@ -54,7 +54,7 @@ public class BackgroundSetup {
         this.backgroundInformation = backgroundInformation;
     }
     
-    public void render(float deltaTime) {
+    public void render() {
         getEngine().getBatch().begin();
         
         getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(),
@@ -62,12 +62,12 @@ public class BackgroundSetup {
                                     BackgroundData.getStandardBackgroundSize().x * getScreenToBackgroundSizeRatio().x,
                                     BackgroundData.getStandardBackgroundSize().y * getScreenToBackgroundSizeRatio().y
         );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(),
-                                    getEnemyBasePosition().x - BackgroundData.getStandardEnemyBaseSize().x,
-                                    getEnemyBasePosition().y - BackgroundData.getStandardEnemyBaseSize().y,
-                                    BackgroundData.getStandardEnemyBaseSize().x * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardEnemyBaseSize().y * getScreenToBackgroundSizeRatio().y
-        );
+        getEngine().getBatch()
+                   .draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBasePosition().x,
+                         getEnemyBasePosition().y,
+                         BackgroundData.getStandardEnemyBaseSize().x * getScreenToBackgroundSizeRatio().x,
+                         BackgroundData.getStandardEnemyBaseSize().y * getScreenToBackgroundSizeRatio().y
+                   );
         getEngine().getBatch()
                    .draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBasePosition().x,
                          getUserBasePosition().y,

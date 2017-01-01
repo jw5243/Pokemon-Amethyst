@@ -16,6 +16,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
+import com.horse.pokemon.Enums.TextSpeeds;
+import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.ObjectData.Players.User;
 
 public class MainGameScreen implements Screen {
@@ -30,6 +32,7 @@ public class MainGameScreen implements Screen {
     private User                       user;
     private Stage                      stage;
     private AudioData                  sound;
+    private Dialog                     dialog;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
@@ -51,6 +54,7 @@ public class MainGameScreen implements Screen {
         Gdx.input.setInputProcessor(getStage());
         sound = AudioData.INTRODUCTION;
         sound.playAudio();
+        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, "Test");
     }
     
     public Stage getStage() {
@@ -128,14 +132,20 @@ public class MainGameScreen implements Screen {
         getEngine().getBatch().setProjectionMatrix(getCamera().combined);
         getEngine().getBatch().begin();
         
+        getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
+        
         getEngine().getBatch().end();
-        getStage().act(Gdx.graphics.getDeltaTime());
+        getStage().act(delta);
         getStage().draw();
         
         renderObjects();
         
         getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
         getHud().stage.draw();
+        
+        getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
+        dialog.getStage().act(delta);
+        dialog.getStage().draw();
     }
     
     @Override
@@ -165,6 +175,7 @@ public class MainGameScreen implements Screen {
         getHud().dispose();
         getStage().dispose();
         sound.getAudio().dispose();
+        dialog.dispose();
     }
     
     public void renderBackground() {
