@@ -20,6 +20,7 @@ public class Dialog extends Actor implements Disposable {
     private SpriteBatch batch;
     private String      text;
     private Texture     dialog;
+    private TextSpeeds  textSpeeds;
     private int         xPosition;
     private int         yPosition;
     private int         xSize;
@@ -35,11 +36,20 @@ public class Dialog extends Actor implements Disposable {
         setxPosition(xPosition);
         setyPosition(yPosition);
         setText(text);
+        setTextSpeeds(textSpeeds);
         setxSize(xSize);
         setySize(ySize);
         setDialog(new Texture(Gdx.files.internal(getDialogFile())));
         getStage().addActor(this);
         setupCharactersToWrite();
+    }
+    
+    public TextSpeeds getTextSpeeds() {
+        return textSpeeds;
+    }
+    
+    public void setTextSpeeds(TextSpeeds textSpeeds) {
+        this.textSpeeds = textSpeeds;
     }
     
     private void setupCharactersToWrite() {
@@ -52,11 +62,11 @@ public class Dialog extends Actor implements Disposable {
             
             getStage().addActor(characterWriter);
             
-            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() >= getxPosition() + getxSize()) {
-                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
-            } else {
-                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
+            setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
+            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
+                setCurrentCharacterXPosition(
+                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
             }
         }
     }
