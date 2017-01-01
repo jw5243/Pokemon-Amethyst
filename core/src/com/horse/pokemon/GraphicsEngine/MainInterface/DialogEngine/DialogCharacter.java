@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public enum Characters {
+public enum DialogCharacter {
     A_UPPER(0, 13), A_LOWER(0, 26), B_UPPER(6, 13), B_LOWER(6, 26), C_UPPER(12, 13), C_LOWER(12, 26), D_UPPER(18, 13),
     D_LOWER(18, 26), E_UPPER(24, 13), E_LOWER(24, 26), F_UPPER(30, 13), F_LOWER(30, 26, 5), G_UPPER(36, 13),
     G_LOWER(36, 26), H_UPPER(42, 13), H_LOWER(42, 26), I_UPPER(49, 13, 4), I_LOWER(50, 26, 2), J_UPPER(54, 13),
@@ -24,15 +24,15 @@ public enum Characters {
     private int width;
     private int height;
     
-    Characters(int x, int y) {
+    DialogCharacter(int x, int y) {
         this(x, y, getDefaultWidth());
     }
     
-    Characters(int x, int y, int width) {
+    DialogCharacter(int x, int y, int width) {
         this(x, y, width, getDefaultHeight());
     }
     
-    Characters(int x, int y, int width, int height) {
+    DialogCharacter(int x, int y, int width, int height) {
         setX(x);
         setY(y);
         setWidth(width);

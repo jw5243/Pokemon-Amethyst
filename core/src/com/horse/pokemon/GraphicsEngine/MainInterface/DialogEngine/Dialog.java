@@ -15,16 +15,17 @@ import com.horse.pokemon.Enums.TextSpeeds;
 
 public class Dialog extends Actor implements Disposable {
     private final String dialogFile = "DialogBoxes\\dialog.png";
-    private Viewport     viewport;
-    private Stage        stage;
-    private DialogWriter writer;
-    private SpriteBatch  batch;
-    private String       text;
-    private Texture      dialog;
-    private int          xPosition;
-    private int          yPosition;
-    private int          xSize;
-    private int          ySize;
+    private Viewport    viewport;
+    private Stage       stage;
+    private SpriteBatch batch;
+    private String      text;
+    private Texture     dialog;
+    private int         xPosition;
+    private int         yPosition;
+    private int         xSize;
+    private int         ySize;
+    private int         currentCharacterXPosition;
+    private int         currentCharacterYPosition;
     
     public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds,
                   String text) {
@@ -36,10 +37,49 @@ public class Dialog extends Actor implements Disposable {
         setText(text);
         setxSize(xSize);
         setySize(ySize);
-        setWriter(new DialogWriter(engine, this, textSpeeds, getText()));
         setDialog(new Texture(Gdx.files.internal(getDialogFile())));
         getStage().addActor(this);
-        getStage().addAction(getWriter());
+        setupCharactersToWrite();
+    }
+    
+    private void setupCharactersToWrite() {
+        setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() -
+                                     CharacterWriter.getDefaultCharacterStartYPositionBuffer());
+        for(char character : getText().toCharArray()) {
+            CharacterWriter characterWriter =
+                    new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
+            
+            //if(characterWriter.getCharacterWidth() != DialogCharacter.getDefaultWidth()) {
+            //    setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() - (characterWriter.getCharacterWidth() / 2));
+            //    characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
+            //}
+            
+            getStage().addActor(characterWriter);
+            
+            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() >= getxSize()) {
+                setCurrentCharacterXPosition(getxPosition());
+                setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
+            } else {
+                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth());
+            }
+        }
+    }
+    
+    public int getCurrentCharacterXPosition() {
+        return currentCharacterXPosition;
+    }
+    
+    public void setCurrentCharacterXPosition(int currentCharacterXPosition) {
+        this.currentCharacterXPosition = currentCharacterXPosition;
+    }
+    
+    public int getCurrentCharacterYPosition() {
+        return currentCharacterYPosition;
+    }
+    
+    public void setCurrentCharacterYPosition(int currentCharacterYPosition) {
+        this.currentCharacterYPosition = currentCharacterYPosition;
     }
     
     public Viewport getViewport() {
@@ -52,14 +92,6 @@ public class Dialog extends Actor implements Disposable {
     
     public String getDialogFile() {
         return dialogFile;
-    }
-    
-    public DialogWriter getWriter() {
-        return writer;
-    }
-    
-    public void setWriter(DialogWriter writer) {
-        this.writer = writer;
     }
     
     public SpriteBatch getBatch() {
@@ -121,7 +153,6 @@ public class Dialog extends Actor implements Disposable {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
-        //getWriter().drawText(getText().toCharArray());
     }
     
     public Stage getStage() {

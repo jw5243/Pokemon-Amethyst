@@ -54,7 +54,7 @@ public class MainGameScreen implements Screen {
         Gdx.input.setInputProcessor(getStage());
         sound = AudioData.INTRODUCTION;
         sound.playAudio();
-        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, "Test");
+        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, "Test Character Writer");
     }
     
     public Stage getStage() {
@@ -131,8 +131,6 @@ public class MainGameScreen implements Screen {
         
         getEngine().getBatch().setProjectionMatrix(getCamera().combined);
         getEngine().getBatch().begin();
-        
-        getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
         
         getEngine().getBatch().end();
         getStage().act(delta);
