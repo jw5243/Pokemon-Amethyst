@@ -60,6 +60,6 @@ public class BattleScreen implements Screen {
     
     @Override
     public void dispose() {
-        
+        getBackgroundSetup().dispose();
     }
 }

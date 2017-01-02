@@ -2,20 +2,45 @@ package com.horse.pokemon;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.horse.pokemon.BattleEngine.BackgroundData;
 import com.horse.pokemon.BattleEngine.BattleScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 
+/**
+ * Class acting as the manager for containing all the screens to be used and some constants.
+ *
+ * @see Game
+ */
 public class Engine extends Game {
-    private static final int V_WIDTH           = (int)(BackgroundData.getStandardBackgroundSize().x);
-    private static final int V_HEIGHT          = (int)(BackgroundData.getStandardBackgroundSize().y);
-    private static final int TILE_SIZE         = 16;
+    /**
+     * The {@link Integer} instance representing the virtual width for reference to all of the positions in the
+     * background.
+     */
+    private static final int V_WIDTH = (int)(BackgroundData.getStandardBackgroundSize().x);
+    
+    /**
+     * The {@link Integer} instance representing the virtual height for reference to all of the positions in the
+     * background.
+     *
+     * @see BackgroundData#getStandardBackgroundSize()
+     */
+    private static final int V_HEIGHT = (int)(BackgroundData.getStandardBackgroundSize().y);
+    
+    /**
+     * The length of a tile's size to reference collisions and presice positions of some actors.
+     */
+    private static final int TILE_SIZE = 16;
+    
+    /**
+     * Changes how much the user can see from its position.  A bigger number will show less area than a smaller number.
+     */
     private static final int CAMERA_ZOOM_SCALE = 2;
     
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;
-    
+    private AssetManager assetManager;
     private SpriteBatch batch;
     
     public static int getvWidth() {
@@ -34,6 +59,14 @@ public class Engine extends Game {
         return CAMERA_ZOOM_SCALE;
     }
     
+    public AssetManager getAssetManager() {
+        return assetManager;
+    }
+    
+    public void setAssetManager(AssetManager assetManager) {
+        this.assetManager = assetManager;
+    }
+    
     public Screen getScreen(screenTypes screenType) {
         if(screenType == screenTypes.MAIN_GAME_SCREEN) {
             return mainGameScreen;
@@ -45,6 +78,8 @@ public class Engine extends Game {
     @Override
     public void create() {
         setBatch(new SpriteBatch());
+        setAssetManager(new AssetManager());
+        
         mainGameScreen = new MainGameScreen(this);
         battleScreen = new BattleScreen(this);
         

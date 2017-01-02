@@ -36,7 +36,7 @@ public class MainGameScreen implements Screen {
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
-        setAtlas(new TextureAtlas("User\\GDX_Users\\User.pack"));
+        setAtlas(new TextureAtlas(User.getUserInformation()));
         setCamera(new OrthographicCamera());
         setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(),
                                     Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()

@@ -3,8 +3,9 @@ package com.horse.pokemon.BattleEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
-public class BackgroundData {
+public class BackgroundData implements Disposable {
     private static final Vector2 STANDARD_BACKGROUND_SIZE = new Vector2(512, 288);
     private static final Vector2 STANDARD_ENEMY_BASE_SIZE = new Vector2(256, 128);
     private static final Vector2 STANDARD_USER_BASE_SIZE  = new Vector2(512, 64);
@@ -58,5 +59,12 @@ public class BackgroundData {
     
     public String getUserBaseFilePath() {
         return userBaseFilePath;
+    }
+    
+    @Override
+    public void dispose() {
+        getBackgroundTexture().dispose();
+        getEnemyBaseTexture().dispose();
+        getUserBaseTexture().dispose();
     }
 }

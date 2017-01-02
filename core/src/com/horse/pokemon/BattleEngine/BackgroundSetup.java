@@ -1,9 +1,10 @@
 package com.horse.pokemon.BattleEngine;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 import com.horse.pokemon.Engine;
 
-public class BackgroundSetup {
+public class BackgroundSetup implements Disposable {
     private static final Vector2 SCREEN_TO_BACKGROUND_SIZE_RATIO =
             new Vector2(Engine.getvWidth() / BackgroundData.getStandardBackgroundSize().x,
                         Engine.getvHeight() / BackgroundData.getStandardBackgroundSize().y
@@ -76,5 +77,10 @@ public class BackgroundSetup {
                    );
         
         getEngine().getBatch().end();
+    }
+    
+    @Override
+    public void dispose() {
+        getBackgroundInformation().dispose();
     }
 }
