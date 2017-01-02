@@ -16,9 +16,10 @@ public enum DialogCharacter {
     Y_LOWER(144, 26), Z_UPPER(150, 13), Z_LOWER(150, 26), ZERO(0, 0, 6), ONE(6, 0, 4), TWO(12, 0), THREE(18, 0),
     FOUR(24, 0), FIVE(30, 0), SIX(36, 0), SEVEN(42, 0), EIGHT(48, 0), NINE(54, 0), SPACE(108, 0, 3);
     
-    private static final String FONT_PATH      = "Fonts\\dialogFont.png";
-    private static final int    DEFAULT_WIDTH  = 6;
-    private static final int    DEFAULT_HEIGHT = 13;
+    private static final String  FONT_PATH      = "Fonts\\dialogFont.png";
+    private static final int     DEFAULT_WIDTH  = 6;
+    private static final int     DEFAULT_HEIGHT = 13;
+    private static final Texture FONT_TEXTURE   = new Texture(Gdx.files.internal(getFontPath()));
     private int x;
     private int y;
     private int width;
@@ -39,6 +40,10 @@ public enum DialogCharacter {
         setHeight(height);
     }
     
+    public static Texture getFontTexture() {
+        return FONT_TEXTURE;
+    }
+    
     public static int getDefaultWidth() {
         return DEFAULT_WIDTH;
     }
@@ -52,9 +57,7 @@ public enum DialogCharacter {
     }
     
     public TextureRegion getLetterTextureRegion() {
-        return new TextureRegion(new Texture(Gdx.files.internal(getFontPath())), getX(), getY(), getWidth(),
-                                 getHeight()
-        );
+        return new TextureRegion(getFontTexture(), getX(), getY(), getWidth(), getHeight());
     }
     
     public int getX() {

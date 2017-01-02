@@ -13,20 +13,23 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.Enums.TextSpeeds;
 
+import java.util.ArrayList;
+
 public class Dialog extends Actor implements Disposable {
     private final String dialogFile = "DialogBoxes\\dialog.png";
-    private Viewport    viewport;
-    private Stage       stage;
-    private SpriteBatch batch;
-    private String      text;
-    private Texture     dialog;
-    private TextSpeeds  textSpeeds;
-    private int         xPosition;
-    private int         yPosition;
-    private int         xSize;
-    private int         ySize;
-    private int         currentCharacterXPosition;
-    private int         currentCharacterYPosition;
+    private Viewport                   viewport;
+    private Stage                      stage;
+    private SpriteBatch                batch;
+    private String                     text;
+    private Texture                    dialog;
+    private TextSpeeds                 textSpeeds;
+    private int                        xPosition;
+    private int                        yPosition;
+    private int                        xSize;
+    private int                        ySize;
+    private int                        currentCharacterXPosition;
+    private int                        currentCharacterYPosition;
+    private ArrayList<CharacterWriter> characterWriterArrayList;
     
     public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds,
                   String text) {
@@ -39,9 +42,18 @@ public class Dialog extends Actor implements Disposable {
         setTextSpeeds(textSpeeds);
         setxSize(xSize);
         setySize(ySize);
+        setCharacterWriterArrayList(new ArrayList<>(getText().length()));
         setDialog(new Texture(Gdx.files.internal(getDialogFile())));
         getStage().addActor(this);
         setupCharactersToWrite();
+    }
+    
+    public ArrayList<CharacterWriter> getCharacterWriterArrayList() {
+        return characterWriterArrayList;
+    }
+    
+    public void setCharacterWriterArrayList(ArrayList<CharacterWriter> characterWriterArrayList) {
+        this.characterWriterArrayList = characterWriterArrayList;
     }
     
     public TextSpeeds getTextSpeeds() {
@@ -60,7 +72,8 @@ public class Dialog extends Actor implements Disposable {
             CharacterWriter characterWriter =
                     new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
             
-            getStage().addActor(characterWriter);
+            //getStage().addActor(characterWriter);
+            getCharacterWriterArrayList().add(characterWriter);
             
             setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
             if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
@@ -159,6 +172,9 @@ public class Dialog extends Actor implements Disposable {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
+        for(CharacterWriter characterWriter : getCharacterWriterArrayList()) {
+            characterWriter.draw(batch, parentAlpha);
+        }
     }
     
     public Stage getStage() {

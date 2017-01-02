@@ -3,9 +3,11 @@ package com.horse.pokemon;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.horse.pokemon.BattleEngine.BackgroundData;
 import com.horse.pokemon.BattleEngine.BattleScreen;
+import com.horse.pokemon.GraphicsEngine.ScreenEngine.IntroScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 
 /**
@@ -38,10 +40,11 @@ public class Engine extends Game {
      */
     private static final int CAMERA_ZOOM_SCALE = 2;
     
+    private static IntroScreen    introScreen;
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;
-    private AssetManager assetManager;
-    private SpriteBatch batch;
+    private        AssetManager   assetManager;
+    private        SpriteBatch    batch;
     
     public static int getvWidth() {
         return V_WIDTH;
@@ -68,7 +71,9 @@ public class Engine extends Game {
     }
     
     public Screen getScreen(screenTypes screenType) {
-        if(screenType == screenTypes.MAIN_GAME_SCREEN) {
+        if(screenType == screenTypes.INTRO_SCREEN) {
+            return introScreen;
+        } else if(screenType == screenTypes.MAIN_GAME_SCREEN) {
             return mainGameScreen;
         } else {
             return battleScreen;
@@ -78,8 +83,11 @@ public class Engine extends Game {
     @Override
     public void create() {
         setBatch(new SpriteBatch());
-        setAssetManager(new AssetManager());
+        setAssetManager(new AssetManager(new InternalFileHandleResolver()));
         
+        loadAssets();
+        
+        introScreen = new IntroScreen(this);
         mainGameScreen = new MainGameScreen(this);
         battleScreen = new BattleScreen(this);
         
@@ -88,6 +96,7 @@ public class Engine extends Game {
     
     @Override
     public void dispose() {
+        getScreen(screenTypes.INTRO_SCREEN).dispose();
         getScreen(screenTypes.MAIN_GAME_SCREEN).dispose();
         getScreen(screenTypes.BATTLE_SCREEN).dispose();
     }
@@ -120,7 +129,16 @@ public class Engine extends Game {
         this.batch = batch;
     }
     
+    private void loadAssets() {
+        //getAssetManager().setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
+        //getAssetManager().load(User.getUserInformation(), TextureAtlas.class);
+        //getAssetManager().finishLoadingAsset(User.getUserInformation());
+        //getAssetManager().load(User.getUserInformation(), TextureAtlas.class);
+        //getAssetManager().finishLoading();
+        //System.out.println(getAssetManager().getAssetNames());
+    }
+    
     public enum screenTypes {
-        MAIN_GAME_SCREEN, BATTLE_SCREEN
+        INTRO_SCREEN, MAIN_GAME_SCREEN, BATTLE_SCREEN
     }
 }

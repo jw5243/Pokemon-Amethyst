@@ -18,14 +18,9 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public final class User extends AbstractPlayer implements AnimationInterface {
-    private static final int   USER_WIDTH      = 16;
-    private static final int   USER_HEIGHT     = 19;
-    private static final float ANIMATION_SPEED = 0.5f;
-    
-    public static String getUserInformation() {
-        return USER_INFORMATION;
-    }
-    
+    private static final int    USER_WIDTH       = 16;
+    private static final int    USER_HEIGHT      = 19;
+    private static final float  ANIMATION_SPEED  = 0.5f;
     private static final String USER_INFORMATION = "User\\GDX_Users\\User.pack";
     private final HandleInput     handleInput;
     private final TextureRegion[] userStand;
@@ -98,6 +93,10 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMoving(false);
             }
         });
+    }
+    
+    public static String getUserInformation() {
+        return USER_INFORMATION;
     }
     
     public static int getUserWidth() {

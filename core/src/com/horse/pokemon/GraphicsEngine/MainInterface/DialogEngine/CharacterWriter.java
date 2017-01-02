@@ -1,9 +1,8 @@
 package com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public class CharacterWriter extends Actor {
+public class CharacterWriter {
     private static final int DEFAULT_CHARACTER_START_X_POSITION_BUFFER = 10;
     private static final int DEFAULT_CHARACTER_START_Y_POSITION_BUFFER = 6;
     private DialogCharacter dialogCharacter;
@@ -68,7 +67,6 @@ public class CharacterWriter extends Actor {
         this.characterHeight = characterHeight;
     }
     
-    @Override
     public void draw(Batch batch, float parentAlpha) {
         batch.draw(getDialogCharacter().getLetterTextureRegion(), getCharacterXPosition(), getCharacterYPosition(),
                    getCharacterWidth(), getCharacterHeight()

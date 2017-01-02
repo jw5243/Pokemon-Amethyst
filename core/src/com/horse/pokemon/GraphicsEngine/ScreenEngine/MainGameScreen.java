@@ -3,6 +3,7 @@ package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -33,30 +34,11 @@ public class MainGameScreen implements Screen {
     private Stage                      stage;
     private AudioData                  sound;
     private Dialog                     dialog;
+    private FPSLogger                  fpsLogger;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
-        setAtlas(new TextureAtlas(User.getUserInformation()));
-        setCamera(new OrthographicCamera());
-        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(),
-                                    Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()
-        ));
-        setHud(new Hud(getEngine()));
-        setMapLoader(new TmxMapLoader());
-        setMap(getMapLoader().load("Maps\\StartMap.tmx"));
-        setRenderer(new OrthogonalTiledMapRenderer(getMap()));
-        setUser(new User(this, new MapCreator(this, getMap())));
-        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
-                                 getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
-        );
-        setStage(new Stage(getViewport(), getEngine().getBatch()));
-        getStage().addActor(getUser());
-        Gdx.input.setInputProcessor(getStage());
-        sound = AudioData.INTRODUCTION;
-        sound.playAudio();
-        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
-                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
-        );
+        fpsLogger = new FPSLogger();
     }
     
     public Stage getStage() {
@@ -117,7 +99,27 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void show() {
-        
+        setAtlas(new TextureAtlas(User.getUserInformation()));
+        setCamera(new OrthographicCamera());
+        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(),
+                                    Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()
+        ));
+        setHud(new Hud(getEngine()));
+        setMapLoader(new TmxMapLoader());
+        setMap(getMapLoader().load("Maps\\StartMap.tmx"));
+        setRenderer(new OrthogonalTiledMapRenderer(getMap()));
+        setUser(new User(this, new MapCreator(this, getMap())));
+        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
+                                 getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
+        );
+        setStage(new Stage(getViewport(), getEngine().getBatch()));
+        getStage().addActor(getUser());
+        Gdx.input.setInputProcessor(getStage());
+        sound = AudioData.INTRODUCTION;
+        sound.playAudio();
+        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
+                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
+        );
     }
     
     @Override
@@ -132,9 +134,7 @@ public class MainGameScreen implements Screen {
         renderBackground();
         
         getEngine().getBatch().setProjectionMatrix(getCamera().combined);
-        getEngine().getBatch().begin();
         
-        getEngine().getBatch().end();
         getStage().act(delta);
         getStage().draw();
         
@@ -146,6 +146,7 @@ public class MainGameScreen implements Screen {
         getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
         dialog.getStage().act(delta);
         dialog.getStage().draw();
+        fpsLogger.log();
     }
     
     @Override
