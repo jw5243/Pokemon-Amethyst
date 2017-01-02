@@ -106,9 +106,12 @@ public class MainGameScreen implements Screen {
         ));
         setHud(new Hud(getEngine()));
         setMapLoader(new TmxMapLoader());
-        setMap(getMapLoader().load("Maps\\StartMap.tmx"));
+        
+        setMap(getMapLoader().load("Maps\\TwinleafTown.tmx"));
         setRenderer(new OrthogonalTiledMapRenderer(getMap()));
+    
         setUser(new User(this, new MapCreator(this, getMap())));
+        
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
         );
@@ -127,6 +130,7 @@ public class MainGameScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
         }
+        
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

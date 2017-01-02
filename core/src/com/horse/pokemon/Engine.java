@@ -2,8 +2,6 @@ package com.horse.pokemon;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.horse.pokemon.BattleEngine.BackgroundData;
 import com.horse.pokemon.BattleEngine.BattleScreen;
@@ -43,7 +41,6 @@ public class Engine extends Game {
     private static IntroScreen    introScreen;
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;
-    private        AssetManager   assetManager;
     private        SpriteBatch    batch;
     
     public static int getvWidth() {
@@ -62,14 +59,6 @@ public class Engine extends Game {
         return CAMERA_ZOOM_SCALE;
     }
     
-    public AssetManager getAssetManager() {
-        return assetManager;
-    }
-    
-    public void setAssetManager(AssetManager assetManager) {
-        this.assetManager = assetManager;
-    }
-    
     public Screen getScreen(screenTypes screenType) {
         if(screenType == screenTypes.INTRO_SCREEN) {
             return introScreen;
@@ -83,15 +72,12 @@ public class Engine extends Game {
     @Override
     public void create() {
         setBatch(new SpriteBatch());
-        setAssetManager(new AssetManager(new InternalFileHandleResolver()));
-        
-        loadAssets();
         
         introScreen = new IntroScreen(this);
         mainGameScreen = new MainGameScreen(this);
         battleScreen = new BattleScreen(this);
         
-        setScreen(getScreen(screenTypes.MAIN_GAME_SCREEN));
+        setScreen(getScreen(screenTypes.INTRO_SCREEN));
     }
     
     @Override
@@ -127,15 +113,6 @@ public class Engine extends Game {
     
     public void setBatch(SpriteBatch batch) {
         this.batch = batch;
-    }
-    
-    private void loadAssets() {
-        //getAssetManager().setLoader(TextureAtlas.class, new TextureAtlasLoader(new InternalFileHandleResolver()));
-        //getAssetManager().load(User.getUserInformation(), TextureAtlas.class);
-        //getAssetManager().finishLoadingAsset(User.getUserInformation());
-        //getAssetManager().load(User.getUserInformation(), TextureAtlas.class);
-        //getAssetManager().finishLoading();
-        //System.out.println(getAssetManager().getAssetNames());
     }
     
     public enum screenTypes {

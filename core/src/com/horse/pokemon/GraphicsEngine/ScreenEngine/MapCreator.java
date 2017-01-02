@@ -22,6 +22,10 @@ public class MapCreator {
     private Array<Rectangle>      connections   = new Array<>();
     
     public MapCreator(MainGameScreen screen, TiledMap map) {
+        addTiledObject(screen, map);
+    }
+    
+    public void addTiledObject(MainGameScreen screen, TiledMap map) {
         for(MapObject object : map.getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
             if(object.getProperties().get("type") instanceof String) {
@@ -40,6 +44,8 @@ public class MapCreator {
                     getTileObjects().add(new Barrier(rectangle));
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Mailbox")) {
                     getTileObjects().add(new Mailbox(rectangle));
+                } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Grass")) {
+                    
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Bed")) {
                     
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Stairs")) {

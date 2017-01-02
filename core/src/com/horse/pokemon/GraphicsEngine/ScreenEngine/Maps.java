@@ -1,7 +1,7 @@
 package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 
 public enum Maps {
-    START_MAP("Maps\\StartMap.tmx"), START_ROOM("Maps\\StartUserRoom.tmx");
+    START_MAP("Maps\\TwinleafTown.tmx"), START_ROOM("Maps\\StartUserRoom.tmx");
     
     
     private String tmxPath;
