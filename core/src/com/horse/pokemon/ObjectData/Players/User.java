@@ -78,28 +78,28 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMoving(true);
                 setAligned(false);
                 setDirection('U');
-                setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize()), false));
+                setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize()), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('D');
-                setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize()), false));
+                setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize()), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('R');
-                setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0), false));
+                setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('L');
-                setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), false));
+                setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
@@ -268,7 +268,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         frames.clear();
         
         userIdleOnLand[0] =
-                new TextureRegion(getUserSprite().getTexture(), 101, 6, getUserWalkWidth(), getUserWalkHeight());
+                new TextureRegion(getUserSprite().getTexture(), 135, 6, getUserWalkWidth(), getUserWalkHeight());
         userIdleOnLand[1] =
                 new TextureRegion(getUserSprite().getTexture(), 62, 49, getUserWalkWidth(), getUserWalkHeight());
         userIdleOnLand[2] =
@@ -317,13 +317,13 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         frames.clear();
         
         userIdleOnWater[0] =
-                new TextureRegion(getUserSprite().getTexture(), 170, 192, getUserSwimWidth(), getUserSwimHeight());
+                new TextureRegion(getUserSprite().getTexture(), 170, 97, getUserSwimWidth(), getUserSwimHeight());
         userIdleOnWater[1] =
-                new TextureRegion(getUserSprite().getTexture(), 125, 147, getUserSwimWidth(), getUserSwimHeight());
+                new TextureRegion(getUserSprite().getTexture(), 125, 97, getUserSwimWidth(), getUserSwimHeight());
         userIdleOnWater[2] =
-                new TextureRegion(getUserSprite().getTexture(), 217, 240, getUserSwimWidth(), getUserSwimHeight());
+                new TextureRegion(getUserSprite().getTexture(), 217, 97, getUserSwimWidth(), getUserSwimHeight());
         userIdleOnWater[3] =
-                new TextureRegion(getUserSprite().getTexture(), 77, 102, getUserSwimWidth(), getUserSwimHeight());
+                new TextureRegion(getUserSprite().getTexture(), 77, 97, getUserSwimWidth(), getUserSwimHeight());
     }
     
     public void handleInput(float deltaTime) {
@@ -342,8 +342,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             if(getDirection() == 'D') {
                 Rectangle futureRectangle = getFutureRectangle(0, -Engine.getTileSize());
                 if(isColliding(futureRectangle, false)) {
-                    TileObject collidingTileObject = getCollidingTileObject(futureRectangle);
-                    if(collidingTileObject instanceof Water) {
+                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
                         setPositionY(getPositionY() - Engine.getTileSize());
                     }
                 }
@@ -357,10 +356,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 if(activateCollisionMethod) {
                     tileObject.onCollide();
                 }
-                if(isSwimming() && tileObject instanceof Water) {
-                    return false;
-                }
-                return true;
+                return !(isSwimming() && tileObject instanceof Water);
             }
         }
         return false;
@@ -515,7 +511,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2,
                        getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(), getUserWalkHeight()
             );
-        } else if(getCurrentState() == State.SWIMMING) {
+        } else if(isSwimming()) {
             batch.draw(getUserSprite(), getPositionX() - getUserSwimWidth() / 2,
                        getPositionY() - getUserSwimHeight() / 2, getUserSwimWidth(), getUserSwimHeight()
             );

@@ -247,12 +247,18 @@ public class MainGameScreen implements Screen {
         int mapWidth  = (int)(getMap().getProperties().get("width"));
         int mapHeight = (int)(getMap().getProperties().get("height"));
         
-        getCamera().position.x = MathUtils.clamp(getUser().getPositionX(), halfViewportWidth,
-                                                 mapWidth * Engine.getTileSize() - halfViewportWidth
-        );
-        getCamera().position.y = MathUtils.clamp(getUser().getPositionY(), halfViewportHeight,
-                                                 mapHeight * Engine.getTileSize() - halfViewportHeight
-        );
+        getCamera().position.x = (mapWidth > getCamera().viewportWidth) ? MathUtils.clamp(getUser().getPositionX(),
+                                                                                          halfViewportWidth, mapWidth *
+                                                                                                             Engine.getTileSize() -
+                                                                                                             halfViewportWidth
+        ) : getUser().getPositionX();
+        
+        getCamera().position.y = (mapHeight > getCamera().viewportHeight) ? MathUtils.clamp(getUser().getPositionY(),
+                                                                                            halfViewportHeight,
+                                                                                            mapHeight *
+                                                                                            Engine.getTileSize() -
+                                                                                            halfViewportHeight
+        ) : getUser().getPositionY();
         
         getCamera().update();
         getRenderer().setView(getCamera());
