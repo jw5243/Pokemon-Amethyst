@@ -35,6 +35,12 @@ public class MainGameScreen implements Screen {
     private AudioData            sound;
     private Dialog               dialog;
     private FPSLogger            fpsLogger;
+    private MapCreator           mapCreator;
+    
+    public MainGameScreen(Engine engine) {
+        setEngine(engine);
+        fpsLogger = new FPSLogger();
+    }
     
     public MapCreator getMapCreator() {
         return mapCreator;
@@ -42,13 +48,6 @@ public class MainGameScreen implements Screen {
     
     public void setMapCreator(MapCreator mapCreator) {
         this.mapCreator = mapCreator;
-    }
-    
-    private MapCreator mapCreator;
-    
-    public MainGameScreen(Engine engine) {
-        setEngine(engine);
-        fpsLogger = new FPSLogger();
     }
     
     public Stage getStage() {
@@ -241,15 +240,19 @@ public class MainGameScreen implements Screen {
         handleInput(deltaTime);
         
         getUser().update(deltaTime);
-    
-        float halfViewportWidth = getCamera().viewportWidth / 2;
+        
+        float halfViewportWidth  = getCamera().viewportWidth / 2;
         float halfViewportHeight = getCamera().viewportHeight / 2;
         
-        int mapWidth = (int)(getMap().getProperties().get("width"));
+        int mapWidth  = (int)(getMap().getProperties().get("width"));
         int mapHeight = (int)(getMap().getProperties().get("height"));
         
-        getCamera().position.x = MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth);
-        getCamera().position.y = MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight);
+        getCamera().position.x = MathUtils.clamp(getUser().getPositionX(), halfViewportWidth,
+                                                 mapWidth * Engine.getTileSize() - halfViewportWidth
+        );
+        getCamera().position.y = MathUtils.clamp(getUser().getPositionY(), halfViewportHeight,
+                                                 mapHeight * Engine.getTileSize() - halfViewportHeight
+        );
         
         getCamera().update();
         getRenderer().setView(getCamera());

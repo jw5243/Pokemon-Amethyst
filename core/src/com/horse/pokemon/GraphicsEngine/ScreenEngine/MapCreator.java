@@ -28,6 +28,7 @@ public class MapCreator {
     public void resetTiledObjects(MainGameScreen screen, TiledMap map) {
         getTileObjects().clear();
         addTiledObjects(screen, map);
+        screen.getUser().setMapCreator(this);
     }
     
     public void addTiledObjects(MainGameScreen screen, TiledMap map) {
