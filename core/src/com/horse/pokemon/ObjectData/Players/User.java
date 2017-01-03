@@ -1,5 +1,7 @@
 package com.horse.pokemon.ObjectData.Players;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,6 +15,7 @@ import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MapCreator;
 import com.horse.pokemon.ObjectData.TiledObjects.TileObject;
+import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -70,28 +73,28 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMoving(true);
                 setAligned(false);
                 setDirection('U');
-                setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize())));
+                setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize()), false));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('D');
-                setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize())));
+                setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize()), false));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('R');
-                setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0)));
+                setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0), false));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection('L');
-                setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0)));
+                setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), false));
             }
         }, (float dt) -> {
             if(isAligned()) {
@@ -278,17 +281,41 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             } else if(getDirection() == 'L') {
                 setPositionX(getPositionX() - getCurrentState().getSpeed());
             }
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            if(getDirection() == 'D') {
+                Rectangle futureRectangle = getFutureRectangle(0, -Engine.getTileSize());
+                if(isColliding(futureRectangle, false)) {
+                    TileObject collidingTileObject = getCollidingTileObject(futureRectangle);
+                    if(collidingTileObject instanceof Water) {
+                        setPositionY(getPositionY() - Engine.getTileSize());
+                    }
+                }
+            }
         }
     }
     
-    private boolean isColliding(Rectangle rectangle) {
+    private boolean isColliding(Rectangle rectangle, boolean activateCollisionMethod) {
         for(TileObject tileObject : getMapCreator().getTileObjects()) {
             if(tileObject.isColliding(rectangle)) {
-                tileObject.onCollide();
+                if(activateCollisionMethod) {
+                    tileObject.onCollide();
+                }
+                if(isSwimming() && tileObject instanceof Water) {
+                    return false;
+                }
                 return true;
             }
         }
         return false;
+    }
+    
+    private TileObject getCollidingTileObject(Rectangle rectangle) {
+        for(TileObject tileObject : getMapCreator().getTileObjects()) {
+            if(tileObject.isColliding(rectangle)) {
+                return tileObject;
+            }
+        }
+        return null;
     }
     
     public TextureRegion[] getUserIdle() {
@@ -319,8 +346,12 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     public void update(float deltaTime) {
         setAligned((getPositionX() + (Engine.getTileSize() / 2)) % Engine.getTileSize() == 0 &&
                    (getPositionY() + (Engine.getTileSize() / 2)) % Engine.getTileSize() - 1 == 0);
+        
         setX(getPositionX() - getUserWidth() / 2);
         setY(getPositionY() - getUserHeight() / 2);
+        
+        setSwimming(getCollidingTileObject(new Rectangle(getX(), getY(), Engine.getTileSize() / 2, Engine.getTileSize() / 2)) instanceof Water);
+        
         getUserSprite().setRegion(getFrame(deltaTime));
     }
     

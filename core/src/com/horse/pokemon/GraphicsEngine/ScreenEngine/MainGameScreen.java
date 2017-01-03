@@ -155,7 +155,7 @@ public class MainGameScreen implements Screen {
             getRenderer().setOffsetX(0);
             getMapCreator().resetTiledObjects(this, getMap());
             getUser().setMapCreator(getMapCreator());
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
             getRenderer().alterOffsetMapValues(16, 0);
             getMapCreator().resetTiledObjects(this, getMap());
             getUser().setMapCreator(getMapCreator());
