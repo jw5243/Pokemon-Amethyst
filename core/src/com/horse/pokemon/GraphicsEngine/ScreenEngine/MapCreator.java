@@ -22,12 +22,21 @@ public class MapCreator {
     private Array<Rectangle>      connections   = new Array<>();
     
     public MapCreator(MainGameScreen screen, TiledMap map) {
-        addTiledObject(screen, map);
+        addTiledObjects(screen, map);
     }
     
-    public void addTiledObject(MainGameScreen screen, TiledMap map) {
+    public void resetTiledObjects(MainGameScreen screen, TiledMap map) {
+        getTileObjects().clear();
+        addTiledObjects(screen, map);
+    }
+    
+    public void addTiledObjects(MainGameScreen screen, TiledMap map) {
         for(MapObject object : map.getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
+            
+            rectangle.setX(rectangle.getX() + screen.getRenderer().getOffsetX());
+            rectangle.setY(rectangle.getY() + screen.getRenderer().getOffsetY());
+            
             if(object.getProperties().get("type") instanceof String) {
                 if(object.getProperties().get("type").toString().equalsIgnoreCase("Door")) {
                     if(object.getProperties().containsKey("Filename")) {

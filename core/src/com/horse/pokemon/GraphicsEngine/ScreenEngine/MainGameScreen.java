@@ -36,6 +36,16 @@ public class MainGameScreen implements Screen {
     private Dialog               dialog;
     private FPSLogger            fpsLogger;
     
+    public MapCreator getMapCreator() {
+        return mapCreator;
+    }
+    
+    public void setMapCreator(MapCreator mapCreator) {
+        this.mapCreator = mapCreator;
+    }
+    
+    private MapCreator mapCreator;
+    
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
@@ -110,7 +120,9 @@ public class MainGameScreen implements Screen {
         setMap(getMapLoader().load(Maps.TWINLEAF_TOWN.getTmxPath()));
         setRenderer(new MultiTileMapRenderer(getMap(), 1.0f, getEngine().getBatch()));
         
-        setUser(new User(this, new MapCreator(this, getMap())));
+        setMapCreator(new MapCreator(this, getMap()));
+        
+        setUser(new User(this, getMapCreator()));
         
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
@@ -134,10 +146,20 @@ public class MainGameScreen implements Screen {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             getRenderer().setOffsetX(Engine.getTileSize());
+            getMapCreator().resetTiledObjects(this, getMap());
+            getUser().setMapCreator(getMapCreator());
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             getRenderer().setOffsetX(-Engine.getTileSize());
+            getMapCreator().resetTiledObjects(this, getMap());
+            getUser().setMapCreator(getMapCreator());
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             getRenderer().setOffsetX(0);
+            getMapCreator().resetTiledObjects(this, getMap());
+            getUser().setMapCreator(getMapCreator());
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+            getRenderer().alterOffsetMapValues(16, 0);
+            getMapCreator().resetTiledObjects(this, getMap());
+            getUser().setMapCreator(getMapCreator());
         }
         
         update(delta);
@@ -145,8 +167,6 @@ public class MainGameScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         renderBackground();
-        
-        //getEngine().getBatch().setProjectionMatrix(getCamera().combined);
         
         getStage().act(delta);
         getStage().draw();
