@@ -21,27 +21,29 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public final class User extends AbstractPlayer implements AnimationInterface {
-    private static final int    USER_WIDTH       = 16;
-    private static final int    USER_HEIGHT      = 19;
+    private static final int    USER_Walk_WIDTH  = 16;
+    private static final int    USER_WALK_HEIGHT = 19;
+    private static final int    USER_SWIM_WIDTH  = 22;
+    private static final int    USER_SWIM_HEIGHT = 24;
     private static final float  ANIMATION_SPEED  = 0.5f;
     private static final String USER_INFORMATION = "User\\GDX_Users\\User.pack";
     private final HandleInput     handleInput;
     private final TextureRegion[] userIdle;
     private final Animation[]     userWalk;
-    private final Animation[] userSwim;
-    private       MapCreator  mapCreator;
-    private       float       positionX;
-    private       float       positionY;
-    private       State       currentState;
-    private       State       previousState;
-    private       float       stateTimer;
-    private       double      currentTime;
-    private       char        direction;
-    private       boolean     moving;
-    private       boolean     aligned;
-    private       boolean     futureCollision;
-    private       Sprite      userSprite;
-    private boolean swimming;
+    private final Animation[]     userSwim;
+    private       MapCreator      mapCreator;
+    private       float           positionX;
+    private       float           positionY;
+    private       State           currentState;
+    private       State           previousState;
+    private       float           stateTimer;
+    private       double          currentTime;
+    private       char            direction;
+    private       boolean         moving;
+    private       boolean         aligned;
+    private       boolean         futureCollision;
+    private       Sprite          userSprite;
+    private       boolean         swimming;
     
     public User(MainGameScreen screen, MapCreator mapCreator) {
         super(screen, "SpriteSheetUser");
@@ -103,16 +105,24 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         });
     }
     
+    public static int getUserSwimWidth() {
+        return USER_SWIM_WIDTH;
+    }
+    
+    public static int getUserSwimHeight() {
+        return USER_SWIM_HEIGHT;
+    }
+    
     public static String getUserInformation() {
         return USER_INFORMATION;
     }
     
-    public static int getUserWidth() {
-        return USER_WIDTH;
+    public static int getUSER_Walk_WIDTH() {
+        return USER_Walk_WIDTH;
     }
     
-    public static int getUserHeight() {
-        return USER_HEIGHT;
+    public static int getUserWalkHeight() {
+        return USER_WALK_HEIGHT;
     }
     
     public Animation[] getUserSwim() {
@@ -133,8 +143,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
         setMapCreator(resetMapCreator ? mapCreator : getMapCreator());
-        setPositionX(mapCreator.getStartPosition().x + getUserWidth() / 2);
-        setPositionY(mapCreator.getStartPosition().y + getUserHeight() / 2);
+        setPositionX(mapCreator.getStartPosition().x + getUSER_Walk_WIDTH() / 2);
+        setPositionY(mapCreator.getStartPosition().y + getUserWalkHeight() / 2);
     }
     
     @Override
@@ -213,8 +223,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         for(int frameIndex = 0; frameIndex <= 3; frameIndex++) {
             int yPosition = 6;
             int xPosition = (frameIndex == 0) ? 135 : (frameIndex == 1) ? 189 : (frameIndex == 3) ? 206 : 135;
-            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUserWidth(),
-                                         getUserHeight()
+            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUSER_Walk_WIDTH(),
+                                         getUserWalkHeight()
             ));
         }
         userWalk[0] = new Animation<>(0.1f, frames);
@@ -223,8 +233,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         for(int frameIndex = 0; frameIndex <= 3; frameIndex++) {
             int yPosition = 49;
             int xPosition = (frameIndex == 0) ? 62 : (frameIndex == 1) ? 80 : (frameIndex == 3) ? 97 : 62;
-            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUserWidth(),
-                                         getUserHeight()
+            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUSER_Walk_WIDTH(),
+                                         getUserWalkHeight()
             ));
         }
         userWalk[1] = new Animation<>(0.1f, frames);
@@ -233,8 +243,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         for(int frameIndex = 0; frameIndex <= 3; frameIndex++) {
             int yPosition = 27;
             int xPosition = (frameIndex == 0) ? 274 : (frameIndex == 1) ? 291 : (frameIndex == 3) ? 204 : 274;
-            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUserWidth(),
-                                         getUserHeight()
+            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUSER_Walk_WIDTH(),
+                                         getUserWalkHeight()
             ));
         }
         userWalk[2] = new Animation<>(0.1f, frames);
@@ -243,26 +253,27 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         for(int frameIndex = 0; frameIndex <= 3; frameIndex++) {
             int yPosition = 27;
             int xPosition = (frameIndex == 0) ? 52 : (frameIndex == 1) ? 35 : (frameIndex == 3) ? 122 : 52;
-            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUserWidth(),
-                                         getUserHeight()
+            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUSER_Walk_WIDTH(),
+                                         getUserWalkHeight()
             ));
         }
         userWalk[3] = new Animation<>(0.1f, frames);
         frames.clear();
         
-        userIdle[0] = new TextureRegion(getUserSprite().getTexture(), 101, 6, getUserWidth(), getUserHeight());
-        userIdle[1] = new TextureRegion(getUserSprite().getTexture(), 62, 49, getUserWidth(), getUserHeight());
-        userIdle[2] = new TextureRegion(getUserSprite().getTexture(), 274, 27, getUserWidth(), getUserHeight());
-        userIdle[3] = new TextureRegion(getUserSprite().getTexture(), 52, 27, getUserWidth(), getUserHeight());
-        
-        final int userSwimLength = 22;
-        final int userSwimHeight = 24;
+        userIdle[0] =
+                new TextureRegion(getUserSprite().getTexture(), 101, 6, getUSER_Walk_WIDTH(), getUserWalkHeight());
+        userIdle[1] =
+                new TextureRegion(getUserSprite().getTexture(), 62, 49, getUSER_Walk_WIDTH(), getUserWalkHeight());
+        userIdle[2] =
+                new TextureRegion(getUserSprite().getTexture(), 274, 27, getUSER_Walk_WIDTH(), getUserWalkHeight());
+        userIdle[3] =
+                new TextureRegion(getUserSprite().getTexture(), 52, 27, getUSER_Walk_WIDTH(), getUserWalkHeight());
         
         for(int frameIndex = 0; frameIndex <= 2; frameIndex++) {
             int yPosition = 97;
             int xPosition = (frameIndex == 0) ? 170 : 192;
-            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, userSwimLength,
-                                         userSwimHeight
+            frames.add(new TextureRegion(getUserSprite().getTexture(), xPosition, yPosition, getUserSwimWidth(),
+                                         getUserSwimHeight()
             ));
         }
         userSwim[0] = new Animation<>(0.1f, frames);
@@ -347,10 +358,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setAligned((getPositionX() + (Engine.getTileSize() / 2)) % Engine.getTileSize() == 0 &&
                    (getPositionY() + (Engine.getTileSize() / 2)) % Engine.getTileSize() - 1 == 0);
         
-        setX(getPositionX() - getUserWidth() / 2);
-        setY(getPositionY() - getUserHeight() / 2);
+        setX(getPositionX() - getUSER_Walk_WIDTH() / 2);
+        setY(getPositionY() - getUserWalkHeight() / 2);
         
-        setSwimming(getCollidingTileObject(new Rectangle(getX(), getY(), Engine.getTileSize() / 2, Engine.getTileSize() / 2)) instanceof Water);
+        setSwimming(getCollidingTileObject(
+                new Rectangle(getX(), getY(), Engine.getTileSize() / 2, Engine.getTileSize() / 2)) instanceof Water);
         
         getUserSprite().setRegion(getFrame(deltaTime));
     }
@@ -437,9 +449,15 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(getUserSprite(), getPositionX() - getUserWidth() / 2, getPositionY() - getUserHeight() / 2,
-                   getUserWidth(), getUserHeight()
-        );
+        if((getCurrentState() == State.IDLE && !isSwimming()) || getCurrentState() == State.WALKING) {
+            batch.draw(getUserSprite(), getPositionX() - getUSER_Walk_WIDTH() / 2,
+                       getPositionY() - getUserWalkHeight() / 2, getUSER_Walk_WIDTH(), getUserWalkHeight()
+            );
+        } else if(getCurrentState() == State.SWIMMING) {
+            batch.draw(getUserSprite(), getPositionX() - getUserSwimWidth() / 2,
+                       getPositionY() - getUserSwimHeight() / 2, getUserSwimWidth(), getUserSwimHeight()
+            );
+        }
     }
     
     public double getCurrentTime() {
