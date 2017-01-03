@@ -11,7 +11,7 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -22,19 +22,19 @@ import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.ObjectData.Players.User;
 
 public class MainGameScreen implements Screen {
-    private Engine                     engine;
-    private TextureAtlas               atlas;
-    private OrthographicCamera         camera;
-    private Viewport                   viewport;
-    private Hud                        hud;
-    private TmxMapLoader               mapLoader;
-    private TiledMap                   map;
-    private OrthogonalTiledMapRenderer renderer;
-    private User                       user;
-    private Stage                      stage;
-    private AudioData                  sound;
-    private Dialog                     dialog;
-    private FPSLogger                  fpsLogger;
+    private Engine               engine;
+    private TextureAtlas         atlas;
+    private OrthographicCamera   camera;
+    private Viewport             viewport;
+    private Hud                  hud;
+    private TmxMapLoader         mapLoader;
+    private TiledMap             map;
+    private MultiTileMapRenderer renderer;
+    private User                 user;
+    private Stage                stage;
+    private AudioData            sound;
+    private Dialog               dialog;
+    private FPSLogger            fpsLogger;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
@@ -107,20 +107,23 @@ public class MainGameScreen implements Screen {
         setHud(new Hud(getEngine()));
         setMapLoader(new TmxMapLoader());
         
-        setMap(getMapLoader().load("Maps\\TwinleafTown.tmx"));
-        setRenderer(new OrthogonalTiledMapRenderer(getMap()));
-    
+        setMap(getMapLoader().load(Maps.TWINLEAF_TOWN.getTmxPath()));
+        setRenderer(new MultiTileMapRenderer(getMap(), 1.0f, getEngine().getBatch()));
+        
         setUser(new User(this, new MapCreator(this, getMap())));
         
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
         );
+        
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
         Gdx.input.setInputProcessor(getStage());
+        
         sound = AudioData.INTRODUCTION;
         sound.playAudio();
         dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
+                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
         );
     }
@@ -129,6 +132,12 @@ public class MainGameScreen implements Screen {
     public void render(float delta) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
+            getRenderer().setOffsetX(Engine.getTileSize());
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
+            getRenderer().setOffsetX(-Engine.getTileSize());
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
+            getRenderer().setOffsetX(0);
         }
         
         update(delta);
@@ -137,7 +146,7 @@ public class MainGameScreen implements Screen {
         
         renderBackground();
         
-        getEngine().getBatch().setProjectionMatrix(getCamera().combined);
+        //getEngine().getBatch().setProjectionMatrix(getCamera().combined);
         
         getStage().act(delta);
         getStage().draw();
@@ -150,6 +159,7 @@ public class MainGameScreen implements Screen {
         getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
         dialog.getStage().act(delta);
         dialog.getStage().draw();
+        
         fpsLogger.log();
     }
     
@@ -186,13 +196,11 @@ public class MainGameScreen implements Screen {
     public void renderBackground() {
         for(MapLayer mapLayer : getMap().getLayers()) {
             if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
-                getRenderer().getBatch().begin();
                 try {
                     getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
                 } catch(ClassCastException e) {
                     e.printStackTrace();
                 }
-                getRenderer().getBatch().end();
             }
         }
     }
@@ -200,13 +208,11 @@ public class MainGameScreen implements Screen {
     public void renderObjects() {
         for(MapLayer mapLayer : getMap().getLayers()) {
             if(mapLayer.getName().equalsIgnoreCase("Objects")) {
-                getRenderer().getBatch().begin();
                 try {
                     getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
                 } catch(ClassCastException e) {
                     e.printStackTrace();
                 }
-                getRenderer().getBatch().end();
             }
         }
     }
@@ -215,19 +221,25 @@ public class MainGameScreen implements Screen {
         handleInput(deltaTime);
         
         getUser().update(deltaTime);
+    
+        float halfViewportWidth = getCamera().viewportWidth / 2;
+        float halfViewportHeight = getCamera().viewportHeight / 2;
         
-        getCamera().position.x = getUser().getPositionX();
-        getCamera().position.y = getUser().getPositionY();
+        int mapWidth = (int)(getMap().getProperties().get("width"));
+        int mapHeight = (int)(getMap().getProperties().get("height"));
+        
+        getCamera().position.x = MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth);
+        getCamera().position.y = MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight);
         
         getCamera().update();
         getRenderer().setView(getCamera());
     }
     
-    public OrthogonalTiledMapRenderer getRenderer() {
+    public MultiTileMapRenderer getRenderer() {
         return renderer;
     }
     
-    public void setRenderer(OrthogonalTiledMapRenderer renderer) {
+    public void setRenderer(MultiTileMapRenderer renderer) {
         this.renderer = renderer;
     }
     
