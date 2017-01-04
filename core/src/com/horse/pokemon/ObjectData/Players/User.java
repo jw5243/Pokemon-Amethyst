@@ -297,32 +297,15 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                                         (getDirection() == 'D') ? getFutureRectangle(0, -Engine.getTileSize()) :
                                         (getDirection() == 'R') ? getFutureRectangle(Engine.getTileSize(), 0) :
                                         getFutureRectangle(-Engine.getTileSize(), 0);
-            
-            
-            if(getDirection() == 'U') {
-                if(isColliding(futureRectangle, false)) {
-                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
-                        alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize());
-                    }
-                }
-            } else if(getDirection() == 'D') {
-                if(isColliding(futureRectangle, false)) {
-                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
-                        alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize());
-                    }
-                }
-            } else if(getDirection() == 'R') {
-                if(isColliding(futureRectangle, false)) {
-                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
-                        alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize());
-                    }
-                }
-            } else if(getDirection() == 'L') {
-                if(isColliding(futureRectangle, false)) {
-                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
-                        alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
-                    }
-                }
+    
+            Runnable alterAction =
+                    (getDirection() == 'U') ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
+                    (getDirection() == 'D') ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
+                    (getDirection() == 'R') ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
+                    () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
+    
+            if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) {
+                alterAction.run();
             }
         }
     }
