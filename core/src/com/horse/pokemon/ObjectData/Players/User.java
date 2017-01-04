@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.horse.pokemon.AnimationEngine.AnimationInitializer;
 import com.horse.pokemon.AnimationEngine.AnimationInterface;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
@@ -22,11 +23,28 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Class acting as the protagonist in the Pokemon game, acting as the graphics, input, and movement for the character.
+ *
+ * @see AbstractPlayer
+ * @see Actor
+ * @see AnimationInterface
+ * @see TextureRegion
+ * @see Animation
+ * @see HandleInput
+ * @see MapCreator
+ * @see Sprite
+ * @see Rectangle
+ */
 public final class User extends AbstractPlayer implements AnimationInterface {
     private static final int    USER_WALK_WIDTH        = 16;
     private static final int    USER_WALK_HEIGHT       = 19;
     private static final int    USER_SWIM_WIDTH        = 22;
     private static final int    USER_SWIM_HEIGHT       = 24;
+    private static final char   UP                     = 'U';
+    private static final char   DOWN                   = 'D';
+    private static final char   RIGHT                  = 'R';
+    private static final char   LEFT                   = 'L';
     private static final float  ANIMATION_SPEED        = 0.5f;
     private static final String USER_INFORMATION       = "User\\GDX_Users\\User.pack";
     private static final String USER_ATLAS_REGION_NAME = "SpriteSheetUser";
@@ -54,7 +72,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setPreviousState(getCurrentState());
         
         setStateTimer(0);
-        setDirection('D');
+        setDirection(getDOWN());
         
         setMoving(false);
         setAligned(true);
@@ -84,28 +102,28 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
-                setDirection('U');
+                setDirection(getUP());
                 setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize()), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
-                setDirection('D');
+                setDirection(getDOWN());
                 setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize()), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
-                setDirection('R');
+                setDirection(getRIGHT());
                 setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0), true));
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(true);
                 setAligned(false);
-                setDirection('L');
+                setDirection(getLEFT());
                 setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), true));
             }
         }, (float dt) -> {
@@ -113,6 +131,22 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMoving(false);
             }
         });
+    }
+    
+    private static char getUP() {
+        return UP;
+    }
+    
+    private static char getDOWN() {
+        return DOWN;
+    }
+    
+    private static char getRIGHT() {
+        return RIGHT;
+    }
+    
+    private static char getLEFT() {
+        return LEFT;
     }
     
     private static String getUserAtlasRegionName() {
@@ -278,13 +312,13 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     public void handleInput(float deltaTime) {
         getHandleInput().update(deltaTime);
         if(!isAligned() && !isFutureCollision()) {
-            if(getDirection() == 'U') {
+            if(getDirection() == getUP()) {
                 setPositionY(getPositionY() + getCurrentState().getSpeed());
-            } else if(getDirection() == 'D') {
+            } else if(getDirection() == getDOWN()) {
                 setPositionY(getPositionY() - getCurrentState().getSpeed());
-            } else if(getDirection() == 'R') {
+            } else if(getDirection() == getRIGHT()) {
                 setPositionX(getPositionX() + getCurrentState().getSpeed());
-            } else if(getDirection() == 'L') {
+            } else if(getDirection() == getLEFT()) {
                 setPositionX(getPositionX() - getCurrentState().getSpeed());
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
@@ -293,15 +327,15 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                                                                                                                         .accept(getPositionMethod.get() +
                                                                                                                                 alterValue);
     
-            Rectangle futureRectangle = (getDirection() == 'U') ? getFutureRectangle(0, Engine.getTileSize()) :
-                                        (getDirection() == 'D') ? getFutureRectangle(0, -Engine.getTileSize()) :
-                                        (getDirection() == 'R') ? getFutureRectangle(Engine.getTileSize(), 0) :
+            Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
+                                        (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
+                                        (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
                                         getFutureRectangle(-Engine.getTileSize(), 0);
     
             Runnable alterAction =
-                    (getDirection() == 'U') ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
-                    (getDirection() == 'D') ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
-                    (getDirection() == 'R') ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
+                    (getDirection() == getUP()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
+                    (getDirection() == getDOWN()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
+                    (getDirection() == getRIGHT()) ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
                     () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
     
             if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) {
@@ -387,26 +421,26 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         
         setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
         setPreviousState(getCurrentState());
-        return (getCurrentState() == State.WALKING) ? (getDirection() == 'U') ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
-                                                      (getDirection() == 'D') ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
-                                                      (getDirection() == 'R') ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
+        return (getCurrentState() == State.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
+                                                      (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
+                                                      (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
                                                       (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-               (getCurrentState() == State.SWIMMING) ? (getDirection() == 'U') ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
-                                                       (getDirection() == 'D') ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
-                                                       (getDirection() == 'R') ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
+               (getCurrentState() == State.SWIMMING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
+                                                       (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
+                                                       (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
                                                        (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ?
-                                                                                                                        (getDirection() == 'U') ?
+                                                                                                                        (getDirection() == getUP()) ?
                                                                                                                         getUserIdleOnWater()[0] :
-                                                                                                                        (getDirection() == 'D') ?
+                                                                                                                        (getDirection() == getDOWN()) ?
                                                                                                                         getUserIdleOnWater()[1] :
-                                                                                                                        (getDirection() == 'R') ?
+                                                                                                                        (getDirection() == getRIGHT()) ?
                                                                                                                         getUserIdleOnWater()[2] :
                                                                                                                         getUserIdleOnWater()[3] :
-                                                                                                                        (getDirection() == 'U') ?
+                                                                                                                        (getDirection() == getUP()) ?
                                                                                                                         getUserIdleOnLand()[0] :
-                                                                                                                        (getDirection() == 'D') ?
+                                                                                                                        (getDirection() == getDOWN()) ?
                                                                                                                         getUserIdleOnLand()[1] :
-                                                                                                                        (getDirection() == 'R') ?
+                                                                                                                        (getDirection() == getRIGHT()) ?
                                                                                                                         getUserIdleOnLand()[2] :
                                                                                                                         getUserIdleOnLand()[3];
     }
