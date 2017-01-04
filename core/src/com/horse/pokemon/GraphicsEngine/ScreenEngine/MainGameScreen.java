@@ -127,8 +127,8 @@ public class MainGameScreen implements Screen {
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
         Gdx.input.setInputProcessor(getStage());
-        
-        sound = AudioData.INTRODUCTION;
+    
+        sound = AudioData.TWINLEAF_TOWN_DAYTIME;
         sound.playAudio();
         dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +

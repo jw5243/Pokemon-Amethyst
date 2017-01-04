@@ -286,11 +286,32 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setPositionX(getPositionX() - getCurrentState().getSpeed());
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
-            if(getDirection() == 'D') {
+            if(getDirection() == 'U') {
+                Rectangle futureRectangle = getFutureRectangle(0, Engine.getTileSize());
+                if(isColliding(futureRectangle, false)) {
+                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
+                        setPositionY(getPositionY() + Engine.getTileSize());
+                    }
+                }
+            } else if(getDirection() == 'D') {
                 Rectangle futureRectangle = getFutureRectangle(0, -Engine.getTileSize());
                 if(isColliding(futureRectangle, false)) {
                     if(getCollidingTileObject(futureRectangle) instanceof Water) {
                         setPositionY(getPositionY() - Engine.getTileSize());
+                    }
+                }
+            } else if(getDirection() == 'R') {
+                Rectangle futureRectangle = getFutureRectangle(Engine.getTileSize(), 0);
+                if(isColliding(futureRectangle, false)) {
+                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
+                        setPositionX(getPositionX() + Engine.getTileSize());
+                    }
+                }
+            } else if(getDirection() == 'L') {
+                Rectangle futureRectangle = getFutureRectangle(-Engine.getTileSize(), 0);
+                if(isColliding(futureRectangle, false)) {
+                    if(getCollidingTileObject(futureRectangle) instanceof Water) {
+                        setPositionX(getPositionX() - Engine.getTileSize());
                     }
                 }
             }
