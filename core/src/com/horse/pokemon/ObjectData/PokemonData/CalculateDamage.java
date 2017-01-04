@@ -32,7 +32,6 @@ public class CalculateDamage {
     }
     
     public int getDamage() {
-        return (int)((((2 * userLevel / 5 + 2) * userAttack * movePower / enemyDefense) / 50 + 2) * userSTAB *
-                     userResistance * randomNumber / 100);
+        return (int)((((2 * userLevel / 5 + 2) * userAttack * movePower / enemyDefense) / 50 + 2) * userSTAB * userResistance * randomNumber / 100);
     }
 }

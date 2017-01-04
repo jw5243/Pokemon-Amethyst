@@ -1,7 +1,7 @@
 package com.horse.pokemon.DataReaders;
 
-import com.horse.pokemon.Enums.PokemonTypes;
 import com.horse.pokemon.ObjectData.PokemonData.Moves;
+import com.horse.pokemon.ObjectData.PokemonData.PokemonTypes;
 
 import java.io.BufferedReader;
 import java.io.File;

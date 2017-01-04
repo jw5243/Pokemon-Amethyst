@@ -31,16 +31,12 @@ public class CalculateStats {
         Pokemon pokemon = PokemonDataReader.getPokemon("Bulbasaur");
         for(int i = 1; i <= 100; i++) {
             pokemon.getInformation().setCurrentLevel(i);
-            CalculateStats calculateStats = new CalculateStats(pokemon.getInformation().getBaseStats(),
-                                                               pokemon.getInformation().getCurrentLevel(),
-                                                               pokemon.getInformation().getIndividualValue(),
-                                                               pokemon.getInformation().getEffortValue()
+            CalculateStats calculateStats = new CalculateStats(pokemon.getInformation().getBaseStats(), pokemon.getInformation().getCurrentLevel(),
+                                                               pokemon.getInformation().getIndividualValue(), pokemon.getInformation().getEffortValue()
             );
             int[] stats = calculateStats.getStats();
-            System.out.println(String.format(
-                    "{Level = %s, Health = %s, Attack = %s, Defense = %s, Special Attack = %s, Special Defense = %s, Speed = %s}",
-                    pokemon.getInformation().getCurrentLevel(), stats[0], stats[1], stats[2], stats[3], stats[4],
-                    stats[5]
+            System.out.println(String.format("{Level = %s, Health = %s, Attack = %s, Defense = %s, Special Attack = %s, Special Defense = %s, Speed = %s}",
+                                             pokemon.getInformation().getCurrentLevel(), stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]
             ));
         }
         System.out.println(pokemon.getInformation().getIndividualValue());
@@ -50,20 +46,15 @@ public class CalculateStats {
         stats[0] = calculateStat(true, health, individualValue.getHealth(), effortValue.getHealthEV());
         stats[1] = calculateStat(false, attack, individualValue.getAttack(), effortValue.getAttackEV());
         stats[2] = calculateStat(false, defense, individualValue.getDefense(), effortValue.getDefenseEV());
-        stats[3] = calculateStat(false, specialAttack, individualValue.getSpecialAttack(),
-                                 effortValue.getSpecialAttackEV()
-        );
-        stats[4] = calculateStat(false, specialDefense, individualValue.getSpecialDefense(),
-                                 effortValue.getSpecialDefenseEV()
-        );
+        stats[3] = calculateStat(false, specialAttack, individualValue.getSpecialAttack(), effortValue.getSpecialAttackEV());
+        stats[4] = calculateStat(false, specialDefense, individualValue.getSpecialDefense(), effortValue.getSpecialDefenseEV());
         stats[5] = calculateStat(false, speed, individualValue.getSpeed(), effortValue.getSpeedEV());
         return stats;
     }
     
     private int calculateStat(boolean healthStat, int statValue, int individualValueStat, int effortValueStat) {
         if(healthStat) {
-            return ((2 * statValue + individualValueStat + (effortValueStat / 4)) * currentLevel / 100) + 10 +
-                   currentLevel;
+            return ((2 * statValue + individualValueStat + (effortValueStat / 4)) * currentLevel / 100) + 10 + currentLevel;
         } else {
             return (((2 * statValue + individualValueStat + (effortValueStat / 4)) * currentLevel / 100) + 5) * 1;
         }

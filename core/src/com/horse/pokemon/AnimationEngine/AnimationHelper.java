@@ -40,8 +40,7 @@ public class AnimationHelper {
         return AnimationInterface.class.isAssignableFrom(c) && c.isAnnotationPresent(AnimationInitializer.class);
     }
     
-    public void setUpAnimation(Object object)
-    throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public void setUpAnimation(Object object) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if(checkClassForAnimation(object.getClass())) {
             annotation = object.getClass().getAnnotation(AnimationInitializer.class);
             actionNames = getAnnotationValue();
@@ -54,11 +53,9 @@ public class AnimationHelper {
         }
     }
     
-    private String[] getAnnotationValue()
-    throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    private String[] getAnnotationValue() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if(annotation != null) {
-            return (String[])(annotation.annotationType().getMethod(AnimationInterface.initializeAnimationName)
-                                        .invoke(annotation));
+            return (String[])(annotation.annotationType().getMethod(AnimationInterface.initializeAnimationName).invoke(annotation));
         } else {
             return new String[] {""};
         }

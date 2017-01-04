@@ -107,8 +107,7 @@ public class MapCreator {
             return false;
         }
         MapCreator that = (MapCreator)o;
-        return Objects.equals(getTileObjects(), that.getTileObjects()) &&
-               Objects.equals(getStartPosition(), that.getStartPosition()) &&
+        return Objects.equals(getTileObjects(), that.getTileObjects()) && Objects.equals(getStartPosition(), that.getStartPosition()) &&
                Objects.equals(getConnections(), that.getConnections());
     }
 }

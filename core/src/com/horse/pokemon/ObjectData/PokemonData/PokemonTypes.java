@@ -1,4 +1,4 @@
-package com.horse.pokemon.Enums;
+package com.horse.pokemon.ObjectData.PokemonData;
 
 /**
  * All the pokemonTypes a PokemonData can possibly be.  All PokemonData can have a max of
@@ -8,6 +8,5 @@ package com.horse.pokemon.Enums;
  * all, which is always good to keep track of so every attack will be worth the whole turn.
  */
 public enum PokemonTypes {
-    NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHT, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK,
-    STEEL, FAIRY
+    NORMAL, FIRE, WATER, ELECTRIC, GRASS, ICE, FIGHT, POISON, GROUND, FLYING, PSYCHIC, BUG, ROCK, GHOST, DRAGON, DARK, STEEL, FAIRY
 }

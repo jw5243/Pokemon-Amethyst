@@ -1,6 +1,4 @@
-package com.horse.pokemon.Enums;
-
-import com.horse.pokemon.ObjectData.PokemonData.PokemonInformation;
+package com.horse.pokemon.ObjectData.PokemonData;
 
 /**
  * All the possible stats a PokemonData can have, all of which affects the amount of damage done to

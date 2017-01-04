@@ -17,8 +17,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
-import com.horse.pokemon.Enums.TextSpeeds;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
+import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.TextSpeeds;
 import com.horse.pokemon.ObjectData.Players.User;
 
 public class MainGameScreen implements Screen {
@@ -110,9 +110,7 @@ public class MainGameScreen implements Screen {
     public void show() {
         setAtlas(new TextureAtlas(User.getUserInformation()));
         setCamera(new OrthographicCamera());
-        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(),
-                                    Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()
-        ));
+        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
         setHud(new Hud(getEngine()));
         setMapLoader(new TmxMapLoader());
         
@@ -123,9 +121,8 @@ public class MainGameScreen implements Screen {
         
         setUser(new User(this, getMapCreator()));
         
-        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
-                                 getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
-        );
+        getCamera().position
+                .set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
@@ -247,18 +244,13 @@ public class MainGameScreen implements Screen {
         int mapWidth  = (int)(getMap().getProperties().get("width"));
         int mapHeight = (int)(getMap().getProperties().get("height"));
         
-        getCamera().position.x = (mapWidth > getCamera().viewportWidth) ? MathUtils.clamp(getUser().getPositionX(),
-                                                                                          halfViewportWidth, mapWidth *
-                                                                                                             Engine.getTileSize() -
-                                                                                                             halfViewportWidth
-        ) : getUser().getPositionX();
+        getCamera().position.x = (mapWidth > getCamera().viewportWidth) ?
+                                 MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth) :
+                                 getUser().getPositionX();
         
-        getCamera().position.y = (mapHeight > getCamera().viewportHeight) ? MathUtils.clamp(getUser().getPositionY(),
-                                                                                            halfViewportHeight,
-                                                                                            mapHeight *
-                                                                                            Engine.getTileSize() -
-                                                                                            halfViewportHeight
-        ) : getUser().getPositionY();
+        getCamera().position.y = (mapHeight > getCamera().viewportHeight) ?
+                                 MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight) :
+                                 getUser().getPositionY();
         
         getCamera().update();
         getRenderer().setView(getCamera());

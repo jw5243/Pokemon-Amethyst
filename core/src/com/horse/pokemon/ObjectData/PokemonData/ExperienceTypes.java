@@ -1,4 +1,4 @@
-package com.horse.pokemon.Enums;
+package com.horse.pokemon.ObjectData.PokemonData;
 
 /**
  * Types of experience all PokemonData can have.

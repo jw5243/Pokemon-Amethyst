@@ -23,8 +23,7 @@ public class HandleInput {
         });
     }
     
-    public HandleInput(Action pressedUp, Action pressedDown, Action pressedRight, Action pressedLeft,
-                       Action pressedNone) {
+    public HandleInput(Action pressedUp, Action pressedDown, Action pressedRight, Action pressedLeft, Action pressedNone) {
         setFunctionality("pressedUp", pressedUp);
         setFunctionality("pressedDown", pressedDown);
         setFunctionality("pressedRight", pressedRight);

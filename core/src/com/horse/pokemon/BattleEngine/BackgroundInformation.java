@@ -8,23 +8,17 @@ public enum BackgroundInformation implements Disposable {
         public void dispose() {
             getBackgroundData().dispose();
         }
-    }, CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png",
-                 "Battlebacks\\playerbaseCaveDark.png"
-    ) {
+    }, CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png", "Battlebacks\\playerbaseCaveDark.png") {
         @Override
         public void dispose() {
             getBackgroundData().dispose();
         }
-    }, CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png",
-                   "Battlebacks\\playerbaseCaveDarker.png"
-    ) {
+    }, CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png", "Battlebacks\\playerbaseCaveDarker.png") {
         @Override
         public void dispose() {
             getBackgroundData().dispose();
         }
-    }, CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png",
-                "Battlebacks\\playerbaseChampion.png"
-    ) {
+    }, CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png", "Battlebacks\\playerbaseChampion.png") {
         @Override
         public void dispose() {
             getBackgroundData().dispose();

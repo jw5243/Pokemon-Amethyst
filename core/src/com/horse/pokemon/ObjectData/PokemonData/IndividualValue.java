@@ -1,17 +1,16 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
-import com.horse.pokemon.Enums.StatTypes;
 import com.horse.pokemon.RandomNumberGenerator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static com.horse.pokemon.Enums.StatTypes.ATTACK;
-import static com.horse.pokemon.Enums.StatTypes.DEFENSE;
-import static com.horse.pokemon.Enums.StatTypes.HEALTH;
-import static com.horse.pokemon.Enums.StatTypes.SPECIAL_ATTACK;
-import static com.horse.pokemon.Enums.StatTypes.SPECIAL_DEFENSE;
-import static com.horse.pokemon.Enums.StatTypes.SPEED;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.ATTACK;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.DEFENSE;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.HEALTH;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.SPECIAL_ATTACK;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.SPECIAL_DEFENSE;
+import static com.horse.pokemon.ObjectData.PokemonData.StatTypes.SPEED;
 
 public class IndividualValue {
     private ArrayList<StatTypes> statTypesArrayList;
@@ -23,8 +22,7 @@ public class IndividualValue {
     private int                  speed;
     
     public IndividualValue() {
-        statTypesArrayList =
-                new ArrayList<>(Arrays.asList(HEALTH, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED));
+        statTypesArrayList = new ArrayList<>(Arrays.asList(HEALTH, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED));
         
         do {
             int randomStatIndex = RandomNumberGenerator.generateNumber(0, statTypesArrayList.toArray().length - 1);
@@ -118,9 +116,8 @@ public class IndividualValue {
     
     @Override
     public String toString() {
-        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " +
-                             "Special Attack IV = %s, Speed IV = %s}", health, attack, defense, specialAttack,
-                             specialDefense, speed
+        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " + "Special Attack IV = %s, Speed IV = %s}",
+                             health, attack, defense, specialAttack, specialDefense, speed
         );
     }
 }

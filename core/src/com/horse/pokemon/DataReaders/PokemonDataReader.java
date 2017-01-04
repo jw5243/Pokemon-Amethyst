@@ -1,13 +1,13 @@
 package com.horse.pokemon.DataReaders;
 
-import com.horse.pokemon.Enums.ExperienceTypes;
-import com.horse.pokemon.Enums.PokemonTypes;
-import com.horse.pokemon.Enums.StatTypes;
 import com.horse.pokemon.ObjectData.PokemonData.EffortValue;
+import com.horse.pokemon.ObjectData.PokemonData.ExperienceTypes;
 import com.horse.pokemon.ObjectData.PokemonData.Moves;
 import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonExperience;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonInformation;
+import com.horse.pokemon.ObjectData.PokemonData.PokemonTypes;
+import com.horse.pokemon.ObjectData.PokemonData.StatTypes;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -79,9 +79,7 @@ public final class PokemonDataReader {
                 Collections.addAll(moveValues, value.split(":"));
             }
             for(int moveValueIndex = 0; moveValueIndex < moveValues.size(); moveValueIndex += 2) {
-                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex).trim()),
-                             MoveDataReader.getMove(moveValues.get(moveValueIndex + 1).trim())
-                );
+                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex).trim()), MoveDataReader.getMove(moveValues.get(moveValueIndex + 1).trim()));
             }
         }
         pokemon.getInformation().setMoveList(moveList);
@@ -99,10 +97,8 @@ public final class PokemonDataReader {
             effortValueMethod = (statType == StatTypes.HEALTH) ? pokemonEffortValues::setImmutableHealthEV :
                                 (statType == StatTypes.ATTACK) ? pokemonEffortValues::setImmutableAttackEV :
                                 (statType == StatTypes.DEFENSE) ? pokemonEffortValues::setImmutableDefenseEV :
-                                (statType == StatTypes.SPECIAL_ATTACK) ?
-                                pokemonEffortValues::setImmutableSpecialAttackEV :
-                                (statType == StatTypes.SPECIAL_DEFENSE) ?
-                                pokemonEffortValues::setImmutableSpecialDefenseEV :
+                                (statType == StatTypes.SPECIAL_ATTACK) ? pokemonEffortValues::setImmutableSpecialAttackEV :
+                                (statType == StatTypes.SPECIAL_DEFENSE) ? pokemonEffortValues::setImmutableSpecialDefenseEV :
                                 pokemonEffortValues::setImmutableSpeedEV;
             effortValueMethod.setEffortValue(Integer.parseInt(effortValue.get(index + 1)));
         }
@@ -123,8 +119,7 @@ public final class PokemonDataReader {
         pokemon.getInformation().setCurrentSpecialAttack(pokemon.getInformation().getBaseStats()[3]);
         pokemon.getInformation().setCurrentSpecialDefense(pokemon.getInformation().getBaseStats()[4]);
         pokemon.getInformation().setCurrentSpeed(pokemon.getInformation().getBaseStats()[5]);
-        pokemon.getInformation()
-               .setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
+        pokemon.getInformation().setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
         
         return pokemon;
     }

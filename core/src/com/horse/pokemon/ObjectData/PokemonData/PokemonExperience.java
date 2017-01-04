@@ -1,7 +1,5 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
-import com.horse.pokemon.Enums.ExperienceTypes;
-
 /**
  * Experience Object for PokemonData, allowing for getting a PokemonData's
  * current level based on their <code>currentExperience</code>.
@@ -48,8 +46,7 @@ public class PokemonExperience {
             } else if(experienceType == ExperienceTypes.SLOW) {
                 return (5 * getLevel() * getLevel() * getLevel() / 4);
             } else if(experienceType == ExperienceTypes.MEDIUM_SLOW) {
-                return (int)((1.2 * getLevel() * getLevel() * getLevel() -
-                              (15 * getLevel() * getLevel() + (100 * getLevel()) - 140)));
+                return (int)((1.2 * getLevel() * getLevel() * getLevel() - (15 * getLevel() * getLevel() + (100 * getLevel()) - 140)));
             } else if(experienceType == ExperienceTypes.MEDIUM_FAST) {
                 return (int)(Math.pow(getLevel(), 3));
             } else if(experienceType == ExperienceTypes.FAST) {
@@ -84,18 +81,12 @@ public class PokemonExperience {
             } else if(experienceType == ExperienceTypes.SLOW) {
                 return (int)(Math.cbrt(0.8 * currentExperience));
             } else if(experienceType == ExperienceTypes.MEDIUM_SLOW) {
-                return (int)((Math.cbrt(
-                        (((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) -
-                         (-140 / (2 * 1.2))) + Math.sqrt(Math.pow(
-                                -Math.pow(-15, 3) + ((-15 * 100) / (Math.pow(6 * 1.2, 2)) - (-140 / (2 * 1.2))), 2) +
-                                                         (100 / (3 * 1.2) -
-                                                          (Math.pow(-15, 2) / (9 * Math.pow(1.2, 2)))))) + Math.cbrt(
-                        (((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) -
-                         (-140 / (2 * 1.2))) - Math.sqrt(Math.pow(
-                                -Math.pow(-15, 3) + ((-15 * 100) / (Math.pow(6 * 1.2, 2)) - (-140 / (2 * 1.2))), 2) +
-                                                         (100 / (3 * 1.2) -
-                                                          (Math.pow(-15, 2) / (9 * Math.pow(1.2, 2))))))) -
-                             (-15 / (3 * 1.2)));
+                return (int)((Math.cbrt((((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) - (-140 / (2 * 1.2))) +
+                                        Math.sqrt(Math.pow(-Math.pow(-15, 3) + ((-15 * 100) / (Math.pow(6 * 1.2, 2)) - (-140 / (2 * 1.2))), 2) +
+                                                  (100 / (3 * 1.2) - (Math.pow(-15, 2) / (9 * Math.pow(1.2, 2)))))) + Math.cbrt(
+                        (((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) - (-140 / (2 * 1.2))) - Math.sqrt(
+                                Math.pow(-Math.pow(-15, 3) + ((-15 * 100) / (Math.pow(6 * 1.2, 2)) - (-140 / (2 * 1.2))), 2) +
+                                (100 / (3 * 1.2) - (Math.pow(-15, 2) / (9 * Math.pow(1.2, 2))))))) - (-15 / (3 * 1.2)));
             } else if(experienceType == ExperienceTypes.MEDIUM_FAST) {
                 return (int)(Math.cbrt(currentExperience));
             } else if(experienceType == ExperienceTypes.FAST) {
@@ -113,8 +104,6 @@ public class PokemonExperience {
     
     @Override
     public String toString() {
-        return String.format("{Experience Type = %s, Experience Value = %s, Level = %s}", experienceType,
-                             currentExperience, getLevel()
-        );
+        return String.format("{Experience Type = %s, Experience Value = %s, Level = %s}", experienceType, currentExperience, getLevel());
     }
 }

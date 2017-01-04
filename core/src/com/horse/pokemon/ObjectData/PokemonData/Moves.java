@@ -1,7 +1,5 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
-import com.horse.pokemon.Enums.PokemonTypes;
-
 public class Moves {
     private String       name;
     private String       category;
@@ -114,12 +112,10 @@ public class Moves {
     
     @Override
     public String toString() {
-        return String.format(
-                "{Name = %s, Category = %s, Move Type = %s, Power Points = %s, Base Power = %s, Accuracy = %s, " +
-                "Effect = %s, TM Number = %s, Speed Priority = %s, Battle Effect = %s, Secondary Effect = %s, " +
-                "Current Power Points = %s}", getName(), getCategory(), getMoveType(), getPowerPoints(), getBasePower(),
-                getAccuracy(), getEffect(), getTechnicalMachine(), getSpeedPriority(), getBattleEffect(),
-                getSecondaryEffect(), getCurrentPowerPoints()
+        return String.format("{Name = %s, Category = %s, Move Type = %s, Power Points = %s, Base Power = %s, Accuracy = %s, " +
+                             "Effect = %s, TM Number = %s, Speed Priority = %s, Battle Effect = %s, Secondary Effect = %s, " + "Current Power Points = %s}",
+                             getName(), getCategory(), getMoveType(), getPowerPoints(), getBasePower(), getAccuracy(), getEffect(), getTechnicalMachine(),
+                             getSpeedPriority(), getBattleEffect(), getSecondaryEffect(), getCurrentPowerPoints()
         );
     }
 }

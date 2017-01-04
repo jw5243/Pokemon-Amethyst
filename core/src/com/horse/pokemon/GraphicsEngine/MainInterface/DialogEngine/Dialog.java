@@ -11,7 +11,6 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.Engine;
-import com.horse.pokemon.Enums.TextSpeeds;
 
 import java.util.ArrayList;
 
@@ -31,8 +30,7 @@ public class Dialog extends Actor implements Disposable {
     private int                        currentCharacterYPosition;
     private ArrayList<CharacterWriter> characterWriterArrayList;
     
-    public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds,
-                  String text) {
+    public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds, String text) {
         setViewport(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()));
         setStage(new Stage(getViewport(), engine.getBatch()));
         setBatch(engine.getBatch());
@@ -66,20 +64,18 @@ public class Dialog extends Actor implements Disposable {
     
     private void setupCharactersToWrite() {
         setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() -
-                                     CharacterWriter.getDefaultCharacterStartYPositionBuffer());
+        setCurrentCharacterYPosition(
+                getyPosition() + getySize() - DialogCharacter.getDefaultHeight() - CharacterWriter.getDefaultCharacterStartYPositionBuffer());
         for(char character : getText().toCharArray()) {
-            CharacterWriter characterWriter =
-                    new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
+            CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
             
             //getStage().addActor(characterWriter);
             getCharacterWriterArrayList().add(characterWriter);
             
             setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
-            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
-               CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
-                setCurrentCharacterXPosition(
-                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >=
+               getxPosition() + getxSize()) {
+                setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                 setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
             }
         }
