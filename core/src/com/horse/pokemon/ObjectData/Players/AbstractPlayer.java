@@ -1,7 +1,6 @@
 package com.horse.pokemon.ObjectData.Players;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
 
 /**
@@ -25,8 +24,7 @@ public abstract class AbstractPlayer extends Actor {
      */
     private Pokemon[] currentPokemon = new Pokemon[MAX_POKEMON];
     
-    protected AbstractPlayer(MainGameScreen screen, String fileName) {
-        //super(screen.getAtlas().findRegion(fileName));
+    protected AbstractPlayer() {
     }
     
     /**
@@ -43,10 +41,8 @@ public abstract class AbstractPlayer extends Actor {
     /**
      * Sets a specific index of the {@link #currentPokemon} instance.
      *
-     * @param currentPokemon
-     *         {@link #currentPokemon}
-     * @param Index
-     *         {@link Integer} representing the index of the PokemonData slot to set or replace.
+     * @param currentPokemon {@link #currentPokemon}
+     * @param Index          {@link Integer} representing the index of the PokemonData slot to set or replace.
      */
     public void setCurrentPokemon(Pokemon currentPokemon, int Index) {
         this.currentPokemon[Index] = currentPokemon;
@@ -64,8 +60,7 @@ public abstract class AbstractPlayer extends Actor {
     /**
      * Sets the {@link #name}.
      *
-     * @param name
-     *         {@link #name}
+     * @param name {@link #name}
      */
     public void setName(String name) {
         this.name = name;
@@ -83,8 +78,7 @@ public abstract class AbstractPlayer extends Actor {
     /**
      * Sets the {@link #currentPokemon} (All slots).
      *
-     * @param currentPokemon
-     *         {@link #currentPokemon}
+     * @param currentPokemon {@link #currentPokemon}
      */
     public void setCurrentPokemon(Pokemon[] currentPokemon) {
         this.currentPokemon = currentPokemon;

@@ -27,12 +27,10 @@ public class PokemonExperience {
     
     /**
      * Class Constructor.
-     * <p>
      * {@code this.currentExperience} is set to 0 at initialization so each PokemonData using
      * {@link PokemonExperience} will start at the smallest possible value in terms of experience points.
      *
-     * @param experienceType
-     *         to add variety to the amount of experience required for each PokemonData. Declared at {@link Pokemon}
+     * @param experienceType to add variety to the amount of experience required for each PokemonData. Declared at {@link Pokemon}
      */
     public PokemonExperience(ExperienceTypes experienceType) {
         this.currentExperience = DEFAULT_EXPERIENCE;
@@ -66,7 +64,6 @@ public class PokemonExperience {
      * Switch-Case returns the PokemonData's level based on its {@code experienceTypes} and {@code currentExperience}.
      * All return statements are casted so that all the level turnouts are truncated.  The default case should not be
      * called at any time, otherwise the {@code getLevel} will throw a new {@code IllegalStateException}.
-     * <p>
      * Formula for finding <code>MediumSlow</code> and credited to:
      *
      * @return Number for what level a PokemonData is at after an experience change.

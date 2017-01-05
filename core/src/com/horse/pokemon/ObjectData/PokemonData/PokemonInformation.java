@@ -151,8 +151,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #individualValue}.
      *
-     * @param individualValue
-     *         {@link #individualValue}
+     * @param individualValue {@link #individualValue}
      */
     public void setIndividualValue(IndividualValue individualValue) {
         this.individualValue = individualValue;
@@ -210,8 +209,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #name}.
      *
-     * @param name
-     *         {@link #name}
+     * @param name {@link #name}
      */
     public void setName(String name) {
         this.name = name;
@@ -229,8 +227,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #classification}.
      *
-     * @param classification
-     *         {@link #classification}
+     * @param classification {@link #classification}
      */
     public void setClassification(String classification) {
         this.classification = classification;
@@ -248,8 +245,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #pokedexNumber}.
      *
-     * @param pokedexNumber
-     *         {@link #pokedexNumber}
+     * @param pokedexNumber {@link #pokedexNumber}
      */
     public void setPokedexNumber(int pokedexNumber) {
         this.pokedexNumber = pokedexNumber;
@@ -267,8 +263,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #evolutionNumber}.
      *
-     * @param evolutionNumber
-     *         {@link #evolutionNumber}
+     * @param evolutionNumber {@link #evolutionNumber}
      */
     public void setEvolutionNumber(int evolutionNumber) {
         this.evolutionNumber = evolutionNumber;
@@ -286,8 +281,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #genderRatio}.
      *
-     * @param genderRatio
-     *         {@link #genderRatio}
+     * @param genderRatio {@link #genderRatio}
      */
     public void setGenderRatio(double genderRatio) {
         this.genderRatio = genderRatio;
@@ -305,8 +299,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #pokemonTypes}.
      *
-     * @param pokemonTypes
-     *         {@link #pokemonTypes}
+     * @param pokemonTypes {@link #pokemonTypes}
      */
     public void setPokemonTypes(PokemonTypes[] pokemonTypes) {
         this.pokemonTypes = pokemonTypes;
@@ -324,8 +317,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #height}.
      *
-     * @param height
-     *         {@link #height}
+     * @param height {@link #height}
      */
     public void setHeight(String height) {
         this.height = height;
@@ -343,8 +335,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #weight}.
      *
-     * @param weight
-     *         {@link #weight}
+     * @param weight {@link #weight}
      */
     public void setWeight(String weight) {
         this.weight = weight;
@@ -362,8 +353,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #captureRate}.
      *
-     * @param captureRate
-     *         {@link #captureRate}
+     * @param captureRate {@link #captureRate}
      */
     public void setCaptureRate(int captureRate) {
         this.captureRate = captureRate;
@@ -381,8 +371,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #baseEggSteps}.
      *
-     * @param baseEggSteps
-     *         {@link #baseEggSteps}
+     * @param baseEggSteps {@link #baseEggSteps}
      */
     public void setBaseEggSteps(int baseEggSteps) {
         this.baseEggSteps = baseEggSteps;
@@ -400,8 +389,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #ability}.
      *
-     * @param ability
-     *         {@link #ability}
+     * @param ability {@link #ability}
      */
     public void setAbility(String ability) {
         this.ability = ability;
@@ -419,8 +407,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #experienceRate}.
      *
-     * @param experienceRate
-     *         {@link #experienceRate}
+     * @param experienceRate {@link #experienceRate}
      */
     public void setExperienceRate(ExperienceTypes experienceRate) {
         this.experienceRate = experienceRate;
@@ -438,8 +425,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #baseHappiness}.
      *
-     * @param baseHappiness
-     *         {@link #baseHappiness}
+     * @param baseHappiness {@link #baseHappiness}
      */
     public void setBaseHappiness(int baseHappiness) {
         this.baseHappiness = baseHappiness;
@@ -457,8 +443,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #moveList}.
      *
-     * @param moveList
-     *         {@link #moveList}
+     * @param moveList {@link #moveList}
      */
     public void setMoveList(HashMap<Integer, Moves> moveList) {
         this.moveList = moveList;
@@ -476,8 +461,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #effortValue}.
      *
-     * @param effortValue
-     *         {@link #effortValue}
+     * @param effortValue {@link #effortValue}
      */
     public void setEffortValue(EffortValue effortValue) {
         this.effortValue = effortValue;
@@ -495,8 +479,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #baseStats}.
      *
-     * @param baseStats
-     *         {@link #baseStats}
+     * @param baseStats {@link #baseStats}
      */
     public void setBaseStats(int[] baseStats) {
         this.baseStats = baseStats;
@@ -514,8 +497,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentLevel}.
      *
-     * @param currentLevel
-     *         {@link #currentLevel}
+     * @param currentLevel {@link #currentLevel}
      */
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
@@ -533,8 +515,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentHealth}.
      *
-     * @param currentHealth
-     *         {@link #currentHealth}
+     * @param currentHealth {@link #currentHealth}
      */
     public void setCurrentHealth(int currentHealth) {
         this.currentHealth = currentHealth;
@@ -552,8 +533,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentAttack}.
      *
-     * @param currentAttack
-     *         {@link #currentAttack}
+     * @param currentAttack {@link #currentAttack}
      */
     public void setCurrentAttack(int currentAttack) {
         this.currentAttack = currentAttack;
@@ -571,8 +551,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentDefense}.
      *
-     * @param currentDefense
-     *         {@link #currentDefense}
+     * @param currentDefense {@link #currentDefense}
      */
     public void setCurrentDefense(int currentDefense) {
         this.currentDefense = currentDefense;
@@ -590,8 +569,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentSpecialAttack}.
      *
-     * @param currentSpecialAttack
-     *         {@link #currentSpecialAttack}
+     * @param currentSpecialAttack {@link #currentSpecialAttack}
      */
     public void setCurrentSpecialAttack(int currentSpecialAttack) {
         this.currentSpecialAttack = currentSpecialAttack;
@@ -609,8 +587,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentSpecialDefense}.
      *
-     * @param currentSpecialDefense
-     *         {@link #currentSpecialDefense}
+     * @param currentSpecialDefense {@link #currentSpecialDefense}
      */
     public void setCurrentSpecialDefense(int currentSpecialDefense) {
         this.currentSpecialDefense = currentSpecialDefense;
@@ -628,8 +605,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentSpeed}.
      *
-     * @param currentSpeed
-     *         {@link #currentSpeed}
+     * @param currentSpeed {@link #currentSpeed}
      */
     public void setCurrentSpeed(int currentSpeed) {
         this.currentSpeed = currentSpeed;
@@ -647,8 +623,7 @@ public class PokemonInformation {
     /**
      * Sets the {@link #currentExperience}.
      *
-     * @param currentExperience
-     *         {@link #currentExperience}
+     * @param currentExperience {@link #currentExperience}
      */
     public void setCurrentExperience(PokemonExperience currentExperience) {
         this.currentExperience = currentExperience;

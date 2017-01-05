@@ -5,15 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.horse.pokemon.AnimationEngine.AnimationInitializer;
 import com.horse.pokemon.AnimationEngine.AnimationInterface;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MapCreator;
 import com.horse.pokemon.ObjectData.TiledObjects.TileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
@@ -24,8 +25,13 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Class acting as the protagonist in the Pokemon game, acting as the graphics, input, and movement for the character.
+ * Class acting as the protagonist in the Pokemon game, acting as the graphics, input, and movement for the character.  {@code User} is also generally used
+ * as the center of the camera of the screen.  {@code User} extends {@link AbstractPlayer} which then extends {@link Actor}, so the user can be added onto
+ * the screen using a {@link Stage}, where the {@code User}'s {@link #draw(Batch, float)} is overridden to draw the sprite that this class stores.  A user
+ * instance is created with a {@code MapCreator}.  In the render method of the screen, a {@code Stage} has to have an instance of {@code User} and be
+ * calling {@link Stage#draw()} to draw the user every frame.
  *
+ * @see Stage
  * @see AbstractPlayer
  * @see Actor
  * @see AnimationInterface
@@ -37,14 +43,41 @@ import java.util.function.Supplier;
  * @see Rectangle
  */
 public final class User extends AbstractPlayer implements AnimationInterface {
-    private static final int    USER_WALK_WIDTH        = 16;
-    private static final int    USER_WALK_HEIGHT       = 19;
-    private static final int    USER_SWIM_WIDTH        = 22;
-    private static final int    USER_SWIM_HEIGHT       = 24;
-    private static final char   UP                     = 'U';
-    private static final char   DOWN                   = 'D';
-    private static final char   RIGHT                  = 'R';
-    private static final char   LEFT                   = 'L';
+    /**
+     * The {@code int} instance representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User}
+     * when in the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how
+     * big the user is drawn every frame x-wise.
+     */
+    private static final byte USER_WALK_WIDTH = 16;
+    
+    /**
+     * The {@code int} instance representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User}
+     * when in the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how
+     * big the user is draw every frame y-wise.
+     */
+    private static final byte USER_WALK_HEIGHT = 19;
+    
+    /**
+     * The {@code int} instance representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User}
+     * when in the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how
+     * big the user is drawn every frame x-wise.
+     */
+    private static final byte USER_SWIM_WIDTH = 22;
+    
+    /**
+     * The {@code int} instance representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User}
+     * when in the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how
+     * big the user is drawn every frame y-wise.
+     */
+    private static final byte USER_SWIM_HEIGHT = 24;
+    
+    /**
+     *
+     */
+    private static final byte   UP                     = 1;
+    private static final byte   DOWN                   = 2;
+    private static final byte   RIGHT                  = 3;
+    private static final byte   LEFT                   = 4;
     private static final float  ANIMATION_SPEED        = 0.5f;
     private static final String USER_INFORMATION       = "User\\GDX_Users\\User.pack";
     private static final String USER_ATLAS_REGION_NAME = "SpriteSheetUser";
@@ -53,10 +86,10 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     private final Animation[]     userWalk;
     private final Animation[]     userSwim;
     private final HandleInput     handleInput;
+    private final Sprite          userSprite;
     private       MapCreator      mapCreator;
-    private       Sprite          userSprite;
     private       Rectangle       currentCollisionRectangle;
-    private       State           previousState;
+    private       PlayerActions   previousState;
     private       float           positionX;
     private       float           positionY;
     private       float           stateTimer;
@@ -64,11 +97,9 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     private       boolean         aligned;
     private       boolean         futureCollision;
     private       boolean         swimming;
-    private       char            direction;
+    private       byte            direction;
     
-    public User(MainGameScreen screen, MapCreator mapCreator) {
-        super(screen, getUserAtlasRegionName());
-        
+    public User(MapCreator mapCreator) {
         setPreviousState(getCurrentState());
         
         setStateTimer(0);
@@ -79,7 +110,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setFutureCollision(false);
         setSwimming(false);
         
-        setUserSprite(new Sprite(screen.getAtlas().findRegion(getUserAtlasRegionName())));
+        userSprite = new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
         
         setMapCreator(mapCreator);
         
@@ -133,19 +164,19 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         });
     }
     
-    private static char getUP() {
+    private static byte getUP() {
         return UP;
     }
     
-    private static char getDOWN() {
+    private static byte getDOWN() {
         return DOWN;
     }
     
-    private static char getRIGHT() {
+    private static byte getRIGHT() {
         return RIGHT;
     }
     
-    private static char getLEFT() {
+    private static byte getLEFT() {
         return LEFT;
     }
     
@@ -153,23 +184,23 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return USER_ATLAS_REGION_NAME;
     }
     
-    private static int getUserSwimWidth() {
+    private static byte getUserSwimWidth() {
         return USER_SWIM_WIDTH;
     }
     
-    private static int getUserSwimHeight() {
+    private static byte getUserSwimHeight() {
         return USER_SWIM_HEIGHT;
     }
     
-    public static String getUserInformation() {
+    private static String getUserInformation() {
         return USER_INFORMATION;
     }
     
-    private static int getUserWalkWidth() {
+    private static byte getUserWalkWidth() {
         return USER_WALK_WIDTH;
     }
     
-    private static int getUserWalkHeight() {
+    private static byte getUserWalkHeight() {
         return USER_WALK_HEIGHT;
     }
     
@@ -250,10 +281,6 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     private Sprite getUserSprite() {
         return userSprite;
-    }
-    
-    private void setUserSprite(Sprite userSprite) {
-        this.userSprite = userSprite;
     }
     
     private boolean isFutureCollision() {
@@ -421,39 +448,35 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         
         setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
         setPreviousState(getCurrentState());
-        return (getCurrentState() == State.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
-                                                      (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
-                                                      (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
-                                                      (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-               (getCurrentState() == State.SWIMMING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
-                                                       (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
-                                                       (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
-                                                       (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ?
-                                                                                                                        (getDirection() == getUP()) ?
-                                                                                                                        getUserIdleOnWater()[0] :
-                                                                                                                        (getDirection() == getDOWN()) ?
-                                                                                                                        getUserIdleOnWater()[1] :
-                                                                                                                        (getDirection() == getRIGHT()) ?
-                                                                                                                        getUserIdleOnWater()[2] :
-                                                                                                                        getUserIdleOnWater()[3] :
-                                                                                                                        (getDirection() == getUP()) ?
-                                                                                                                        getUserIdleOnLand()[0] :
-                                                                                                                        (getDirection() == getDOWN()) ?
-                                                                                                                        getUserIdleOnLand()[1] :
-                                                                                                                        (getDirection() == getRIGHT()) ?
-                                                                                                                        getUserIdleOnLand()[2] :
-                                                                                                                        getUserIdleOnLand()[3];
+        return (getCurrentState() == PlayerActions.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getDOWN()) ?
+                                                              (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getRIGHT()) ?
+                                                              (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
+                                                              (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
+               (getCurrentState() == PlayerActions.SWIMMING) ?
+               (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
+               (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
+               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
+               (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ? (getDirection() == getUP()) ? getUserIdleOnWater()[0] :
+                                                                                                 (getDirection() == getDOWN()) ? getUserIdleOnWater()[1] :
+                                                                                                 (getDirection() == getRIGHT()) ? getUserIdleOnWater()[2] :
+                                                                                                 getUserIdleOnWater()[3] :
+                                                                                (getDirection() == getUP()) ? getUserIdleOnLand()[0] :
+                                                                                (getDirection() == getDOWN()) ? getUserIdleOnLand()[1] :
+                                                                                (getDirection() == getRIGHT()) ? getUserIdleOnLand()[2] :
+                                                                                getUserIdleOnLand()[3];
     }
     
-    private State getCurrentState() {
+    private PlayerActions getCurrentState() {
         if(isMoving()) {
             if(isSwimming()) {
-                return State.SWIMMING;
+                return PlayerActions.SWIMMING;
             } else {
-                return State.WALKING;
+                return PlayerActions.WALKING;
             }
         } else {
-            return State.IDLE;
+            return PlayerActions.IDLE;
         }
     }
     
@@ -469,11 +492,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         this.stateTimer = stateTimer;
     }
     
-    private State getPreviousState() {
+    private PlayerActions getPreviousState() {
         return previousState;
     }
     
-    private void setPreviousState(State previousState) {
+    private void setPreviousState(PlayerActions previousState) {
         this.previousState = previousState;
     }
     
@@ -487,7 +510,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if((getCurrentState() == State.IDLE && !isSwimming()) || getCurrentState() == State.WALKING) {
+        if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING) {
             batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2, getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(),
                        getUserWalkHeight()
             );
@@ -498,11 +521,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         }
     }
     
-    private char getDirection() {
+    private byte getDirection() {
         return direction;
     }
     
-    private void setDirection(char direction) {
+    private void setDirection(byte direction) {
         this.direction = direction;
     }
     
@@ -512,19 +535,5 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     private void setAligned(boolean aligned) {
         this.aligned = aligned;
-    }
-    
-    private enum State {
-        IDLE(0f), WALKING(1f), RUNNING(2f), BIKING(3f), SWIMMING(1f), USING_HM_MOVE(0f), FISHING(0f), IN_BATTLE(0f);
-        
-        float speed;
-        
-        State(float speed) {
-            this.speed = speed;
-        }
-        
-        public float getSpeed() {
-            return speed;
-        }
     }
 }

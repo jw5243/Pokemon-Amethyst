@@ -19,20 +19,13 @@ public class AnimationManager {
     /**
      * Method for organizing an {@link Animation} object with the given paramters when the action strip has altering x-positions and y-positions.
      *
-     * @param textureSheet
-     *         Texture representing all the frames for animation.
-     * @param frames
-     *         Amount of animation pictures for a specific action.
-     * @param frameDuration
-     *         The time between frames in seconds.
-     * @param xPositions
-     *         The left-most position of each frame in order.  Should be same length as parameter frames.
-     * @param yPositions
-     *         The upper-most position of each frame in order.  Should be same length as parameter frames.
-     * @param frameWidth
-     *         The standard width of a single frame.
-     * @param frameHeight
-     *         The standard height of a single frame.
+     * @param textureSheet  Texture representing all the frames for animation.
+     * @param frames        Amount of animation pictures for a specific action.
+     * @param frameDuration The time between frames in seconds.
+     * @param xPositions    The left-most position of each frame in order.  Should be same length as parameter frames.
+     * @param yPositions    The upper-most position of each frame in order.  Should be same length as parameter frames.
+     * @param frameWidth    The standard width of a single frame.
+     * @param frameHeight   The standard height of a single frame.
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
@@ -66,20 +59,13 @@ public class AnimationManager {
     /**
      * Method for organizing an {@link Animation} object with the given paramters when the action strip is all horizontal with the same top-most y-position.
      *
-     * @param textureSheet
-     *         Texture representing all the frames for animation.
-     * @param frames
-     *         Amount of animation pictures for a specific action.
-     * @param frameDuration
-     *         The time between frames in seconds.
-     * @param xPositions
-     *         The left-most position of each frame in order.  Should be same length as parameter frames.
-     * @param yPosition
-     *         The upper-most position of all frames.  Should be same length as parameter frames.
-     * @param frameWidth
-     *         The standard width of a single frame.
-     * @param frameHeight
-     *         The standard height of a single frame.
+     * @param textureSheet  Texture representing all the frames for animation.
+     * @param frames        Amount of animation pictures for a specific action.
+     * @param frameDuration The time between frames in seconds.
+     * @param xPositions    The left-most position of each frame in order.  Should be same length as parameter frames.
+     * @param yPosition     The upper-most position of all frames.  Should be same length as parameter frames.
+     * @param frameWidth    The standard width of a single frame.
+     * @param frameHeight   The standard height of a single frame.
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
@@ -105,20 +91,13 @@ public class AnimationManager {
     /**
      * Method for organizing an {@link Animation} object with the given paramters when the action strip is all vertical with the same left-most x-position.
      *
-     * @param textureSheet
-     *         Texture representing all the frames for animation.
-     * @param frames
-     *         Amount of animation pictures for a specific action.
-     * @param frameDuration
-     *         The time between frames in seconds.
-     * @param xPosition
-     *         The left-most position of all frames.  Should be same length as parameter frames.
-     * @param yPositions
-     *         The upper-most position of each frame in order.  Should be same length as parameter frames.
-     * @param frameWidth
-     *         The standard width of a single frame.
-     * @param frameHeight
-     *         The standard height of a single frame.
+     * @param textureSheet  Texture representing all the frames for animation.
+     * @param frames        Amount of animation pictures for a specific action.
+     * @param frameDuration The time between frames in seconds.
+     * @param xPosition     The left-most position of all frames.  Should be same length as parameter frames.
+     * @param yPositions    The upper-most position of each frame in order.  Should be same length as parameter frames.
+     * @param frameWidth    The standard width of a single frame.
+     * @param frameHeight   The standard height of a single frame.
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */

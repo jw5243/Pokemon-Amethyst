@@ -85,6 +85,8 @@ public class Engine extends Game {
         getScreen(screenTypes.INTRO_SCREEN).dispose();
         getScreen(screenTypes.MAIN_GAME_SCREEN).dispose();
         getScreen(screenTypes.BATTLE_SCREEN).dispose();
+    
+        System.out.println("Memory used: " + Runtime.getRuntime().totalMemory());
     }
     
     @Override

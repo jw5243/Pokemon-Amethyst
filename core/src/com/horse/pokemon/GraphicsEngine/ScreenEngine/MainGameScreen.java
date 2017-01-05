@@ -6,7 +6,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -23,7 +22,6 @@ import com.horse.pokemon.ObjectData.Players.User;
 
 public class MainGameScreen implements Screen {
     private Engine               engine;
-    private TextureAtlas         atlas;
     private OrthographicCamera   camera;
     private Viewport             viewport;
     private Hud                  hud;
@@ -98,17 +96,8 @@ public class MainGameScreen implements Screen {
         this.viewport = viewport;
     }
     
-    public TextureAtlas getAtlas() {
-        return atlas;
-    }
-    
-    public void setAtlas(TextureAtlas atlas) {
-        this.atlas = atlas;
-    }
-    
     @Override
     public void show() {
-        setAtlas(new TextureAtlas(User.getUserInformation()));
         setCamera(new OrthographicCamera());
         setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
         setHud(new Hud(getEngine()));
@@ -118,8 +107,8 @@ public class MainGameScreen implements Screen {
         setRenderer(new MultiTileMapRenderer(getMap(), 1.0f, getEngine().getBatch()));
         
         setMapCreator(new MapCreator(this, getMap()));
-        
-        setUser(new User(this, getMapCreator()));
+    
+        setUser(new User(getMapCreator()));
         
         getCamera().position
                 .set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
