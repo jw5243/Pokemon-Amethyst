@@ -244,7 +244,7 @@ public class MainGameScreen implements Screen {
         getRenderer().setView(getCamera());
     }
     
-    public MultiTileMapRenderer getRenderer() {
+    MultiTileMapRenderer getRenderer() {
         return renderer;
     }
     

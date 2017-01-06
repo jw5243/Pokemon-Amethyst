@@ -193,6 +193,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     private boolean swimming;
     
     /**
+     * The {@code boolean} instance representing if the {@code User} is able to move not in terms of collisions but during some scenes in the game.
+     */
+    private boolean restrictedMovement;
+    
+    /**
      * The {@code byte} instance representing where the {@code User} is pointing towards.
      */
     private byte direction;
@@ -214,6 +219,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setAligned(true);                    //Initializes aligned to true because the User should be placed correctly on the grid so that aligned should be true already.
         setFutureCollision(false);           //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
         setSwimming(false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
+        setRestrictedMovement(false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
         
         userSprite = new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
         
@@ -359,6 +365,14 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return USER_WALK_HEIGHT;
     }
     
+    private boolean isRestrictedMovement() {
+        return restrictedMovement;
+    }
+    
+    private void setRestrictedMovement(boolean restrictedMovement) {
+        this.restrictedMovement = restrictedMovement;
+    }
+    
     /**
      * Returns the {@link Rectangle} instance representing the collision box of the {@code User} to detect future collisions and special actions.
      *
@@ -500,7 +514,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     public void handleInput(float deltaTime) {
         getHandleInput().update(deltaTime);
-        if(!isAligned() && !isFutureCollision()) {
+        if(!isAligned() && !isFutureCollision() && !isRestrictedMovement()) {
             if(getDirection() == getUP()) {
                 setPositionY(getPositionY() + getCurrentState().getSpeed());
             } else if(getDirection() == getDOWN()) {
@@ -510,7 +524,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             } else if(getDirection() == getLEFT()) {
                 setPositionX(getPositionX() - getCurrentState().getSpeed());
             }
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && !isRestrictedMovement()) {
             AlterPlayerPosition alterPlayerPosition =
                     (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod.accept(getPositionMethod.get() + alterValue);
             

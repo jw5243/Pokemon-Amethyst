@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
 import com.badlogic.gdx.math.Vector2;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.C1;
@@ -122,9 +123,11 @@ public class MultiTileMapRenderer extends BatchTiledMapRenderer {
                     final int     rotations = cell.getRotation();
                     
                     TextureRegion region = tile.getTextureRegion();
-                    
-                    tile.setOffsetX(getOffsetX());
-                    tile.setOffsetY(getOffsetY());
+    
+                    if(!(tile instanceof AnimatedTiledMapTile)) {
+                        tile.setOffsetX(getOffsetX());
+                        tile.setOffsetY(getOffsetY());
+                    }
                     
                     float x1 = (x + tile.getOffsetX()) * unitScale;
                     float y1 = (y + tile.getOffsetY()) * unitScale;
