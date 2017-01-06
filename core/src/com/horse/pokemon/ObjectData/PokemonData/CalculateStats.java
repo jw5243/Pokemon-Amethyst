@@ -31,9 +31,10 @@ public class CalculateStats {
         Pokemon pokemon = PokemonDataReader.getPokemon("Bulbasaur");
         for(int i = 1; i <= 100; i++) {
             pokemon.getInformation().setCurrentLevel(i);
-            CalculateStats calculateStats = new CalculateStats(pokemon.getInformation().getBaseStats(), pokemon.getInformation().getCurrentLevel(),
-                                                               pokemon.getInformation().getIndividualValue(), pokemon.getInformation().getEffortValue()
-            );
+            CalculateStats calculateStats =
+                    new CalculateStats(pokemon.getInformation().getBaseStats(), pokemon.getInformation().getCurrentLevel(), pokemon.getInformation().getIndividualValue(),
+                                       pokemon.getInformation().getEffortValue()
+                    );
             int[] stats = calculateStats.getStats();
             System.out.println(String.format("{Level = %s, Health = %s, Attack = %s, Defense = %s, Special Attack = %s, Special Defense = %s, Speed = %s}",
                                              pokemon.getInformation().getCurrentLevel(), stats[0], stats[1], stats[2], stats[3], stats[4], stats[5]

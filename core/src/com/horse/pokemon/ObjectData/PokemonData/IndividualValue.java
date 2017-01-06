@@ -116,8 +116,8 @@ public class IndividualValue {
     
     @Override
     public String toString() {
-        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " + "Special Attack IV = %s, Speed IV = %s}",
-                             health, attack, defense, specialAttack, specialDefense, speed
+        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " + "Special Attack IV = %s, Speed IV = %s}", health, attack, defense,
+                             specialAttack, specialDefense, speed
         );
     }
 }

@@ -98,8 +98,7 @@ public final class PokemonDataReader {
                                 (statType == StatTypes.ATTACK) ? pokemonEffortValues::setImmutableAttackEV :
                                 (statType == StatTypes.DEFENSE) ? pokemonEffortValues::setImmutableDefenseEV :
                                 (statType == StatTypes.SPECIAL_ATTACK) ? pokemonEffortValues::setImmutableSpecialAttackEV :
-                                (statType == StatTypes.SPECIAL_DEFENSE) ? pokemonEffortValues::setImmutableSpecialDefenseEV :
-                                pokemonEffortValues::setImmutableSpeedEV;
+                                (statType == StatTypes.SPECIAL_DEFENSE) ? pokemonEffortValues::setImmutableSpecialDefenseEV : pokemonEffortValues::setImmutableSpeedEV;
             effortValueMethod.setEffortValue(Integer.parseInt(effortValue.get(index + 1)));
         }
         

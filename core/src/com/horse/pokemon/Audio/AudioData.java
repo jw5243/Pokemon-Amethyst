@@ -4,8 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
 
 public enum AudioData {
-    OPENING_MOVIE("Sounds\\001 Opening Movie.mp3"), INTRODUCTION("Sounds\\002 Introduction.mp3"),
-    START_SPECIAL_REPORT("Sounds\\003 Special Report_ _Search for the R.mp3"), TWINLEAF_TOWN_DAYTIME("Sounds\\004 Twinleaf Town (Day).mp3");
+    OPENING_MOVIE("Sounds\\001 Opening Movie.mp3"), INTRODUCTION("Sounds\\002 Introduction.mp3"), START_SPECIAL_REPORT("Sounds\\003 Special Report_ _Search for the R.mp3"),
+    TWINLEAF_TOWN_DAYTIME("Sounds\\004 Twinleaf Town (Day).mp3");
     
     private String audioPath;
     private Sound  audio;

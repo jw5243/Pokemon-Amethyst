@@ -64,8 +64,7 @@ public class Dialog extends Actor implements Disposable {
     
     private void setupCharactersToWrite() {
         setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-        setCurrentCharacterYPosition(
-                getyPosition() + getySize() - DialogCharacter.getDefaultHeight() - CharacterWriter.getDefaultCharacterStartYPositionBuffer());
+        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() - CharacterWriter.getDefaultCharacterStartYPositionBuffer());
         for(char character : getText().toCharArray()) {
             CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
             
@@ -73,8 +72,7 @@ public class Dialog extends Actor implements Disposable {
             getCharacterWriterArrayList().add(characterWriter);
             
             setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
-            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >=
-               getxPosition() + getxSize()) {
+            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
                 setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                 setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
             }

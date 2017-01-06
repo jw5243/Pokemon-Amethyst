@@ -20,8 +20,7 @@ public class EffortValue {
         this(0, 0, 0, 0, 0, 0);
     }
     
-    public EffortValue(int immutableHealthEV, int immutableAttackEV, int immutableDefenseEV, int immutableSpecialAttackEV, int immutableSpecialDefenseEV,
-                       int immutableSpeedEV) {
+    public EffortValue(int immutableHealthEV, int immutableAttackEV, int immutableDefenseEV, int immutableSpecialAttackEV, int immutableSpecialDefenseEV, int immutableSpeedEV) {
         resetEV();
         setImmutableHealthEV(immutableHealthEV);
         setImmutableAttackEV(immutableAttackEV);
@@ -115,10 +114,9 @@ public class EffortValue {
     @Override
     public String toString() {
         return String.format("{Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s, " +
-                             "Immutables: Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s}",
-                             getHealthEV(), getAttackEV(), getDefenseEV(), getSpecialAttackEV(), getSpecialDefenseEV(), getSpeedEV(),
-                             getImmutableHealthEV(), getImmutableAttackEV(), getImmutableDefenseEV(), getImmutableSpecialAttackEV(),
-                             getImmutableSpecialDefenseEV(), getImmutableSpeedEV()
+                             "Immutables: Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s}", getHealthEV(),
+                             getAttackEV(), getDefenseEV(), getSpecialAttackEV(), getSpecialDefenseEV(), getSpeedEV(), getImmutableHealthEV(), getImmutableAttackEV(),
+                             getImmutableDefenseEV(), getImmutableSpecialAttackEV(), getImmutableSpecialDefenseEV(), getImmutableSpeedEV()
         );
     }
     
@@ -145,8 +143,7 @@ public class EffortValue {
     }
     
     public void setDefenseEV(int defenseEV) {
-        this.defenseEV =
-                totalEV() + defenseEV <= MAX_EFFORT_VALUE_TOTAL ? getDefenseEV() + defenseEV : getDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
+        this.defenseEV = totalEV() + defenseEV <= MAX_EFFORT_VALUE_TOTAL ? getDefenseEV() + defenseEV : getDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
         this.defenseEV = getDefenseEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getDefenseEV();
     }
     
@@ -155,8 +152,8 @@ public class EffortValue {
     }
     
     public void setSpecialAttackEV(int specialAttackEV) {
-        this.specialAttackEV = totalEV() + specialAttackEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialAttackEV() + specialAttackEV :
-                               getSpecialAttackEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
+        this.specialAttackEV =
+                totalEV() + specialAttackEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialAttackEV() + specialAttackEV : getSpecialAttackEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
         this.specialAttackEV = getSpecialAttackEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getSpecialAttackEV();
     }
     
@@ -165,8 +162,8 @@ public class EffortValue {
     }
     
     public void setSpecialDefenseEV(int specialDefenseEV) {
-        this.specialDefenseEV = totalEV() + specialDefenseEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialDefenseEV() + specialDefenseEV :
-                                getSpecialDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
+        this.specialDefenseEV =
+                totalEV() + specialDefenseEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialDefenseEV() + specialDefenseEV : getSpecialDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
         this.specialDefenseEV = getSpecialDefenseEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getSpecialDefenseEV();
     }
     

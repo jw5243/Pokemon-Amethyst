@@ -163,11 +163,10 @@ public class PokemonInformation {
                                      "Gender Ratio = %s, Types = %s, Height = %s, Weight = %s, Capture Rate = %s, Base Egg Steps = %s, " +
                                      "Ability = %s, Experience Rate = %s, Base Happiness = %s, Move List = %s, Effort Value = %s, Base Stats = %s, " +
                                      "Level = %s, Health = %s, Attack = %s, Defense = %s, Special Attack = %s, Special Defense = %s, Speed = %s, " +
-                                     "Experience = %s, Individual Values = %s}", getName(), getClassification(), getPokedexNumber(), getEvolutionNumber(),
-                                     getGenderRatio(), Arrays.toString(getPokemonTypes()), getHeight(), getWeight(), getCaptureRate(), getBaseEggSteps(),
-                                     getAbility(), getExperienceRate(), getBaseHappiness(), getMoveList(), getEffortValue(),
-                                     Arrays.toString(getBaseStats()), getCurrentLevel(), getCurrentHealth(), getCurrentAttack(), getCurrentDefense(),
-                                     getCurrentSpecialAttack(), getCurrentSpecialDefense(), getCurrentSpeed(), getCurrentExperience(), getIndividualValue()
+                                     "Experience = %s, Individual Values = %s}", getName(), getClassification(), getPokedexNumber(), getEvolutionNumber(), getGenderRatio(),
+                                     Arrays.toString(getPokemonTypes()), getHeight(), getWeight(), getCaptureRate(), getBaseEggSteps(), getAbility(), getExperienceRate(),
+                                     getBaseHappiness(), getMoveList(), getEffortValue(), Arrays.toString(getBaseStats()), getCurrentLevel(), getCurrentHealth(), getCurrentAttack(),
+                                     getCurrentDefense(), getCurrentSpecialAttack(), getCurrentSpecialDefense(), getCurrentSpeed(), getCurrentExperience(), getIndividualValue()
         );
         StringBuilder formatString = new StringBuilder();
         int           tabs         = 0;

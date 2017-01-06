@@ -29,8 +29,7 @@ public class AnimationManager {
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
-    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int[] yPositions,
-                                                        int frameWidth, int frameHeight) {
+    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int[] yPositions, int frameWidth, int frameHeight) {
         
         if(frames != xPositions.length) {
             try {
@@ -69,8 +68,7 @@ public class AnimationManager {
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
-    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int yPosition,
-                                                        int frameWidth, int frameHeight) {
+    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int yPosition, int frameWidth, int frameHeight) {
         if(frames != xPositions.length) {
             try {
                 throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of xPositions array.");
@@ -101,8 +99,7 @@ public class AnimationManager {
      *
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
-    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int xPosition, int[] yPositions,
-                                                        int frameWidth, int frameHeight) {
+    public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int xPosition, int[] yPositions, int frameWidth, int frameHeight) {
         if(frames != yPositions.length) {
             try {
                 throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of yPositions array.");

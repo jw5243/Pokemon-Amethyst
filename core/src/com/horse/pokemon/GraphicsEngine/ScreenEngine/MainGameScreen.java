@@ -40,27 +40,27 @@ public class MainGameScreen implements Screen {
         fpsLogger = new FPSLogger();
     }
     
-    public MapCreator getMapCreator() {
+    private MapCreator getMapCreator() {
         return mapCreator;
     }
     
-    public void setMapCreator(MapCreator mapCreator) {
+    private void setMapCreator(MapCreator mapCreator) {
         this.mapCreator = mapCreator;
     }
     
-    public Stage getStage() {
+    private Stage getStage() {
         return stage;
     }
     
-    public void setStage(Stage stage) {
+    private void setStage(Stage stage) {
         this.stage = stage;
     }
     
-    public OrthographicCamera getCamera() {
+    private OrthographicCamera getCamera() {
         return camera;
     }
     
-    public void setCamera(OrthographicCamera camera) {
+    private void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
     
@@ -76,7 +76,7 @@ public class MainGameScreen implements Screen {
         return mapLoader;
     }
     
-    public void setMapLoader(TmxMapLoader mapLoader) {
+    private void setMapLoader(TmxMapLoader mapLoader) {
         this.mapLoader = mapLoader;
     }
     
@@ -88,11 +88,11 @@ public class MainGameScreen implements Screen {
         this.map = map;
     }
     
-    public Viewport getViewport() {
+    private Viewport getViewport() {
         return viewport;
     }
     
-    public void setViewport(Viewport viewport) {
+    private void setViewport(Viewport viewport) {
         this.viewport = viewport;
     }
     
@@ -109,9 +109,8 @@ public class MainGameScreen implements Screen {
         setMapCreator(new MapCreator(this, getMap()));
     
         setUser(new User(getMapCreator()));
-        
-        getCamera().position
-                .set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
+    
+        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
@@ -198,7 +197,7 @@ public class MainGameScreen implements Screen {
         dialog.dispose();
     }
     
-    public void renderBackground() {
+    private void renderBackground() {
         for(MapLayer mapLayer : getMap().getLayers()) {
             if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
                 try {
@@ -210,7 +209,7 @@ public class MainGameScreen implements Screen {
         }
     }
     
-    public void renderObjects() {
+    private void renderObjects() {
         for(MapLayer mapLayer : getMap().getLayers()) {
             if(mapLayer.getName().equalsIgnoreCase("Objects")) {
                 try {
@@ -232,14 +231,14 @@ public class MainGameScreen implements Screen {
         
         int mapWidth  = (int)(getMap().getProperties().get("width"));
         int mapHeight = (int)(getMap().getProperties().get("height"));
-        
-        getCamera().position.x = (mapWidth > getCamera().viewportWidth) ?
-                                 MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth) :
-                                 getUser().getPositionX();
-        
-        getCamera().position.y = (mapHeight > getCamera().viewportHeight) ?
-                                 MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight) :
-                                 getUser().getPositionY();
+    
+        getCamera().position.x =
+                (mapWidth > getCamera().viewportWidth) ? MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth) :
+                getUser().getPositionX();
+    
+        getCamera().position.y =
+                (mapHeight > getCamera().viewportHeight) ? MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight) :
+                getUser().getPositionY();
         
         getCamera().update();
         getRenderer().setView(getCamera());
@@ -249,7 +248,7 @@ public class MainGameScreen implements Screen {
         return renderer;
     }
     
-    public void setRenderer(MultiTileMapRenderer renderer) {
+    private void setRenderer(MultiTileMapRenderer renderer) {
         this.renderer = renderer;
     }
     
@@ -261,11 +260,11 @@ public class MainGameScreen implements Screen {
         this.user = user;
     }
     
-    public Hud getHud() {
+    private Hud getHud() {
         return hud;
     }
     
-    public void setHud(Hud hud) {
+    private void setHud(Hud hud) {
         this.hud = hud;
     }
     

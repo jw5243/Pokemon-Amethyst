@@ -121,7 +121,7 @@ public class Engine extends Game {
         return batch;
     }
     
-    public void setBatch(SpriteBatch batch) {
+    private void setBatch(SpriteBatch batch) {
         this.batch = batch;
     }
     
