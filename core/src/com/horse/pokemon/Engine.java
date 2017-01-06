@@ -29,19 +29,27 @@ public class Engine extends Game {
     private static final int V_HEIGHT = (int)(BackgroundData.getStandardBackgroundSize().y);
     
     /**
-     * The length of a tile's size to reference collisions and presice positions of some actors.
+     * The length of the size of a tile to reference collisions and presice positions of some actors.
      */
     private static final int TILE_SIZE = 16;
+    
+    /**
+     * Half the length of the size of a tile to reference collisions and presice positions of some actors.
+     */
+    private static final int HALF_TILE_SIZE = getTileSize() / 2;
     
     /**
      * Changes how much the user can see from its position.  A bigger number will show less area than a smaller number.
      */
     private static final int CAMERA_ZOOM_SCALE = 2;
-    
     private static IntroScreen    introScreen;
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;
     private        SpriteBatch    batch;
+    
+    public static int getHalfTileSize() {
+        return HALF_TILE_SIZE;
+    }
     
     public static int getvWidth() {
         return V_WIDTH;

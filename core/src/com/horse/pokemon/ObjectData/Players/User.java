@@ -21,8 +21,6 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Class acting as the protagonist in the Pokemon game, acting as the graphics, input, and movement for the character.  {@code User} is also generally used
@@ -44,61 +42,167 @@ import java.util.function.Supplier;
  */
 public final class User extends AbstractPlayer implements AnimationInterface {
     /**
-     * The {@code int} instance representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User}
-     * when in the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how
-     * big the user is drawn every frame x-wise.
+     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
+     * {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the user
+     * is drawn every frame x-wise.
      */
     private static final byte USER_WALK_WIDTH = 16;
     
     /**
-     * The {@code int} instance representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User}
-     * when in the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how
-     * big the user is draw every frame y-wise.
+     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
+     * the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the
+     * user is draw every frame y-wise.
      */
     private static final byte USER_WALK_HEIGHT = 19;
     
     /**
-     * The {@code int} instance representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User}
-     * when in the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how
-     * big the user is drawn every frame x-wise.
+     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
+     * {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how big the user
+     * is drawn every frame x-wise.
      */
     private static final byte USER_SWIM_WIDTH = 22;
     
     /**
-     * The {@code int} instance representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User}
-     * when in the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how
-     * big the user is drawn every frame y-wise.
+     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
+     * the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how big the
+     * user is drawn every frame y-wise.
      */
     private static final byte USER_SWIM_HEIGHT = 24;
     
     /**
-     *
+     * The {@code byte} representing the 'up' direction for when the character is moving upwards or at a constant position pointing up.
      */
-    private static final byte   UP                     = 1;
-    private static final byte   DOWN                   = 2;
-    private static final byte   RIGHT                  = 3;
-    private static final byte   LEFT                   = 4;
-    private static final float  ANIMATION_SPEED        = 0.5f;
-    private static final String USER_INFORMATION       = "User\\GDX_Users\\User.pack";
-    private static final String USER_ATLAS_REGION_NAME = "SpriteSheetUser";
-    private final TextureRegion[] userIdleOnLand;
-    private final TextureRegion[] userIdleOnWater;
-    private final Animation[]     userWalk;
-    private final Animation[]     userSwim;
-    private final HandleInput     handleInput;
-    private final Sprite          userSprite;
-    private       MapCreator      mapCreator;
-    private       Rectangle       currentCollisionRectangle;
-    private       PlayerActions   previousState;
-    private       float           positionX;
-    private       float           positionY;
-    private       float           stateTimer;
-    private       boolean         moving;
-    private       boolean         aligned;
-    private       boolean         futureCollision;
-    private       boolean         swimming;
-    private       byte            direction;
+    private static final byte UP = 1;
     
+    /**
+     * The {@code byte} representing the 'down' direction for when the character is moving downwards or at a constant position pointing down.
+     */
+    private static final byte DOWN = 2;
+    
+    /**
+     * The {@code byte} representing the 'right' direction for when the character is moving to the right or at a constant position pointing to the right.
+     */
+    private static final byte RIGHT = 3;
+    
+    /**
+     * The {@code byte} representing the 'left' direction for when the character is moving to the left of at a constant position pointing to the left.
+     */
+    private static final byte LEFT = 4;
+    
+    /**
+     * The {@code float} representing the frame speed for when {@code User} animation is being played.
+     */
+    private static final float ANIMATION_SPEED = 0.5f;
+    
+    /**
+     * The {@link String} representing the location of the Texture Packer file of all the compact images of the {@code User}.
+     */
+    private static final String USER_INFORMATION = "User\\GDX_Users\\User.pack";
+    
+    /**
+     * The {@link String} representing the name of all the sprites of the {@code User} for all movements and standard actions according to {@link
+     * #USER_INFORMATION}
+     */
+    private static final String USER_ATLAS_REGION_NAME = "SpriteSheetUser";
+    
+    /**
+     * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on land.
+     */
+    private final TextureRegion[] userIdleOnLand;
+    
+    /**
+     * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on water.
+     */
+    private final TextureRegion[] userIdleOnWater;
+    
+    /**
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land.
+     */
+    private final Animation[] userWalk;
+    
+    /**
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
+     */
+    private final Animation[] userSwim;
+    
+    /**
+     * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
+     */
+    private final HandleInput handleInput;
+    
+    /**
+     * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
+     * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
+     */
+    private final Sprite userSprite;
+    
+    /**
+     * The {@link MapCreator} instance representing the current map the {@code User} is on, which is used to calculate whether the {@code User} is
+     * colliding with any of the objects of the map.
+     */
+    private MapCreator mapCreator;
+    
+    /**
+     * The {@link Rectangle} instance representing the boundaries of the {@code User} to detect collisions.
+     */
+    private Rectangle currentCollisionRectangle;
+    
+    /**
+     * The {@link PlayerActions} instance representing the last action the {@code User} was in to implement smoot animation transitions and to check whether
+     * the animation of the {@code User} should be reset or continued.
+     */
+    private PlayerActions previousState;
+    
+    /**
+     * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
+     */
+    private float stateTimer;
+    
+    /**
+     * The {@code int} instance representing where the {@code User} is every frame in terms of horizontal pixels.
+     */
+    private int positionX;
+    
+    /**
+     * The {@code int} instance representing where the {@code User} is every frame in terms of vertical pixels.
+     */
+    private int positionY;
+    
+    /**
+     * The {@code boolean} instance representing if the {@link #handleInput} of the {@code User} has a keyboard press that will represent that the {@code
+     * User} is to try and move throughout the map.
+     */
+    private boolean moving;
+    
+    /**
+     * The {@code boolean} instance representing if the {@code User} is correctly positioned onto one of the game tiles.  This may also be thought of as a
+     * snap-to-grid type of system.
+     */
+    private boolean aligned;
+    
+    /**
+     * The {@code boolean} instance representing if the {@code User} is going to collide in the next tile position by referencing the {@link #direction} of
+     * the {@code User} to identify the correct {@link Rectangle} the {@code User} would be on top of.  This ensures the {@code User} stays {@link #aligned}
+     * with the tiles.
+     */
+    private boolean futureCollision;
+    
+    /**
+     * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
+     */
+    private boolean swimming;
+    
+    /**
+     * The {@code byte} instance representing where the {@code User} is pointing towards.
+     */
+    private byte direction;
+    
+    /**
+     * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
+     * {@code User} for movement and animation.
+     *
+     * @param mapCreator Contains the collision {@link Rectangle}s for the {@code User} to check possible movements.
+     */
     public User(MapCreator mapCreator) {
         setPreviousState(getCurrentState());
         
@@ -121,8 +225,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         userSwim = new Animation[4];
         
         initializeAnimation();
-        
-        setBounds(0, 0, Engine.getTileSize() / 2, Engine.getTileSize() / 2);
+    
+        setBounds(0, 0, Engine.getHalfTileSize(), Engine.getHalfTileSize());
         getUserSprite().setRegion(getUserIdleOnLand()[1]);
         
         resetPosition();
@@ -164,18 +268,38 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         });
     }
     
+    /**
+     * Returns the representation for when the {@code User} is pointing upwards.
+     *
+     * @return {@link #UP}
+     */
     private static byte getUP() {
         return UP;
     }
     
+    /**
+     * Returns the representation for when the {@code User} is pointing downwards.
+     *
+     * @return {@link #DOWN}
+     */
     private static byte getDOWN() {
         return DOWN;
     }
     
+    /**
+     * Returns the representation for when the {@code User} is pointing to the right.
+     *
+     * @return {@link #RIGHT}
+     */
     private static byte getRIGHT() {
         return RIGHT;
     }
     
+    /**
+     * Returns the representation fir when the {@code User} is pointing to the left.
+     *
+     * @return {@link #LEFT}
+     */
     private static byte getLEFT() {
         return LEFT;
     }
@@ -213,7 +337,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     }
     
     private void updateCurrentCollisionRectangle() {
-        setCurrentCollisionRectangle(new Rectangle(getX(), getY(), Engine.getTileSize() / 2, Engine.getTileSize() / 2));
+        setCurrentCollisionRectangle(new Rectangle(getX(), getY(), Engine.getHalfTileSize(), Engine.getHalfTileSize()));
     }
     
     private TextureRegion[] getUserIdleOnWater() {
@@ -238,8 +362,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
         setMapCreator(resetMapCreator ? mapCreator : getMapCreator());
-        setPositionX(mapCreator.getStartPosition().x + getUserWalkWidth() / 2);
-        setPositionY(mapCreator.getStartPosition().y + getUserWalkHeight() / 2);
+        setPositionX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() / 2));
+        setPositionY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() / 2));
     }
     
     @Override
@@ -350,22 +474,24 @@ public final class User extends AbstractPlayer implements AnimationInterface {
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X)) {
             AlterPlayerPosition alterPlayerPosition =
-                    (Consumer<Float> setPositionMethod, Supplier<Float> getPositionMethod, float alterValue) -> setPositionMethod
-                                                                                                                        .accept(getPositionMethod.get() +
-                                                                                                                                alterValue);
-    
+                    (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod
+                                                                                                                          .accept(getPositionMethod.get() +
+                                                                                                                                  alterValue);
+            
             Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                                         (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
                                         (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
                                         getFutureRectangle(-Engine.getTileSize(), 0);
     
-            Runnable alterAction =
-                    (getDirection() == getUP()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
-                    (getDirection() == getDOWN()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
-                    (getDirection() == getRIGHT()) ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
-                    () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
-    
             if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) {
+                Runnable alterAction = (getDirection() == getUP()) ?
+                                       () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
+                                       (getDirection() == getDOWN()) ?
+                                       () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
+                                       (getDirection() == getRIGHT()) ?
+                                       () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
+                                       () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
+                
                 alterAction.run();
             }
         }
@@ -400,19 +526,19 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return handleInput;
     }
     
-    public float getPositionX() {
+    public int getPositionX() {
         return positionX;
     }
     
-    private void setPositionX(float positionX) {
+    private void setPositionX(int positionX) {
         this.positionX = positionX;
     }
     
-    public float getPositionY() {
+    public int getPositionY() {
         return positionY;
     }
     
-    private void setPositionY(float positionY) {
+    private void setPositionY(int positionY) {
         this.positionY = positionY;
     }
     
@@ -426,8 +552,8 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     }
     
     private void updateAlignment() {
-        setAligned((getPositionX() + (Engine.getTileSize() / 2)) % Engine.getTileSize() == 0 &&
-                   (getPositionY() + (Engine.getTileSize() / 2)) % Engine.getTileSize() - 1 == 0);
+        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
+                   (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
     }
     
     private void updateSwimming() {
