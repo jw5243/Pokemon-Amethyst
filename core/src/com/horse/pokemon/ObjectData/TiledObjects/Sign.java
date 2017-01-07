@@ -3,7 +3,7 @@ package com.horse.pokemon.ObjectData.TiledObjects;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Sign extends TileObject {
+public class Sign extends CollidableTileObject {
     public Sign(Rectangle bounds) {
         super(bounds);
     }

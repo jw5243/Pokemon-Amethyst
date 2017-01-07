@@ -8,7 +8,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -19,25 +21,74 @@ import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.TextSpeeds;
 import com.horse.pokemon.ObjectData.Players.User;
+import com.horse.pokemon.ObjectData.TiledObjects.Door;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MainGameScreen implements Screen {
-    private Engine               engine;
-    private OrthographicCamera   camera;
-    private Viewport             viewport;
-    private Hud                  hud;
-    private TmxMapLoader         mapLoader;
-    private TiledMap             map;
-    private MultiTileMapRenderer renderer;
-    private User                 user;
-    private Stage                stage;
-    private AudioData            sound;
-    private Dialog               dialog;
-    private FPSLogger            fpsLogger;
-    private MapCreator           mapCreator;
+    private Engine                            engine;
+    private OrthographicCamera                camera;
+    private Viewport                          viewport;
+    private Hud                               hud;
+    private TmxMapLoader                      mapLoader;
+    private TiledMap                          map;
+    private MultiTileMapRenderer              renderer;
+    private User                              user;
+    private Stage                             stage;
+    private AudioData                         sound;
+    private Dialog                            dialog;
+    private FPSLogger                         fpsLogger;
+    private MapCreator                        mapCreator;
+    private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
+    private HashMap<Integer, TiledMapTile>    doorTiles;
+    private Door                              doorToOpen;
+    private int                               framesToAnimateDoor;
+    private int                               currentDoorFrameCount;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
+    }
+    
+    public int getCurrentDoorFrameCount() {
+        return currentDoorFrameCount;
+    }
+    
+    public void setCurrentDoorFrameCount(int currentDoorFrameCount) {
+        this.currentDoorFrameCount = currentDoorFrameCount;
+    }
+    
+    public Door getDoorToOpen() {
+        return doorToOpen;
+    }
+    
+    public void setDoorToOpen(Door doorToOpen) {
+        this.doorToOpen = doorToOpen;
+    }
+    
+    public int getFramesToAnimateDoor() {
+        return framesToAnimateDoor;
+    }
+    
+    public void setFramesToAnimateDoor(int framesToAnimateDoor) {
+        this.framesToAnimateDoor = framesToAnimateDoor;
+    }
+    
+    public ArrayList<TiledMapTileLayer.Cell> getDoorsInMap() {
+        return doorsInMap;
+    }
+    
+    public void setDoorsInMap(ArrayList<TiledMapTileLayer.Cell> doorsInMap) {
+        this.doorsInMap = doorsInMap;
+    }
+    
+    public HashMap<Integer, TiledMapTile> getDoorTiles() {
+        return doorTiles;
+    }
+    
+    public void setDoorTiles(HashMap<Integer, TiledMapTile> doorTiles) {
+        this.doorTiles = doorTiles;
     }
     
     private MapCreator getMapCreator() {
@@ -122,6 +173,33 @@ public class MainGameScreen implements Screen {
                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
         );
+    
+        TiledMapTileSet tileSet = getMap().getTileSets().getTileSet("SinnohTileSet");
+    
+        setDoorTiles(new HashMap<>());
+        for(TiledMapTile tile : tileSet) {
+            Object property = tile.getProperties().get("Door Animation");
+            if(property != null) {
+                getDoorTiles().put((int)(property), tile);
+            }
+        }
+    
+        setDoorsInMap(new ArrayList<>());
+        TiledMapTileLayer layer = (TiledMapTileLayer)(getMap().getLayers().get("Object Bottom"));
+        for(int x = 0; x < layer.getWidth(); x++) {
+            for(int y = 0; y < layer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = layer.getCell(x, y);
+                if(cell != null && cell.getTile().getProperties().containsKey("Door Animation")) {
+                    Object property = cell.getTile().getProperties().get("Door Animation");
+                    if(property != null) {
+                        getDoorsInMap().add(cell);
+                    }
+                }
+            }
+        }
+        setDoorToOpen(null);
+        setFramesToAnimateDoor(6);
+        setCurrentDoorFrameCount(0);
     }
     
     @Override
@@ -156,6 +234,13 @@ public class MainGameScreen implements Screen {
         getStage().draw();
         
         renderObjects();
+    
+        if(getDoorToOpen() != null) {
+            setCurrentDoorFrameCount(getCurrentDoorFrameCount() + 1);
+            if(getCurrentDoorFrameCount() % getFramesToAnimateDoor() == 0) {
+                animateDoor();
+            }
+        }
         
         getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
         getHud().stage.draw();
@@ -195,6 +280,24 @@ public class MainGameScreen implements Screen {
         getStage().dispose();
         sound.getAudio().dispose();
         dialog.dispose();
+    }
+    
+    public void animateDoor() {
+        for(TiledMapTileLayer.Cell cell : getDoorsInMap()) {
+            try {
+                int currentAnimationFrame = (int)(cell.getTile().getProperties().get("Door Animation"));
+                
+                currentAnimationFrame++;
+                
+                TiledMapTile newTile = getDoorTiles().get(currentAnimationFrame);
+                cell.setTile(newTile);
+            } catch(NullPointerException e) {
+                if(getDoorToOpen() == null) {
+                    return;
+                }
+                getDoorToOpen().switchRooms();
+            }
+        }
     }
     
     private void renderBackground() {

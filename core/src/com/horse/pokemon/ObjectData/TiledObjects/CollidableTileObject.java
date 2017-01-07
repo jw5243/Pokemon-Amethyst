@@ -4,10 +4,10 @@ import com.badlogic.gdx.math.Rectangle;
 
 import java.util.Objects;
 
-public abstract class TileObject {
+public abstract class CollidableTileObject {
     private Rectangle bounds;
     
-    public TileObject(Rectangle bounds) {
+    public CollidableTileObject(Rectangle bounds) {
         setBounds(bounds);
     }
     
@@ -38,7 +38,7 @@ public abstract class TileObject {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        TileObject that = (TileObject)o;
+        CollidableTileObject that = (CollidableTileObject)o;
         return Objects.equals(getBounds(), that.getBounds());
     }
     

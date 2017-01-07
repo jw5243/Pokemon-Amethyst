@@ -7,31 +7,41 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.horse.pokemon.ObjectData.TiledObjects.Barrier;
+import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.pokemon.ObjectData.TiledObjects.Mailbox;
 import com.horse.pokemon.ObjectData.TiledObjects.Sign;
-import com.horse.pokemon.ObjectData.TiledObjects.TileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class MapCreator {
-    private ArrayList<TileObject> tileObjects   = new ArrayList<>();
-    private Vector2               startPosition = new Vector2();
-    private Array<Rectangle>      connections   = new Array<>();
+    private ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
+    private Vector2                         startPosition         = new Vector2();
+    private Array<Rectangle>                connections           = new Array<>();
+    private MainGameScreen screen;
     
     public MapCreator(MainGameScreen screen, TiledMap map) {
         addTiledObjects(screen, map);
     }
     
+    public MainGameScreen getScreen() {
+        return screen;
+    }
+    
+    public void setScreen(MainGameScreen screen) {
+        this.screen = screen;
+    }
+    
     public void resetTiledObjects(MainGameScreen screen, TiledMap map) {
-        getTileObjects().clear();
+        getCollidableTileObjects().clear();
         addTiledObjects(screen, map);
         screen.getUser().setMapCreator(this);
     }
     
     public void addTiledObjects(MainGameScreen screen, TiledMap map) {
+        setScreen(screen);
         for(MapObject object : map.getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
             
@@ -42,18 +52,18 @@ public class MapCreator {
                 if(object.getProperties().get("type").toString().equalsIgnoreCase("Door")) {
                     if(object.getProperties().containsKey("Filename")) {
                         String fileName = object.getProperties().get("Filename").toString();
-                        getTileObjects().add(new Door(screen, rectangle, fileName));
+                        getCollidableTileObjects().add(new Door(screen, rectangle, fileName));
                     } else {
-                        getTileObjects().add(new Door(rectangle));
+                        getCollidableTileObjects().add(new Door(rectangle));
                     }
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Sign")) {
-                    getTileObjects().add(new Sign(rectangle));
+                    getCollidableTileObjects().add(new Sign(rectangle));
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Water")) {
-                    getTileObjects().add(new Water(rectangle));
+                    getCollidableTileObjects().add(new Water(rectangle));
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Barrier")) {
-                    getTileObjects().add(new Barrier(rectangle));
+                    getCollidableTileObjects().add(new Barrier(rectangle));
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Mailbox")) {
-                    getTileObjects().add(new Mailbox(rectangle));
+                    getCollidableTileObjects().add(new Mailbox(rectangle));
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Grass")) {
                     
                 } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Bed")) {
@@ -69,12 +79,12 @@ public class MapCreator {
         }
     }
     
-    public ArrayList<TileObject> getTileObjects() {
-        return tileObjects;
+    public ArrayList<CollidableTileObject> getCollidableTileObjects() {
+        return collidableTileObjects;
     }
     
-    public void setTileObjects(ArrayList<TileObject> tileObjects) {
-        this.tileObjects = tileObjects;
+    public void setCollidableTileObjects(ArrayList<CollidableTileObject> collidableTileObjects) {
+        this.collidableTileObjects = collidableTileObjects;
     }
     
     public Vector2 getStartPosition() {
@@ -95,7 +105,7 @@ public class MapCreator {
     
     @Override
     public int hashCode() {
-        return Objects.hash(getTileObjects(), getStartPosition(), getConnections());
+        return Objects.hash(getCollidableTileObjects(), getStartPosition(), getConnections());
     }
     
     @Override
@@ -107,7 +117,7 @@ public class MapCreator {
             return false;
         }
         MapCreator that = (MapCreator)o;
-        return Objects.equals(getTileObjects(), that.getTileObjects()) && Objects.equals(getStartPosition(), that.getStartPosition()) &&
+        return Objects.equals(getCollidableTileObjects(), that.getCollidableTileObjects()) && Objects.equals(getStartPosition(), that.getStartPosition()) &&
                Objects.equals(getConnections(), that.getConnections());
     }
 }

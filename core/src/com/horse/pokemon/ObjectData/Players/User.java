@@ -16,7 +16,8 @@ import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MapCreator;
-import com.horse.pokemon.ObjectData.TiledObjects.TileObject;
+import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
+import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.Arrays;
@@ -544,21 +545,26 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     }
     
     private boolean isColliding(Rectangle rectangle, boolean activateCollisionMethod) {
-        for(TileObject tileObject : getMapCreator().getTileObjects()) {
-            if(tileObject.isColliding(rectangle)) {
+        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) {
+            if(collidableTileObject.isColliding(rectangle)) {
                 if(activateCollisionMethod) {
-                    tileObject.onCollide();
+                    if(collidableTileObject instanceof Door) {
+                        getMapCreator().getScreen().setDoorToOpen((Door)(collidableTileObject));
+                        collidableTileObject.onCollide();
+                        return false;
+                    }
+                    collidableTileObject.onCollide();
                 }
-                return !(isSwimming() && tileObject instanceof Water);
+                return !(isSwimming() && collidableTileObject instanceof Water);
             }
         }
         return false;
     }
     
-    private TileObject getCollidingTileObject(Rectangle rectangle) {
-        for(TileObject tileObject : getMapCreator().getTileObjects()) {
-            if(tileObject.isColliding(rectangle)) {
-                return tileObject;
+    private CollidableTileObject getCollidingTileObject(Rectangle rectangle) {
+        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) {
+            if(collidableTileObject.isColliding(rectangle)) {
+                return collidableTileObject;
             }
         }
         return null;
