@@ -42,6 +42,10 @@ public class Engine extends Game {
      * Changes how much the user can see from its position.  A bigger number will show less area than a smaller number.
      */
     private static final int CAMERA_ZOOM_SCALE = 2;
+    
+    /**
+     * The {@link IntroScreen} representing the scenes and actions for when the game is started from the beginning.
+     */
     private static IntroScreen    introScreen;
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;

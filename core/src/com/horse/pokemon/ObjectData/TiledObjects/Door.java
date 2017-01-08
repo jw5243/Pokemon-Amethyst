@@ -22,14 +22,6 @@ public class Door extends CollidableTileObject {
     @Override
     public void onCollide() {
         Gdx.app.log("Door", "Collision");
-        if(this.screen != null && fileName != null) {
-            if(screen.getDoorToOpen() == null) {
-                screen.getMap().dispose();
-                screen.setMap(screen.getMapLoader().load(fileName));
-                MapCreator mapCreator = new MapCreator(screen, screen.getMap());
-                screen.getUser().resetPosition(mapCreator, true);
-            }
-        }
     }
     
     public void switchRooms() {

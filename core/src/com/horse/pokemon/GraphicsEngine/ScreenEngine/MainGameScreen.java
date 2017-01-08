@@ -12,7 +12,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -296,6 +295,7 @@ public class MainGameScreen implements Screen {
                     return;
                 }
                 getDoorToOpen().switchRooms();
+                setDoorToOpen(null);
             }
         }
     }
@@ -328,20 +328,9 @@ public class MainGameScreen implements Screen {
         handleInput(deltaTime);
         
         getUser().update(deltaTime);
-        
-        float halfViewportWidth  = getCamera().viewportWidth / 2;
-        float halfViewportHeight = getCamera().viewportHeight / 2;
-        
-        int mapWidth  = (int)(getMap().getProperties().get("width"));
-        int mapHeight = (int)(getMap().getProperties().get("height"));
     
-        getCamera().position.x =
-                (mapWidth > getCamera().viewportWidth) ? MathUtils.clamp(getUser().getPositionX(), halfViewportWidth, mapWidth * Engine.getTileSize() - halfViewportWidth) :
-                getUser().getPositionX();
-    
-        getCamera().position.y =
-                (mapHeight > getCamera().viewportHeight) ? MathUtils.clamp(getUser().getPositionY(), halfViewportHeight, mapHeight * Engine.getTileSize() - halfViewportHeight) :
-                getUser().getPositionY();
+        getCamera().position.x = getUser().getPositionX();
+        getCamera().position.y = getUser().getPositionY();
         
         getCamera().update();
         getRenderer().setView(getCamera());
