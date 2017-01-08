@@ -105,103 +105,87 @@ public final class User extends AbstractPlayer implements AnimationInterface {
      * #USER_INFORMATION}
      */
     private static final String USER_ATLAS_REGION_NAME = "SpriteSheetUser";
-    
+    private static final float  keyPressToMoveTime     = 0.1f;
     /**
      * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on land.
      */
     private final TextureRegion[] userIdleOnLand;
-    
     /**
      * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on water.
      */
     private final TextureRegion[] userIdleOnWater;
-    
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land.
      */
-    private final Animation[] userWalk;
-    
+    private final Animation[]     userWalk;
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
     private final Animation[] userSwim;
-    
     /**
      * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
      */
     private final HandleInput handleInput;
-    
     /**
      * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
     private final Sprite userSprite;
-    
     /**
      * The {@link MapCreator} instance representing the current map the {@code User} is on, which is used to calculate whether the {@code User} is
      * colliding with any of the objects of the map.
      */
     private MapCreator mapCreator;
-    
     /**
      * The {@link Rectangle} instance representing the boundaries of the {@code User} to detect collisions.
      */
     private Rectangle currentCollisionRectangle;
-    
     /**
      * The {@link PlayerActions} instance representing the last action the {@code User} was in to implement smoot animation transitions and to check whether
      * the animation of the {@code User} should be reset or continued.
      */
     private PlayerActions previousState;
-    
     /**
      * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
      */
     private float stateTimer;
-    
     /**
      * The {@code int} instance representing where the {@code User} is every frame in terms of horizontal pixels.
      */
     private int positionX;
-    
     /**
      * The {@code int} instance representing where the {@code User} is every frame in terms of vertical pixels.
      */
     private int positionY;
-    
     /**
      * The {@code boolean} instance representing if the {@link #handleInput} of the {@code User} has a keyboard press that will represent that the {@code
      * User} is to try and move throughout the map.
      */
     private boolean moving;
-    
     /**
      * The {@code boolean} instance representing if the {@code User} is correctly positioned onto one of the game tiles.  This may also be thought of as a
      * snap-to-grid type of system.
      */
     private boolean aligned;
-    
     /**
      * The {@code boolean} instance representing if the {@code User} is going to collide in the next tile position by referencing the {@link #direction} of
      * the {@code User} to identify the correct {@link Rectangle} the {@code User} would be on top of.  This ensures the {@code User} stays {@link #aligned}
      * with the tiles.
      */
     private boolean futureCollision;
-    
     /**
      * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
      */
-    private boolean swimming;
-    
+    private       boolean         swimming;
     /**
      * The {@code boolean} instance representing if the {@code User} is able to move not in terms of collisions but during some scenes in the game.
      */
-    private boolean restrictedMovement;
-    
+    private       boolean         restrictedMovement;
     /**
      * The {@code byte} instance representing where the {@code User} is pointing towards.
      */
-    private byte direction;
+    private       byte            direction;
+    private       float           movementKeyHeldDownTime;
     
     /**
      * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
@@ -221,6 +205,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setFutureCollision(false);           //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
         setSwimming(false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
         setRestrictedMovement(false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
+        setMovementKeyHeldDownTime(0f);
         
         userSprite = new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
         
@@ -247,6 +232,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setAligned(false);
                 setDirection(getUP());
                 setFutureCollision(isColliding(getFutureRectangle(0, Engine.getTileSize()), true));
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
             if(isAligned()) {
@@ -254,6 +240,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setAligned(false);
                 setDirection(getDOWN());
                 setFutureCollision(isColliding(getFutureRectangle(0, -Engine.getTileSize()), true));
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
             if(isAligned()) {
@@ -261,6 +248,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setAligned(false);
                 setDirection(getRIGHT());
                 setFutureCollision(isColliding(getFutureRectangle(Engine.getTileSize(), 0), true));
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
             if(isAligned()) {
@@ -268,12 +256,18 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setAligned(false);
                 setDirection(getLEFT());
                 setFutureCollision(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), true));
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
             if(isAligned()) {
                 setMoving(false);
+                setMovementKeyHeldDownTime(0f);
             }
         });
+    }
+    
+    public static float getKeyPressToMoveTime() {
+        return keyPressToMoveTime;
     }
     
     /**
@@ -364,6 +358,14 @@ public final class User extends AbstractPlayer implements AnimationInterface {
      */
     private static byte getUserWalkHeight() {
         return USER_WALK_HEIGHT;
+    }
+    
+    public float getMovementKeyHeldDownTime() {
+        return movementKeyHeldDownTime;
+    }
+    
+    public void setMovementKeyHeldDownTime(float movementKeyHeldDownTime) {
+        this.movementKeyHeldDownTime = movementKeyHeldDownTime;
     }
     
     private boolean isRestrictedMovement() {
@@ -517,13 +519,13 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         getHandleInput().update(deltaTime);
         if(!isAligned() && !isFutureCollision() && !isRestrictedMovement()) {
             if(getDirection() == getUP()) {
-                setPositionY(getPositionY() + getCurrentState().getSpeed());
+                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionY() + getCurrentState().getSpeed() : getPositionY());
             } else if(getDirection() == getDOWN()) {
-                setPositionY(getPositionY() - getCurrentState().getSpeed());
+                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionY() - getCurrentState().getSpeed() : getPositionY());
             } else if(getDirection() == getRIGHT()) {
-                setPositionX(getPositionX() + getCurrentState().getSpeed());
+                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionX() + getCurrentState().getSpeed() : getPositionX());
             } else if(getDirection() == getLEFT()) {
-                setPositionX(getPositionX() - getCurrentState().getSpeed());
+                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionX() - getCurrentState().getSpeed() : getPositionX());
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && !isRestrictedMovement()) {
             AlterPlayerPosition alterPlayerPosition =

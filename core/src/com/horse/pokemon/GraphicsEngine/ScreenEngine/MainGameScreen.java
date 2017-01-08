@@ -11,7 +11,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -30,8 +29,8 @@ public class MainGameScreen implements Screen {
     private OrthographicCamera                camera;
     private Viewport                          viewport;
     private Hud                               hud;
-    private TmxMapLoader                      mapLoader;
-    private TiledMap                          map;
+    private MultiTmxMapLoader                 mapLoader;
+    private TiledMap[]                        maps;
     private MultiTileMapRenderer              renderer;
     private User                              user;
     private Stage                             stage;
@@ -48,6 +47,14 @@ public class MainGameScreen implements Screen {
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
+    }
+    
+    public TiledMap[] getMaps() {
+        return maps;
+    }
+    
+    public void setMaps(TiledMap[] maps) {
+        this.maps = maps;
     }
     
     public int getCurrentDoorFrameCount() {
@@ -122,20 +129,12 @@ public class MainGameScreen implements Screen {
         this.engine = engine;
     }
     
-    public TmxMapLoader getMapLoader() {
+    public MultiTmxMapLoader getMapLoader() {
         return mapLoader;
     }
     
-    private void setMapLoader(TmxMapLoader mapLoader) {
+    private void setMapLoader(MultiTmxMapLoader mapLoader) {
         this.mapLoader = mapLoader;
-    }
-    
-    public TiledMap getMap() {
-        return map;
-    }
-    
-    public void setMap(TiledMap map) {
-        this.map = map;
     }
     
     private Viewport getViewport() {
@@ -151,13 +150,14 @@ public class MainGameScreen implements Screen {
         setCamera(new OrthographicCamera());
         setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
         setHud(new Hud(getEngine()));
-        setMapLoader(new TmxMapLoader());
-        
-        setMap(getMapLoader().load(Maps.TWINLEAF_TOWN.getTmxPath()));
-        setRenderer(new MultiTileMapRenderer(getMap(), 1.0f, getEngine().getBatch()));
-        
-        setMapCreator(new MapCreator(this, getMap()));
+        setMapLoader(new MultiTmxMapLoader(1, 0));
     
+        setMaps(getMapLoader().loadAllMaps(new String[] {Maps.TWINLEAF_TOWN.getTmxPath()}, new int[] {0}, new int[] {0}));
+    
+        setRenderer(new MultiTileMapRenderer(getMaps()[0], 1.0f, getEngine().getBatch()));
+    
+        setMapCreator(new MapCreator(this, getMaps()[0]));
+        
         setUser(new User(getMapCreator()));
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
@@ -173,8 +173,8 @@ public class MainGameScreen implements Screen {
                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
         );
     
-        TiledMapTileSet tileSet = getMap().getTileSets().getTileSet("SinnohTileSet");
-    
+        TiledMapTileSet tileSet = getMaps()[0].getTileSets().getTileSet("SinnohTileSet");
+        
         setDoorTiles(new HashMap<>());
         for(TiledMapTile tile : tileSet) {
             Object property = tile.getProperties().get("Door Animation");
@@ -184,7 +184,7 @@ public class MainGameScreen implements Screen {
         }
     
         setDoorsInMap(new ArrayList<>());
-        TiledMapTileLayer layer = (TiledMapTileLayer)(getMap().getLayers().get("Object Bottom"));
+        TiledMapTileLayer layer = (TiledMapTileLayer)(getMaps()[0].getLayers().get("Object Bottom"));
         for(int x = 0; x < layer.getWidth(); x++) {
             for(int y = 0; y < layer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = layer.getCell(x, y);
@@ -207,19 +207,19 @@ public class MainGameScreen implements Screen {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
             getRenderer().setOffsetX(Engine.getTileSize());
-            getMapCreator().resetTiledObjects(this, getMap());
+            getMapCreator().resetTiledObjects(this, getMaps()[0]);
             getUser().setMapCreator(getMapCreator());
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             getRenderer().setOffsetX(-Engine.getTileSize());
-            getMapCreator().resetTiledObjects(this, getMap());
+            getMapCreator().resetTiledObjects(this, getMaps()[0]);
             getUser().setMapCreator(getMapCreator());
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
             getRenderer().setOffsetX(0);
-            getMapCreator().resetTiledObjects(this, getMap());
+            getMapCreator().resetTiledObjects(this, getMaps()[0]);
             getUser().setMapCreator(getMapCreator());
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
             getRenderer().alterOffsetMapValues(16, 0);
-            getMapCreator().resetTiledObjects(this, getMap());
+            getMapCreator().resetTiledObjects(this, getMaps()[0]);
             getUser().setMapCreator(getMapCreator());
         }
         
@@ -273,7 +273,9 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void dispose() {
-        getMap().dispose();
+        for(TiledMap tiledMap : getMaps()) {
+            tiledMap.dispose();
+        }
         getRenderer().dispose();
         getHud().dispose();
         getStage().dispose();
@@ -301,24 +303,28 @@ public class MainGameScreen implements Screen {
     }
     
     private void renderBackground() {
-        for(MapLayer mapLayer : getMap().getLayers()) {
-            if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
-                try {
-                    getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                } catch(ClassCastException e) {
-                    e.printStackTrace();
+        for(TiledMap tiledMap : getMaps()) {
+            for(MapLayer mapLayer : tiledMap.getLayers()) {
+                if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
+                    try {
+                        getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
+                    } catch(ClassCastException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
     }
     
     private void renderObjects() {
-        for(MapLayer mapLayer : getMap().getLayers()) {
-            if(mapLayer.getName().equalsIgnoreCase("Objects")) {
-                try {
-                    getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                } catch(ClassCastException e) {
-                    e.printStackTrace();
+        for(TiledMap tiledMap : getMaps()) {
+            for(MapLayer mapLayer : tiledMap.getLayers()) {
+                if(mapLayer.getName().equalsIgnoreCase("Objects")) {
+                    try {
+                        getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
+                    } catch(ClassCastException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
