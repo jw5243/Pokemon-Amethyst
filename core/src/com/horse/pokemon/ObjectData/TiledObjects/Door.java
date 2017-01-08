@@ -30,7 +30,8 @@ public class Door extends CollidableTileObject {
             for(TiledMap tiledMap : screen.getMaps()) {
                 tiledMap.dispose();
             }
-            screen.getMaps()[0] = screen.getMapLoader().load(fileName);
+            TiledMap[] tiledMaps = screen.getMapLoader().loadAllMaps(new String[] {fileName}, new int[] {0}, new int[] {0});
+            screen.setMaps(tiledMaps);
             MapCreator mapCreator = new MapCreator(screen, screen.getMaps()[0]);
             screen.getUser().resetPosition(mapCreator, true);
         }

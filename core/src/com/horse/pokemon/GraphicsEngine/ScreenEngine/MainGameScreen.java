@@ -152,7 +152,7 @@ public class MainGameScreen implements Screen {
         setHud(new Hud(getEngine()));
         setMapLoader(new MultiTmxMapLoader(1, 0));
     
-        setMaps(getMapLoader().loadAllMaps(new String[] {Maps.TWINLEAF_TOWN.getTmxPath()}, new int[] {0}, new int[] {0}));
+        setMaps(getMapLoader().loadAllMaps(new String[] {Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath()}, new int[] {0, -9}, new int[] {0, 50}));
     
         setRenderer(new MultiTileMapRenderer(getMaps()[0], 1.0f, getEngine().getBatch()));
     
