@@ -1,14 +1,15 @@
-package com.horse.pokemon.GraphicsEngine.ScreenEngine;
+package com.horse.pokemon.GraphicsEngine.MapEngine;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.renderers.BatchTiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.tiles.AnimatedTiledMapTile;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Disposable;
 
 import static com.badlogic.gdx.graphics.g2d.Batch.C1;
 import static com.badlogic.gdx.graphics.g2d.Batch.C2;
@@ -31,24 +32,55 @@ import static com.badlogic.gdx.graphics.g2d.Batch.Y2;
 import static com.badlogic.gdx.graphics.g2d.Batch.Y3;
 import static com.badlogic.gdx.graphics.g2d.Batch.Y4;
 
-public class MultiTileMapRenderer extends BatchTiledMapRenderer {
-    private float offsetX = 0;
-    private float offsetY = 0;
+public class MultiTileMapRenderer implements Disposable {
+    private static final int   NUM_VERTICES = 20;
+    private              float offsetX      = 0;
+    private              float offsetY      = 0;
+    private float       unitScale;
+    private Rectangle   viewBounds;
+    private SpriteBatch batch;
+    private float[] vertices = new float[NUM_VERTICES];
     
-    public MultiTileMapRenderer(TiledMap map) {
-        super(map);
+    public MultiTileMapRenderer(float unitScale, SpriteBatch batch) {
+        setUnitScale(unitScale);
+        setBatch(batch);
+        setViewBounds(new Rectangle());
     }
     
-    public MultiTileMapRenderer(TiledMap map, float unitScale) {
-        super(map, unitScale);
+    public static int getNumVertices() {
+        return NUM_VERTICES;
     }
     
-    public MultiTileMapRenderer(TiledMap map, Batch batch) {
-        super(map, batch);
+    public float getUnitScale() {
+        return unitScale;
     }
     
-    public MultiTileMapRenderer(TiledMap map, float unitScale, Batch batch) {
-        super(map, unitScale, batch);
+    public void setUnitScale(float unitScale) {
+        this.unitScale = unitScale;
+    }
+    
+    public Rectangle getViewBounds() {
+        return viewBounds;
+    }
+    
+    public void setViewBounds(Rectangle viewBounds) {
+        this.viewBounds = viewBounds;
+    }
+    
+    public SpriteBatch getBatch() {
+        return batch;
+    }
+    
+    public void setBatch(SpriteBatch batch) {
+        this.batch = batch;
+    }
+    
+    public float[] getVertices() {
+        return vertices;
+    }
+    
+    public void setVertices(float[] vertices) {
+        this.vertices = vertices;
     }
     
     public float getOffsetX() {
@@ -84,7 +116,15 @@ public class MultiTileMapRenderer extends BatchTiledMapRenderer {
         alterOffsetMapValues(offsetMapValues.x, offsetMapValues.y);
     }
     
-    @Override
+    public void setView(OrthographicCamera camera) {
+        getBatch().setProjectionMatrix(camera.combined);
+        float width  = camera.viewportWidth * camera.zoom;
+        float height = camera.viewportHeight * camera.zoom;
+        float w      = width * Math.abs(camera.up.y) + height * Math.abs(camera.up.x);
+        float h      = height * Math.abs(camera.up.y) + width * Math.abs(camera.up.x);
+        getViewBounds().set(camera.position.x - w / 2, camera.position.y - h / 2, w, h);
+    }
+    
     public void renderTileLayer(TiledMapTileLayer layer) {
         getBatch().begin();
         
@@ -226,5 +266,10 @@ public class MultiTileMapRenderer extends BatchTiledMapRenderer {
             y -= layerTileHeight;
         }
         getBatch().end();
+    }
+    
+    @Override
+    public void dispose() {
+        getBatch().dispose();
     }
 }

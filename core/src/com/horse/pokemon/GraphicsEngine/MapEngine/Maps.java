@@ -1,4 +1,4 @@
-package com.horse.pokemon.GraphicsEngine.ScreenEngine;
+package com.horse.pokemon.GraphicsEngine.MapEngine;
 
 public enum Maps {
     TWINLEAF_TOWN("Maps\\TwinleafTown.tmx"), START_ROOM("Maps\\StartUserRoom.tmx"), ROUTE_201("Maps\\Route201.tmx");

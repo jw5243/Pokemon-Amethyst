@@ -1,4 +1,4 @@
-package com.horse.pokemon.GraphicsEngine.ScreenEngine;
+package com.horse.pokemon.GraphicsEngine.MapEngine;
 
 import com.badlogic.gdx.assets.loaders.FileHandleResolver;
 import com.badlogic.gdx.files.FileHandle;
@@ -14,6 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
+import com.horse.pokemon.Engine;
 
 import java.io.IOException;
 import java.security.spec.InvalidParameterSpecException;
@@ -21,6 +22,11 @@ import java.security.spec.InvalidParameterSpecException;
 public class MultiTmxMapLoader extends TmxMapLoader {
     private int offsetX;
     private int offsetY;
+    
+    public MultiTmxMapLoader() {
+        setOffsetX(0);
+        setOffsetY(0);
+    }
     
     public MultiTmxMapLoader(int offsetX, int offsetY) {
         setOffsetX(offsetX);
@@ -43,7 +49,7 @@ public class MultiTmxMapLoader extends TmxMapLoader {
         this.offsetY = offsetY;
     }
     
-    public TiledMap[] loadAllMaps(String[] mapNames, int[] offsetXArray, int[] offsetYArray) {
+    public MultiTiledMap[] loadAllMaps(String[] mapNames, int[] offsetXArray, int[] offsetYArray) {
         try {
             if(mapNames.length != offsetXArray.length) {
                 throw new InvalidParameterSpecException(String.format("Invalid \"offsetXArray length\", given length %s compared to the length of mapName: %s", offsetXArray.length,
@@ -57,11 +63,14 @@ public class MultiTmxMapLoader extends TmxMapLoader {
         } catch(InvalidParameterSpecException e) {
             e.printStackTrace();
         }
-        TiledMap[] tiledMaps = new TiledMap[mapNames.length];
+        MultiTiledMap[] tiledMaps = new MultiTiledMap[mapNames.length];
         for(int index = 0; index < mapNames.length; index++) {
             setOffsetX(offsetXArray[index]);
             setOffsetY(offsetYArray[index]);
-            tiledMaps[index] = load(mapNames[index]);
+            MultiTiledMap multiTiledMap = load(mapNames[index]);
+            multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
+            multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
+            tiledMaps[index] = multiTiledMap;
         }
         return tiledMaps;
     }
@@ -113,7 +122,7 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      * @return the TiledMap
      */
     @Override
-    public TiledMap load(String fileName) {
+    public MultiTiledMap load(String fileName) {
         return load(fileName, new TmxMapLoader.Parameters());
     }
     
@@ -127,13 +136,13 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      * @return the TiledMap
      */
     @Override
-    public TiledMap load(String fileName, TmxMapLoader.Parameters parameters) {
+    public MultiTiledMap load(String fileName, TmxMapLoader.Parameters parameters) {
         try {
             this.convertObjectToTileSpace = parameters.convertObjectToTileSpace;
             this.flipY = parameters.flipY;
             FileHandle tmxFile = resolve(fileName);
             root = xml.parse(tmxFile);
-            ObjectMap<String, Texture> textures     = new ObjectMap<String, Texture>();
+            ObjectMap<String, Texture> textures     = new ObjectMap<>();
             Array<FileHandle>          textureFiles = loadTilesets(root, tmxFile);
             textureFiles.addAll(loadImages(root, tmxFile));
             
@@ -144,7 +153,7 @@ public class MultiTmxMapLoader extends TmxMapLoader {
             }
             
             ImageResolver.DirectImageResolver imageResolver = new ImageResolver.DirectImageResolver(textures);
-            TiledMap                          map           = loadTilemap(root, tmxFile, imageResolver);
+            MultiTiledMap                     map           = loadTilemap(root, tmxFile, imageResolver);
             map.setOwnedResources(textures.values().toArray());
             return map;
         } catch(IOException e) {
@@ -162,8 +171,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      * @return the {@link TiledMap}
      */
     @Override
-    protected TiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver) {
-        TiledMap map = new TiledMap();
+    protected MultiTiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver) {
+        MultiTiledMap map = new MultiTiledMap(getOffsetX(), getOffsetY());
         
         String mapOrientation     = root.getAttribute("orientation", null);
         int    mapWidth           = root.getIntAttribute("width", 0);

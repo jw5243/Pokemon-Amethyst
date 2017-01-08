@@ -1,10 +1,10 @@
 package com.horse.pokemon.ObjectData.TiledObjects;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTiledMap;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.MapCreator;
 
 public class Door extends CollidableTileObject {
     private MainGameScreen screen;
@@ -27,12 +27,12 @@ public class Door extends CollidableTileObject {
     
     public void switchRooms() {
         if(this.screen != null && fileName != null) {
-            for(TiledMap tiledMap : screen.getMaps()) {
+            for(MultiTiledMap tiledMap : screen.getMaps()) {
                 tiledMap.dispose();
             }
-            TiledMap[] tiledMaps = screen.getMapLoader().loadAllMaps(new String[] {fileName}, new int[] {0}, new int[] {0});
+            MultiTiledMap[] tiledMaps = screen.getMapLoader().loadAllMaps(new String[] {fileName}, new int[] {0}, new int[] {0});
             screen.setMaps(tiledMaps);
-            MapCreator mapCreator = new MapCreator(screen, screen.getMaps()[0]);
+            MapCreator mapCreator = new MapCreator(screen, screen.getMaps());
             screen.getUser().resetPosition(mapCreator, true);
         }
     }

@@ -15,7 +15,7 @@ import com.horse.pokemon.AnimationEngine.AnimationInterface;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.MapCreator;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
 import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
@@ -121,58 +121,58 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
-    private final Animation[] userSwim;
+    private final Animation[]     userSwim;
     /**
      * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
      */
-    private final HandleInput handleInput;
+    private final HandleInput     handleInput;
     /**
      * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
-    private final Sprite userSprite;
+    private final Sprite          userSprite;
     /**
      * The {@link MapCreator} instance representing the current map the {@code User} is on, which is used to calculate whether the {@code User} is
      * colliding with any of the objects of the map.
      */
-    private MapCreator mapCreator;
+    private       MapCreator      mapCreator;
     /**
      * The {@link Rectangle} instance representing the boundaries of the {@code User} to detect collisions.
      */
-    private Rectangle currentCollisionRectangle;
+    private       Rectangle       currentCollisionRectangle;
     /**
      * The {@link PlayerActions} instance representing the last action the {@code User} was in to implement smoot animation transitions and to check whether
      * the animation of the {@code User} should be reset or continued.
      */
-    private PlayerActions previousState;
+    private       PlayerActions   previousState;
     /**
      * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
      */
-    private float stateTimer;
+    private       float           stateTimer;
     /**
      * The {@code int} instance representing where the {@code User} is every frame in terms of horizontal pixels.
      */
-    private int positionX;
+    private       int             positionX;
     /**
      * The {@code int} instance representing where the {@code User} is every frame in terms of vertical pixels.
      */
-    private int positionY;
+    private       int             positionY;
     /**
      * The {@code boolean} instance representing if the {@link #handleInput} of the {@code User} has a keyboard press that will represent that the {@code
      * User} is to try and move throughout the map.
      */
-    private boolean moving;
+    private       boolean         moving;
     /**
      * The {@code boolean} instance representing if the {@code User} is correctly positioned onto one of the game tiles.  This may also be thought of as a
      * snap-to-grid type of system.
      */
-    private boolean aligned;
+    private       boolean         aligned;
     /**
      * The {@code boolean} instance representing if the {@code User} is going to collide in the next tile position by referencing the {@link #direction} of
      * the {@code User} to identify the correct {@link Rectangle} the {@code User} would be on top of.  This ensures the {@code User} stays {@link #aligned}
      * with the tiles.
      */
-    private boolean futureCollision;
+    private       boolean         futureCollision;
     /**
      * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
      */

@@ -1,13 +1,11 @@
 package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.maps.MapLayer;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -18,6 +16,11 @@ import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.TextSpeeds;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
+import com.horse.pokemon.GraphicsEngine.MapEngine.Maps;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTileMapRenderer;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTiledMap;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTmxMapLoader;
 import com.horse.pokemon.ObjectData.Players.User;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 
@@ -30,7 +33,7 @@ public class MainGameScreen implements Screen {
     private Viewport                          viewport;
     private Hud                               hud;
     private MultiTmxMapLoader                 mapLoader;
-    private TiledMap[]                        maps;
+    private MultiTiledMap[]                   maps;
     private MultiTileMapRenderer              renderer;
     private User                              user;
     private Stage                             stage;
@@ -49,11 +52,11 @@ public class MainGameScreen implements Screen {
         fpsLogger = new FPSLogger();
     }
     
-    public TiledMap[] getMaps() {
+    public MultiTiledMap[] getMaps() {
         return maps;
     }
     
-    public void setMaps(TiledMap[] maps) {
+    public void setMaps(MultiTiledMap[] maps) {
         this.maps = maps;
     }
     
@@ -150,13 +153,13 @@ public class MainGameScreen implements Screen {
         setCamera(new OrthographicCamera());
         setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
         setHud(new Hud(getEngine()));
-        setMapLoader(new MultiTmxMapLoader(1, 0));
-    
+        setMapLoader(new MultiTmxMapLoader());
+        
         setMaps(getMapLoader().loadAllMaps(new String[] {Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath()}, new int[] {0, -9}, new int[] {0, 50}));
     
-        setRenderer(new MultiTileMapRenderer(getMaps()[0], 1.0f, getEngine().getBatch()));
+        setRenderer(new MultiTileMapRenderer(1.0f, getEngine().getBatch()));
     
-        setMapCreator(new MapCreator(this, getMaps()[0]));
+        setMapCreator(new MapCreator(this, getMaps()));
         
         setUser(new User(getMapCreator()));
     
@@ -203,26 +206,6 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void render(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.R)) {
-            getRenderer().setOffsetX(Engine.getTileSize());
-            getMapCreator().resetTiledObjects(this, getMaps()[0]);
-            getUser().setMapCreator(getMapCreator());
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.L)) {
-            getRenderer().setOffsetX(-Engine.getTileSize());
-            getMapCreator().resetTiledObjects(this, getMaps()[0]);
-            getUser().setMapCreator(getMapCreator());
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.M)) {
-            getRenderer().setOffsetX(0);
-            getMapCreator().resetTiledObjects(this, getMaps()[0]);
-            getUser().setMapCreator(getMapCreator());
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.Z)) {
-            getRenderer().alterOffsetMapValues(16, 0);
-            getMapCreator().resetTiledObjects(this, getMaps()[0]);
-            getUser().setMapCreator(getMapCreator());
-        }
-        
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -273,7 +256,7 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void dispose() {
-        for(TiledMap tiledMap : getMaps()) {
+        for(MultiTiledMap tiledMap : getMaps()) {
             tiledMap.dispose();
         }
         getRenderer().dispose();
@@ -303,7 +286,7 @@ public class MainGameScreen implements Screen {
     }
     
     private void renderBackground() {
-        for(TiledMap tiledMap : getMaps()) {
+        for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
                 if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
                     try {
@@ -317,7 +300,7 @@ public class MainGameScreen implements Screen {
     }
     
     private void renderObjects() {
-        for(TiledMap tiledMap : getMaps()) {
+        for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
                 if(mapLayer.getName().equalsIgnoreCase("Objects")) {
                     try {
@@ -342,7 +325,7 @@ public class MainGameScreen implements Screen {
         getRenderer().setView(getCamera());
     }
     
-    MultiTileMapRenderer getRenderer() {
+    public MultiTileMapRenderer getRenderer() {
         return renderer;
     }
     
