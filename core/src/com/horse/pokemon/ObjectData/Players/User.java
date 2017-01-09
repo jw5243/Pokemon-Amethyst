@@ -107,21 +107,16 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     /**
      * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
      */
-    private final HandleInput     handleInput;
+    private final HandleInput handleInput;
     /**
      * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
-    private final Sprite          userSprite;
-    
-    /**
-     * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
-     */
-    private float stateTimer;
+    private final Sprite      userSprite;
     /**
      * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move the {@code User}.
      */
-    private float movementKeyHeldDownTime;
+    private       float       movementKeyHeldDownTime;
     
     /**
      * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
@@ -523,13 +518,5 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     private Animation[] getUserWalk() {
         return userWalk;
-    }
-    
-    private float getStateTimer() {
-        return stateTimer;
-    }
-    
-    private void setStateTimer(float stateTimer) {
-        this.stateTimer = stateTimer;
     }
 }

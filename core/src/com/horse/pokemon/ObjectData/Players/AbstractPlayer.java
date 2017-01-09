@@ -88,6 +88,10 @@ public abstract class AbstractPlayer extends Actor {
      */
     private byte          direction;
     /**
+     * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
+     */
+    private float         stateTimer;
+    /**
      * The {@link String} instance representing a Player's name.
      */
     private String        name;
@@ -139,6 +143,14 @@ public abstract class AbstractPlayer extends Actor {
      */
     public static int getMaxPokemon() {
         return MAX_POKEMON;
+    }
+    
+    float getStateTimer() {
+        return stateTimer;
+    }
+    
+    void setStateTimer(float stateTimer) {
+        this.stateTimer = stateTimer;
     }
     
     /**

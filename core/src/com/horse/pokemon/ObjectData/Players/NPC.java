@@ -6,13 +6,15 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
+import com.horse.pokemon.Engine;
 
 public class NPC extends AbstractPlayer {
     //DEFAULT: Characters\\NPCSpriteSheets\\NPC 01.png
-    private static final int DEFAULT_WIDTH  = 32;
-    private static final int DEFAULT_HEIGHT = 48;
-    private static final int IN_GAME_WIDTH  = 16;
-    private static final int IN_GAME_HEIGHT = 24;
+    private static final int   DEFAULT_WIDTH   = 32;
+    private static final int   DEFAULT_HEIGHT  = 48;
+    private static final int   IN_GAME_WIDTH   = 16;
+    private static final int   IN_GAME_HEIGHT  = 24;
+    private static final float ANIMATION_SPEED = 0.5f;
     private final String          npcSpriteSheetPath;
     private final Sprite          npcSprite;
     private final TextureRegion[] idleFrames;
@@ -24,6 +26,10 @@ public class NPC extends AbstractPlayer {
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
+    }
+    
+    public static float getAnimationSpeed() {
+        return ANIMATION_SPEED;
     }
     
     public static int getInGameWidth() {
@@ -70,10 +76,46 @@ public class NPC extends AbstractPlayer {
         return movingFrames;
     }
     
+    private TextureRegion getFrame(float deltaTime) {
+        float stateTime = getStateTimer() * getAnimationSpeed();
+        
+        setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
+        setPreviousState(getCurrentState());
+        return (getCurrentState() == PlayerActions.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getMovingFrames()[0].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getDOWN()) ? (TextureRegion)(getMovingFrames()[1].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getRIGHT()) ? (TextureRegion)(getMovingFrames()[2].getKeyFrame(stateTime, true)) :
+                                                              (TextureRegion)(getMovingFrames()[3].getKeyFrame(stateTime, true)) : (getDirection() == getUP()) ? getIdleFrames()[0] :
+                                                                                                                                   (getDirection() == getDOWN()) ? getIdleFrames()[1] :
+                                                                                                                                   (getDirection() == getRIGHT()) ? getIdleFrames()[2] :
+                                                                                                                                   getIdleFrames()[3];
+    }
+    
+    private PlayerActions getCurrentState() {
+        if(isMoving()) {
+            return PlayerActions.WALKING;
+        } else {
+            return PlayerActions.IDLE;
+        }
+    }
+    
+    private void updateAlignment() {
+        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 && (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
+    }
+    
+    private void updateAnimation(float deltaTime) {
+        getNpcSprite().setRegion(getFrame(deltaTime));
+    }
+    
+    private void updateActorXY() {
+        setX(getPositionX() - getInGameWidth() / 2);
+        setY(getPositionY() - getInGameHeight() / 2);
+    }
+    
     @Override
     void update(float deltaTime) {
-        setX(getPositionX());
-        setY(getPositionY());
+        updateAlignment();
+        updateActorXY();
+        updateAnimation(deltaTime);
     }
     
     @Override
