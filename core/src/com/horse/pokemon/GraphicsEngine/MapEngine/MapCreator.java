@@ -14,16 +14,26 @@ import com.horse.pokemon.ObjectData.TiledObjects.Sign;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MapCreator {
     private ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
     private Vector2                         startPosition         = new Vector2();
+    private HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
     private Array<Rectangle>                connections           = new Array<>();
     private MainGameScreen screen;
     
     public MapCreator(MainGameScreen screen, MultiTiledMap... maps) {
         addTiledObjects(screen, maps);
+    }
+    
+    public HashMap<String, Vector2> getNpcStartPositions() {
+        return npcStartPositions;
+    }
+    
+    public void setNpcStartPositions(HashMap<String, Vector2> npcStartPositions) {
+        this.npcStartPositions = npcStartPositions;
     }
     
     public MainGameScreen getScreen() {
@@ -73,6 +83,8 @@ public class MapCreator {
                         
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
+                    } else if(object.getProperties().get("type").toString().contains("NPC")) {
+                        getNpcStartPositions().put(object.getProperties().get("type").toString(), new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
                         getConnections().add(rectangle);
                     }

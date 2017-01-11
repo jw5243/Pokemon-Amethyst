@@ -1,15 +1,15 @@
 package com.horse.pokemon.ObjectData.Players;
 
 enum PlayerActions {
-    IDLE(0), WALKING(1), RUNNING(2), BIKING(3), SWIMMING(1), USING_HM_MOVE(0), FISHING(0), IN_BATTLE(0);
+    IDLE(0f), WALKING(1f), RUNNING(2f), BIKING(2f), SWIMMING(1f), USING_HM_MOVE(0f), FISHING(0f), IN_BATTLE(0f);
     
-    int speed;
+    float speed;
     
-    PlayerActions(int speed) {
+    PlayerActions(float speed) {
         this.speed = speed;
     }
     
-    public int getSpeed() {
+    public float getSpeed() {
         return speed;
     }
 }

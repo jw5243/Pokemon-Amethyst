@@ -41,13 +41,13 @@ public abstract class AbstractPlayer extends Actor {
     private static final int MAX_POKEMON = 6;
     
     /**
-     * The {@code int} instance representing where the {@code AbstractPlayer} is every frame in terms of horizontal pixels.
+     * The {@code float} instance representing where the {@code AbstractPlayer} is every frame in terms of horizontal pixels.
      */
-    private int     positionX;
+    private float   positionX;
     /**
-     * The {@code int} instance representing where the {@code AbstractPlayer} is every frame in terms of vertical pixels.
+     * The {@code float} instance representing where the {@code AbstractPlayer} is every frame in terms of vertical pixels.
      */
-    private int     positionY;
+    private float   positionY;
     /**
      * The {@code boolean} instance representing if the {@link HandleInput} of the {@code AbstractPlayer} has a keyboard press that will represent that the {@code AbstractPlayer} is to
      * try and move throughout the map.
@@ -82,24 +82,24 @@ public abstract class AbstractPlayer extends Actor {
     /**
      * The {@code boolean} instance representing if the {@code AbstractPlayer} is able to move not in terms of collisions but during some scenes in the game.
      */
-    private boolean       restrictedMovement;
+    private boolean restrictedMovement;
     /**
      * The {@code byte} instance representing where the {@code AbstractPlayer} is pointing towards.
      */
-    private byte          direction;
+    private byte    direction;
     /**
      * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
      */
-    private float         stateTimer;
+    private float   stateTimer;
     /**
      * The {@link String} instance representing a Player's name.
      */
-    private String        name;
+    private String  name;
     /**
      * The {@link Pokemon} array instance representing the Player's PokemonData slots.
      */
     private Pokemon[] currentPokemon = new Pokemon[MAX_POKEMON];
-    
+
     /**
      * Returns the representation for when the {@code AbstractPlayer} is pointing upwards.
      *
@@ -108,7 +108,7 @@ public abstract class AbstractPlayer extends Actor {
     static byte getUP() {
         return UP;
     }
-    
+
     /**
      * Returns the representation for when the {@code AbstractPlayer} is pointing downwards.
      *
@@ -211,19 +211,19 @@ public abstract class AbstractPlayer extends Actor {
         this.futureCollision = futureCollision;
     }
     
-    public int getPositionX() {
+    public float getPositionX() {
         return positionX;
     }
     
-    void setPositionX(int positionX) {
+    void setPositionX(float positionX) {
         this.positionX = positionX;
     }
     
-    public int getPositionY() {
+    public float getPositionY() {
         return positionY;
     }
     
-    void setPositionY(int positionY) {
+    void setPositionY(float positionY) {
         this.positionY = positionY;
     }
     

@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
+import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
 
 public class NPC extends AbstractPlayer {
     //DEFAULT: Characters\\NPCSpriteSheets\\NPC 01.png
@@ -20,9 +21,11 @@ public class NPC extends AbstractPlayer {
     private final TextureRegion[] idleFrames;
     private final Animation[]     movingFrames;
     
-    public NPC(String npcSpriteSheetPath) {
+    public NPC(MapCreator mapCreator, String npcSpriteSheetPath) {
         this.npcSpriteSheetPath = npcSpriteSheetPath;
         this.npcSprite = new Sprite(new Texture(getNpcSpriteSheetPath()));
+        setMapCreator(mapCreator);
+        resetPosition();
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
@@ -46,6 +49,16 @@ public class NPC extends AbstractPlayer {
     
     public static int getDefaultHeight() {
         return DEFAULT_HEIGHT;
+    }
+    
+    private void resetPosition() {
+        resetPosition(getMapCreator(), false);
+    }
+    
+    public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
+        setMapCreator(resetMapCreator ? mapCreator : getMapCreator());
+        setPositionX((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).x + getInGameWidth() / 2));
+        setPositionY((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).y + getInGameHeight() / 2));
     }
     
     public Sprite getNpcSprite() {

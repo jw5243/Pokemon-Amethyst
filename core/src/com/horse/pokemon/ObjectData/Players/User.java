@@ -97,9 +97,13 @@ public final class User extends AbstractPlayer implements AnimationInterface {
      */
     private final TextureRegion[] userIdleOnWater;
     /**
-     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land.
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is moving at a steady pace.
      */
     private final Animation[]     userWalk;
+    /**
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is quickly moving.
+     */
+    private final Animation[]     userRun;
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
@@ -107,16 +111,16 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     /**
      * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
      */
-    private final HandleInput handleInput;
+    private final HandleInput     handleInput;
     /**
      * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
-    private final Sprite      userSprite;
+    private final Sprite          userSprite;
     /**
      * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move the {@code User}.
      */
-    private       float       movementKeyHeldDownTime;
+    private       float           movementKeyHeldDownTime;
     
     /**
      * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
@@ -151,6 +155,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         userIdleOnWater = new TextureRegion[4];
         
         userWalk = new Animation[4];
+        userRun = new Animation[4];
         userSwim = new Animation[4];
         
         initializeAnimation();
@@ -260,6 +265,10 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return USER_WALK_HEIGHT;
     }
     
+    public Animation[] getUserRun() {
+        return userRun;
+    }
+    
     private float getMovementKeyHeldDownTime() {
         return movementKeyHeldDownTime;
     }
@@ -356,6 +365,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         userWalk[1] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {80, 62, 97, 62}, 49, getUserWalkWidth(), getUserWalkHeight());
         userWalk[2] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {291, 274, 204, 274}, 27, getUserWalkWidth(), getUserWalkHeight());
         userWalk[3] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {35, 52, 122, 52}, 27, getUserWalkWidth(), getUserWalkHeight());
+    
+        userRun[0] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {153, 135, 172, 135}, 6, getUserWalkWidth(), getUserWalkHeight());
+        userRun[1] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {27, 62, 45, 62}, 49, getUserWalkWidth(), getUserWalkHeight());
+        userRun[2] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {205, 274, 221, 274}, 27, getUserWalkWidth(), getUserWalkHeight());
+        userRun[3] = AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {122, 52, 105, 52}, 27, getUserWalkWidth(), getUserWalkHeight());
         
         userIdleOnLand[0] = new TextureRegion(getUserSprite().getTexture(), 135, 6, getUserWalkWidth(), getUserWalkHeight());
         userIdleOnLand[1] = new TextureRegion(getUserSprite().getTexture(), 62, 49, getUserWalkWidth(), getUserWalkHeight());
@@ -449,7 +463,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING) {
+        if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING || getCurrentState() == PlayerActions.RUNNING) {
             batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2, getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(), getUserWalkHeight());
         } else if(isSwimming()) {
             batch.draw(getUserSprite(), getPositionX() - getUserSwimWidth() / 2, getPositionY() - getUserSwimHeight() / 2, getUserSwimWidth(), getUserSwimHeight());
@@ -481,33 +495,34 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return (getCurrentState() == PlayerActions.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
                                                               (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
                                                               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
-                                                              (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) : (getCurrentState() == PlayerActions.SWIMMING) ?
-                                                                                                                               (getDirection() == getUP()) ?
-                                                                                                                               (TextureRegion)(getUserSwim()[0]
-                                                                                                                                                       .getKeyFrame(stateTime, true)) :
-                                                                                                                               (getDirection() == getDOWN()) ?
-                                                                                                                               (TextureRegion)(getUserSwim()[1]
-                                                                                                                                                       .getKeyFrame(stateTime, true)) :
-                                                                                                                               (getDirection() == getRIGHT()) ?
-                                                                                                                               (TextureRegion)(getUserSwim()[2]
-                                                                                                                                                       .getKeyFrame(stateTime, true)) :
-                                                                                                                               (TextureRegion)(getUserSwim()[3]
-                                                                                                                                                       .getKeyFrame(stateTime, true)) :
-                                                                                                                               (isSwimming()) ?
-                                                                                                                               (getDirection() == getUP()) ? getUserIdleOnWater()[0] :
-                                                                                                                               (getDirection() == getDOWN()) ? getUserIdleOnWater()[1] :
-                                                                                                                               (getDirection() == getRIGHT()) ?
-                                                                                                                               getUserIdleOnWater()[2] : getUserIdleOnWater()[3] :
-                                                                                                                               (getDirection() == getUP()) ? getUserIdleOnLand()[0] :
-                                                                                                                               (getDirection() == getDOWN()) ? getUserIdleOnLand()[1] :
-                                                                                                                               (getDirection() == getRIGHT()) ? getUserIdleOnLand()[2] :
-                                                                                                                               getUserIdleOnLand()[3];
+                                                              (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
+
+               (getCurrentState() == PlayerActions.RUNNING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
+                                                              (getDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
+                                                              (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
+
+               (getCurrentState() == PlayerActions.SWIMMING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
+                                                               (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
+                                                               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
+                                                               (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ?
+                                                                                                                                (getDirection() == getUP()) ? getUserIdleOnWater()[0] :
+                                                                                                                                (getDirection() == getDOWN()) ?
+                                                                                                                                getUserIdleOnWater()[1] :
+                                                                                                                                (getDirection() == getRIGHT()) ?
+                                                                                                                                getUserIdleOnWater()[2] : getUserIdleOnWater()[3] :
+                                                                                                                                (getDirection() == getUP()) ? getUserIdleOnLand()[0] :
+                                                                                                                                (getDirection() == getDOWN()) ? getUserIdleOnLand()[1] :
+                                                                                                                                (getDirection() == getRIGHT()) ?
+                                                                                                                                getUserIdleOnLand()[2] : getUserIdleOnLand()[3];
     }
     
     private PlayerActions getCurrentState() {
         if(isMoving()) {
             if(isSwimming()) {
                 return PlayerActions.SWIMMING;
+            } else if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                return PlayerActions.RUNNING;
             } else {
                 return PlayerActions.WALKING;
             }
