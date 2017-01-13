@@ -14,10 +14,10 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.GdxRuntimeException;
 import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
-import com.horse.pokemon.Engine;
 
 import java.io.IOException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.HashMap;
 
 public class MultiTmxMapLoader extends TmxMapLoader {
     private int offsetX;
@@ -63,13 +63,33 @@ public class MultiTmxMapLoader extends TmxMapLoader {
         } catch(InvalidParameterSpecException e) {
             e.printStackTrace();
         }
+        HashMap<String, int[]> offsetMap = new HashMap<>(mapNames.length);
+        for(String mapName : mapNames) {
+            offsetMap.put(mapName, new int[] {0, 0});
+        }
         MultiTiledMap[] tiledMaps = new MultiTiledMap[mapNames.length];
         for(int index = 0; index < mapNames.length; index++) {
-            setOffsetX(offsetXArray[index]);
-            setOffsetY(offsetYArray[index]);
+            //setOffsetX(offsetXArray[index]);
+            //setOffsetY(offsetYArray[index]);
             MultiTiledMap multiTiledMap = load(mapNames[index]);
-            multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
-            multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
+            //multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
+            //multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
+            //multiTiledMap.setOffsetX(offsetMap.get(mapNames[index])[0]);
+            //multiTiledMap.setOffsetY(offsetMap.get(mapNames[index])[1]);
+            offsetMap.put(multiTiledMap.getConnectingMap(), multiTiledMap.getConnectionOffset());
+            //setOffsetX(offsetMap.get(mapNames[index])[0]);
+            //setOffsetY(offsetMap.get(mapNames[index])[1]);
+            //multiTiledMap = load(mapNames[index]);
+            //multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
+            //multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
+            //tiledMaps[index] = multiTiledMap;
+        }
+        for(int index = 0; index < mapNames.length; index++) {
+            setOffsetX(offsetMap.get(mapNames[index])[0]);
+            setOffsetY(offsetMap.get(mapNames[index])[1]);
+            MultiTiledMap multiTiledMap = load(mapNames[index]);
+            multiTiledMap.setOffsetX(offsetMap.get(mapNames[index])[0]);
+            multiTiledMap.setOffsetY(offsetMap.get(mapNames[index])[1]);
             tiledMaps[index] = multiTiledMap;
         }
         return tiledMaps;

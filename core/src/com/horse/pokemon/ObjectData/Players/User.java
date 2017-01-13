@@ -265,7 +265,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return USER_WALK_HEIGHT;
     }
     
-    public Animation[] getUserRun() {
+    private Animation[] getUserRun() {
         return userRun;
     }
     

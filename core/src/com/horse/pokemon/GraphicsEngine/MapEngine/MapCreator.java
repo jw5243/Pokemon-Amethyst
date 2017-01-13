@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
+import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 import com.horse.pokemon.ObjectData.TiledObjects.Barrier;
 import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
@@ -21,7 +22,7 @@ public class MapCreator {
     private ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
     private Vector2                         startPosition         = new Vector2();
     private HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
-    private Array<Rectangle>                connections           = new Array<>();
+    private Array<ConnectionInformation>    connections           = new Array<>();
     private MainGameScreen screen;
     
     public MapCreator(MainGameScreen screen, MultiTiledMap... maps) {
@@ -55,9 +56,9 @@ public class MapCreator {
         for(int index = 0; index < maps.length; index++) {
             for(MapObject object : maps[index].getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
                 Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
-                
-                rectangle.setX(rectangle.getX() + screen.getMaps()[index].getOffsetX());
-                rectangle.setY(rectangle.getY() + screen.getMaps()[index].getOffsetY());
+    
+                rectangle.setX(rectangle.getX() + screen.getMaps()[index].getOffsetX() * Engine.getTileSize());
+                rectangle.setY(rectangle.getY() + screen.getMaps()[index].getOffsetY() * Engine.getTileSize());
                 
                 if(object.getProperties().get("type") instanceof String) {
                     if(object.getProperties().get("type").toString().equalsIgnoreCase("Door")) {
@@ -86,7 +87,7 @@ public class MapCreator {
                     } else if(object.getProperties().get("type").toString().contains("NPC")) {
                         getNpcStartPositions().put(object.getProperties().get("type").toString(), new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
-                        getConnections().add(rectangle);
+                        getConnections().add(new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString()));
                     }
                 }
             }
@@ -109,11 +110,11 @@ public class MapCreator {
         this.startPosition = startPosition;
     }
     
-    public Array<Rectangle> getConnections() {
+    public Array<ConnectionInformation> getConnections() {
         return connections;
     }
     
-    public void setConnections(Array<Rectangle> connections) {
+    public void setConnections(Array<ConnectionInformation> connections) {
         this.connections = connections;
     }
     
