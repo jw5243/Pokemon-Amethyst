@@ -46,10 +46,19 @@ public class MainGameScreen implements Screen {
     private Door                              doorToOpen;
     private int                               framesToAnimateDoor;
     private int                               currentDoorFrameCount;
+    private boolean                           firstFrame;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
+    }
+    
+    public boolean isFirstFrame() {
+        return firstFrame;
+    }
+    
+    public void setFirstFrame(boolean firstFrame) {
+        this.firstFrame = firstFrame;
     }
     
     public MultiTiledMap[] getMaps() {
@@ -154,9 +163,9 @@ public class MainGameScreen implements Screen {
         setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
         setHud(new Hud(getEngine()));
         setMapLoader(new MultiTmxMapLoader());
-        
-        setMaps(getMapLoader().loadAllMaps(new String[] {Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath()}, new int[] {0, -9}, new int[] {0, 50}));
     
+        setMaps(getMapLoader().loadAllMaps(Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath()));
+        
         setRenderer(new MultiTileMapRenderer(1.0f, getEngine().getBatch()));
     
         setMapCreator(new MapCreator(this, getMaps()));
@@ -171,10 +180,6 @@ public class MainGameScreen implements Screen {
     
         sound = AudioData.TWINLEAF_TOWN_DAYTIME;
         sound.playAudio();
-        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
-                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
-                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
-        );
     
         TiledMapTileSet tileSet = getMaps()[0].getTileSets().getTileSet("SinnohTileSet");
         
@@ -202,6 +207,13 @@ public class MainGameScreen implements Screen {
         setDoorToOpen(null);
         setFramesToAnimateDoor(6);
         setCurrentDoorFrameCount(0);
+    
+        setFirstFrame(true);
+    
+        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
+                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
+                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
+        );
     }
     
     @Override
@@ -226,12 +238,17 @@ public class MainGameScreen implements Screen {
         
         getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
         getHud().stage.draw();
+    
+        if(!isFirstFrame()) {
+            getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
         
-        getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
-        dialog.getStage().act(delta);
-        dialog.getStage().draw();
+            dialog.getStage().act(delta);
+            dialog.getStage().draw();
+        }
         
         fpsLogger.log();
+    
+        setFirstFrame(false);
     }
     
     @Override

@@ -78,7 +78,7 @@ public abstract class AbstractPlayer extends Actor {
      * AbstractPlayer} to identify the correct {@link Rectangle} the {@code AbstractPlayer} would be on top of.  This ensures the {@code AbstractPlayer} stays {@link #aligned} with the
      * tiles.
      */
-    private boolean       futureCollision;
+    private boolean futureCollision;
     /**
      * The {@code boolean} instance representing if the {@code AbstractPlayer} is able to move not in terms of collisions but during some scenes in the game.
      */
@@ -99,7 +99,7 @@ public abstract class AbstractPlayer extends Actor {
      * The {@link Pokemon} array instance representing the Player's PokemonData slots.
      */
     private Pokemon[] currentPokemon = new Pokemon[MAX_POKEMON];
-
+    
     /**
      * Returns the representation for when the {@code AbstractPlayer} is pointing upwards.
      *
@@ -108,7 +108,7 @@ public abstract class AbstractPlayer extends Actor {
     static byte getUP() {
         return UP;
     }
-
+    
     /**
      * Returns the representation for when the {@code AbstractPlayer} is pointing downwards.
      *

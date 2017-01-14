@@ -6,8 +6,6 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
 import com.horse.pokemon.Engine;
 
-import java.util.Arrays;
-
 public class MultiTiledMap extends TiledMap {
     private int offsetX;
     private int offsetY;
@@ -48,8 +46,6 @@ public class MultiTiledMap extends TiledMap {
             if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
                 offset[0] = (int)(rectangle.getX());
                 offset[1] = (int)(rectangle.getY());
-                System.out.println(Arrays.toString(offset));
-                //sum of max and min minus height for inverse
             }
         }
         return offset;

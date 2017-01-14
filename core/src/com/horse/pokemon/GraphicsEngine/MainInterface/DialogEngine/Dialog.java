@@ -29,6 +29,7 @@ public class Dialog extends Actor implements Disposable {
     private int                        currentCharacterXPosition;
     private int                        currentCharacterYPosition;
     private ArrayList<CharacterWriter> characterWriterArrayList;
+    private float                      timer;
     
     public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds, String text) {
         setViewport(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()));
@@ -43,7 +44,16 @@ public class Dialog extends Actor implements Disposable {
         setCharacterWriterArrayList(new ArrayList<>(getText().length()));
         setDialog(new Texture(Gdx.files.internal(getDialogFile())));
         getStage().addActor(this);
+        setTimer(0f);
         setupCharactersToWrite();
+    }
+    
+    public float getTimer() {
+        return timer;
+    }
+    
+    public void setTimer(float timer) {
+        this.timer = timer;
     }
     
     public ArrayList<CharacterWriter> getCharacterWriterArrayList() {
@@ -165,9 +175,14 @@ public class Dialog extends Actor implements Disposable {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        setTimer(getTimer() + Gdx.graphics.getDeltaTime());
+        
         getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
-        for(CharacterWriter characterWriter : getCharacterWriterArrayList()) {
-            characterWriter.draw(batch, parentAlpha);
+    
+        for(int index = 0; index < getCharacterWriterArrayList().size(); index++) {
+            if(getTimer() > (index + 1) * getTextSpeeds().getSpeed()) {
+                getCharacterWriterArrayList().get(index).draw(batch, parentAlpha);
+            }
         }
     }
     

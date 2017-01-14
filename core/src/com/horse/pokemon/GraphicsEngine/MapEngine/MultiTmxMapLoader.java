@@ -16,7 +16,6 @@ import com.badlogic.gdx.utils.ObjectMap;
 import com.badlogic.gdx.utils.XmlReader;
 
 import java.io.IOException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 
 public class MultiTmxMapLoader extends TmxMapLoader {
@@ -49,40 +48,16 @@ public class MultiTmxMapLoader extends TmxMapLoader {
         this.offsetY = offsetY;
     }
     
-    public MultiTiledMap[] loadAllMaps(String[] mapNames, int[] offsetXArray, int[] offsetYArray) {
-        try {
-            if(mapNames.length != offsetXArray.length) {
-                throw new InvalidParameterSpecException(String.format("Invalid \"offsetXArray length\", given length %s compared to the length of mapName: %s", offsetXArray.length,
-                                                                      mapNames.length
-                ));
-            } else if(mapNames.length != offsetYArray.length) {
-                throw new InvalidParameterSpecException(String.format("Invalid \"offsetYArray length\", given length %s compared to the length of mapName: %s", offsetYArray.length,
-                                                                      mapNames.length
-                ));
-            }
-        } catch(InvalidParameterSpecException e) {
-            e.printStackTrace();
-        }
+    public MultiTiledMap[] loadAllMaps(String... mapNames) {
         HashMap<String, int[]> offsetMap = new HashMap<>(mapNames.length);
         for(String mapName : mapNames) {
             offsetMap.put(mapName, new int[] {0, 0});
         }
         MultiTiledMap[] tiledMaps = new MultiTiledMap[mapNames.length];
         for(int index = 0; index < mapNames.length; index++) {
-            //setOffsetX(offsetXArray[index]);
-            //setOffsetY(offsetYArray[index]);
             MultiTiledMap multiTiledMap = load(mapNames[index]);
-            //multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
-            //multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
-            //multiTiledMap.setOffsetX(offsetMap.get(mapNames[index])[0]);
-            //multiTiledMap.setOffsetY(offsetMap.get(mapNames[index])[1]);
             offsetMap.put(multiTiledMap.getConnectingMap(), multiTiledMap.getConnectionOffset());
-            //setOffsetX(offsetMap.get(mapNames[index])[0]);
-            //setOffsetY(offsetMap.get(mapNames[index])[1]);
-            //multiTiledMap = load(mapNames[index]);
-            //multiTiledMap.setOffsetX(getOffsetX() * Engine.getTileSize());
-            //multiTiledMap.setOffsetY(getOffsetY() * Engine.getTileSize());
-            //tiledMaps[index] = multiTiledMap;
+            multiTiledMap.dispose();
         }
         for(int index = 0; index < mapNames.length; index++) {
             setOffsetX(offsetMap.get(mapNames[index])[0]);
