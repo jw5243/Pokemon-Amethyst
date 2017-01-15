@@ -15,7 +15,7 @@ import com.horse.pokemon.Engine;
 import java.util.ArrayList;
 
 public class Dialog extends Actor implements Disposable {
-    private final String dialogFile = "DialogBoxes\\dialog.png";
+    private static final String dialogFile = "DialogBoxes\\dialog.png";
     private Viewport                   viewport;
     private Stage                      stage;
     private SpriteBatch                batch;
@@ -30,6 +30,7 @@ public class Dialog extends Actor implements Disposable {
     private int                        currentCharacterYPosition;
     private ArrayList<CharacterWriter> characterWriterArrayList;
     private float                      timer;
+    private boolean                    visible;
     
     public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds, String text) {
         setViewport(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()));
@@ -45,7 +46,12 @@ public class Dialog extends Actor implements Disposable {
         setDialog(new Texture(Gdx.files.internal(getDialogFile())));
         getStage().addActor(this);
         setTimer(0f);
+        setVisible(false);
         setupCharactersToWrite();
+    }
+    
+    public static String getDialogFile() {
+        return dialogFile;
     }
     
     public float getTimer() {
@@ -78,7 +84,6 @@ public class Dialog extends Actor implements Disposable {
         for(char character : getText().toCharArray()) {
             CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
             
-            //getStage().addActor(characterWriter);
             getCharacterWriterArrayList().add(characterWriter);
             
             setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
@@ -111,10 +116,6 @@ public class Dialog extends Actor implements Disposable {
     
     public void setViewport(Viewport viewport) {
         this.viewport = viewport;
-    }
-    
-    public String getDialogFile() {
-        return dialogFile;
     }
     
     public SpriteBatch getBatch() {
@@ -175,13 +176,15 @@ public class Dialog extends Actor implements Disposable {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        setTimer(getTimer() + Gdx.graphics.getDeltaTime());
+        if(isVisible()) {
+            setTimer(getTimer() + Gdx.graphics.getDeltaTime());
         
-        getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
-    
-        for(int index = 0; index < getCharacterWriterArrayList().size(); index++) {
-            if(getTimer() > (index + 1) * getTextSpeeds().getSpeed()) {
-                getCharacterWriterArrayList().get(index).draw(batch, parentAlpha);
+            getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
+        
+            for(int index = 0; index < getCharacterWriterArrayList().size(); index++) {
+                if(getTimer() > (index + 1) * getTextSpeeds().getSpeed()) {
+                    getCharacterWriterArrayList().get(index).draw(batch, parentAlpha);
+                }
             }
         }
     }
@@ -192,6 +195,16 @@ public class Dialog extends Actor implements Disposable {
     
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+    
+    @Override
+    public boolean isVisible() {
+        return visible;
+    }
+    
+    @Override
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
     
     public int[] getDialogPosition() {

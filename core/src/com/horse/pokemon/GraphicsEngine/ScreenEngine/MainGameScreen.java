@@ -46,19 +46,26 @@ public class MainGameScreen implements Screen {
     private Door                              doorToOpen;
     private int                               framesToAnimateDoor;
     private int                               currentDoorFrameCount;
-    private boolean                           firstFrame;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
     }
     
-    public boolean isFirstFrame() {
-        return firstFrame;
+    public AudioData getSound() {
+        return sound;
     }
     
-    public void setFirstFrame(boolean firstFrame) {
-        this.firstFrame = firstFrame;
+    public void setSound(AudioData sound) {
+        this.sound = sound;
+    }
+    
+    public Dialog getDialog() {
+        return dialog;
+    }
+    
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
     }
     
     public MultiTiledMap[] getMaps() {
@@ -109,27 +116,27 @@ public class MainGameScreen implements Screen {
         this.doorTiles = doorTiles;
     }
     
-    private MapCreator getMapCreator() {
+    public MapCreator getMapCreator() {
         return mapCreator;
     }
     
-    private void setMapCreator(MapCreator mapCreator) {
+    public void setMapCreator(MapCreator mapCreator) {
         this.mapCreator = mapCreator;
     }
     
-    private Stage getStage() {
+    public Stage getStage() {
         return stage;
     }
     
-    private void setStage(Stage stage) {
+    public void setStage(Stage stage) {
         this.stage = stage;
     }
     
-    private OrthographicCamera getCamera() {
+    public OrthographicCamera getCamera() {
         return camera;
     }
     
-    private void setCamera(OrthographicCamera camera) {
+    public void setCamera(OrthographicCamera camera) {
         this.camera = camera;
     }
     
@@ -145,15 +152,15 @@ public class MainGameScreen implements Screen {
         return mapLoader;
     }
     
-    private void setMapLoader(MultiTmxMapLoader mapLoader) {
+    public void setMapLoader(MultiTmxMapLoader mapLoader) {
         this.mapLoader = mapLoader;
     }
     
-    private Viewport getViewport() {
+    public Viewport getViewport() {
         return viewport;
     }
     
-    private void setViewport(Viewport viewport) {
+    public void setViewport(Viewport viewport) {
         this.viewport = viewport;
     }
     
@@ -169,18 +176,18 @@ public class MainGameScreen implements Screen {
         setRenderer(new MultiTileMapRenderer(1.0f, getEngine().getBatch()));
     
         setMapCreator(new MapCreator(this, getMaps()));
-        
-        setUser(new User(getMapCreator()));
     
+        setUser(new User(this));
+        
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
         Gdx.input.setInputProcessor(getStage());
     
-        sound = AudioData.TWINLEAF_TOWN_DAYTIME;
-        sound.playAudio();
-    
+        setSound(AudioData.TWINLEAF_TOWN_DAYTIME);
+        getSound().playAudio();
+        
         TiledMapTileSet tileSet = getMaps()[0].getTileSets().getTileSet("SinnohTileSet");
         
         setDoorTiles(new HashMap<>());
@@ -208,12 +215,10 @@ public class MainGameScreen implements Screen {
         setFramesToAnimateDoor(6);
         setCurrentDoorFrameCount(0);
     
-        setFirstFrame(true);
-    
-        dialog = new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
-                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
-                            "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
-        );
+        setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
+                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
+                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
+        ));
     }
     
     @Override
@@ -239,16 +244,12 @@ public class MainGameScreen implements Screen {
         getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
         getHud().stage.draw();
     
-        if(!isFirstFrame()) {
-            getEngine().getBatch().setProjectionMatrix(dialog.getStage().getCamera().combined);
-        
-            dialog.getStage().act(delta);
-            dialog.getStage().draw();
-        }
+        getEngine().getBatch().setProjectionMatrix(getDialog().getStage().getCamera().combined);
+    
+        getDialog().getStage().act(delta);
+        getDialog().getStage().draw();
         
         fpsLogger.log();
-    
-        setFirstFrame(false);
     }
     
     @Override
@@ -279,8 +280,8 @@ public class MainGameScreen implements Screen {
         getRenderer().dispose();
         getHud().dispose();
         getStage().dispose();
-        sound.getAudio().dispose();
-        dialog.dispose();
+        getSound().getAudio().dispose();
+        getDialog().dispose();
     }
     
     public void animateDoor() {

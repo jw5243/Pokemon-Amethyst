@@ -16,8 +16,10 @@ import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
+import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
 import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
+import com.horse.pokemon.ObjectData.TiledObjects.Sign;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 import java.util.Arrays;
@@ -127,16 +129,18 @@ public final class User extends AbstractPlayer implements AnimationInterface {
      */
     private boolean swimming;
     
+    private MainGameScreen mainGameScreen;
+    
     /**
      * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
      * {@code User} for movement and animation.
      *
-     * @param mapCreator Contains the collision {@link Rectangle}s for the {@code User} to check possible movements.
+     * @param mainGameScreen The screen the {@code User} is in when performing all actions.
      *
      * @see NullPointerException
      * @see MapCreator
      */
-    public User(MapCreator mapCreator) {
+    public User(MainGameScreen mainGameScreen) {
         setPreviousState(getCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
         setStateTimer(0);                    //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
         setDirection(getDOWN());             //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
@@ -146,10 +150,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         setSwimming(false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
         setRestrictedMovement(false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
         setMovementKeyHeldDownTime(0f);
+        setMainGameScreen(mainGameScreen);
         
         userSprite = new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
-        
-        setMapCreator(mapCreator);
+    
+        setMapCreator(mainGameScreen.getMapCreator());
         
         userIdleOnLand = new TextureRegion[4];
         userIdleOnWater = new TextureRegion[4];
@@ -168,7 +173,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         updateCurrentCollisionRectangle();
         
         handleInput = new HandleInput((float dt) -> {
-            if(isAligned()) {
+            if(isAligned() && !isRestrictedMovement()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getUP());
@@ -176,7 +181,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned()) {
+            if(isAligned() && !isRestrictedMovement()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getDOWN());
@@ -184,7 +189,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned()) {
+            if(isAligned() && !isRestrictedMovement()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getRIGHT());
@@ -192,7 +197,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned()) {
+            if(isAligned() && !isRestrictedMovement()) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getLEFT());
@@ -263,6 +268,14 @@ public final class User extends AbstractPlayer implements AnimationInterface {
      */
     private static byte getUserWalkHeight() {
         return USER_WALK_HEIGHT;
+    }
+    
+    public MainGameScreen getMainGameScreen() {
+        return mainGameScreen;
+    }
+    
+    public void setMainGameScreen(MainGameScreen mainGameScreen) {
+        this.mainGameScreen = mainGameScreen;
     }
     
     private Animation[] getUserRun() {
@@ -414,7 +427,14 @@ public final class User extends AbstractPlayer implements AnimationInterface {
                                        () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, -Engine.getTileSize());
                 
                 alterAction.run();
+            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Sign) {
+                getMainGameScreen().getDialog().setVisible(true);
+                setRestrictedMovement(true);
             }
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && isRestrictedMovement()) {
+            getMainGameScreen().getDialog().setVisible(false);
+            getMainGameScreen().getDialog().setTimer(0f);
+            setRestrictedMovement(false);
         }
     }
     
@@ -518,7 +538,7 @@ public final class User extends AbstractPlayer implements AnimationInterface {
     }
     
     private PlayerActions getCurrentState() {
-        if(isMoving()) {
+        if(isMoving() && !isRestrictedMovement()) {
             if(isSwimming()) {
                 return PlayerActions.SWIMMING;
             } else if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {

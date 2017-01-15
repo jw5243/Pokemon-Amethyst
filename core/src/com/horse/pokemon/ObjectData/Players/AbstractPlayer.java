@@ -78,23 +78,23 @@ public abstract class AbstractPlayer extends Actor {
      * AbstractPlayer} to identify the correct {@link Rectangle} the {@code AbstractPlayer} would be on top of.  This ensures the {@code AbstractPlayer} stays {@link #aligned} with the
      * tiles.
      */
-    private boolean futureCollision;
+    private boolean       futureCollision;
     /**
      * The {@code boolean} instance representing if the {@code AbstractPlayer} is able to move not in terms of collisions but during some scenes in the game.
      */
-    private boolean restrictedMovement;
+    private boolean       restrictedMovement;
     /**
      * The {@code byte} instance representing where the {@code AbstractPlayer} is pointing towards.
      */
-    private byte    direction;
+    private byte          direction;
     /**
      * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
      */
-    private float   stateTimer;
+    private float         stateTimer;
     /**
      * The {@link String} instance representing a Player's name.
      */
-    private String  name;
+    private String        name;
     /**
      * The {@link Pokemon} array instance representing the Player's PokemonData slots.
      */
