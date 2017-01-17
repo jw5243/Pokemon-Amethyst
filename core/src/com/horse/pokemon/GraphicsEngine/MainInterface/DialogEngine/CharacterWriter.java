@@ -3,8 +3,9 @@ package com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine;
 import com.badlogic.gdx.graphics.g2d.Batch;
 
 public class CharacterWriter {
-    private static final int DEFAULT_CHARACTER_START_X_POSITION_BUFFER = 10;
+    private static final int DEFAULT_CHARACTER_START_X_POSITION_BUFFER = 24;
     private static final int DEFAULT_CHARACTER_START_Y_POSITION_BUFFER = 6;
+    private static final int DEFAULT_CHARACTER_END_X_POSITION_BUFFER   = 40;
     private DialogCharacter dialogCharacter;
     private int             characterXPosition;
     private int             characterYPosition;
@@ -17,6 +18,10 @@ public class CharacterWriter {
         setCharacterYPosition(characterYPosition);
         setCharacterWidth(getDialogCharacter().getWidth());
         setCharacterHeight(getDialogCharacter().getHeight());
+    }
+    
+    public static int getDefaultCharacterEndXPositionBuffer() {
+        return DEFAULT_CHARACTER_END_X_POSITION_BUFFER;
     }
     
     public static int getDefaultCharacterStartXPositionBuffer() {

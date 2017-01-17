@@ -15,7 +15,7 @@ import com.horse.pokemon.Engine;
 import java.util.ArrayList;
 
 public class Dialog extends Actor implements Disposable {
-    private static final String dialogFile = "DialogBoxes\\dialog.png";
+    private static final String dialogFile = "DialogBoxes\\dialogDiamond.png";
     private Viewport                   viewport;
     private Stage                      stage;
     private SpriteBatch                batch;
@@ -82,14 +82,24 @@ public class Dialog extends Actor implements Disposable {
         setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
         setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() - CharacterWriter.getDefaultCharacterStartYPositionBuffer());
         for(char character : getText().toCharArray()) {
-            CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
-            
-            getCharacterWriterArrayList().add(characterWriter);
-            
-            setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
-            if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
+            if(character == '\n') {
                 setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                 setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
+            } else if(character == ' ') {
+                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.SPACE.getWidth());
+                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
+                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
+                }
+            } else {
+                CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
+                getCharacterWriterArrayList().add(characterWriter);
+        
+                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
+                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getxPosition() + getxSize()) {
+                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
+                }
             }
         }
     }
@@ -178,9 +188,9 @@ public class Dialog extends Actor implements Disposable {
     public void draw(Batch batch, float parentAlpha) {
         if(isVisible()) {
             setTimer(getTimer() + Gdx.graphics.getDeltaTime());
-        
+    
             getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
-        
+    
             for(int index = 0; index < getCharacterWriterArrayList().size(); index++) {
                 if(getTimer() > (index + 1) * getTextSpeeds().getSpeed()) {
                     getCharacterWriterArrayList().get(index).draw(batch, parentAlpha);

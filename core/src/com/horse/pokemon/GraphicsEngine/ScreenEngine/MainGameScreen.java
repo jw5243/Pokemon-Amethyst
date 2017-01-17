@@ -216,7 +216,7 @@ public class MainGameScreen implements Screen {
         setCurrentDoorFrameCount(0);
     
         setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
-                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
+                             "Test Character Writer\n ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
                              "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
         ));
     }
@@ -240,10 +240,10 @@ public class MainGameScreen implements Screen {
                 animateDoor();
             }
         }
-        
-        getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
-        getHud().stage.draw();
     
+        //getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
+        //getHud().stage.draw();
+        
         getEngine().getBatch().setProjectionMatrix(getDialog().getStage().getCamera().combined);
     
         getDialog().getStage().act(delta);
