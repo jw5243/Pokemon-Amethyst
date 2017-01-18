@@ -94,7 +94,7 @@ public class Dialog extends Actor implements Disposable {
             } else {
                 CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
                 getCharacterWriterArrayList().add(characterWriter);
-        
+    
                 setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
                 if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getxPosition() + getxSize()) {
                     setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());

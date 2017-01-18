@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainGameScreen implements Screen {
+    private static final int FRAMES_TO_ANIMATE_DOOR = 6;
     private Engine                            engine;
     private OrthographicCamera                camera;
     private Viewport                          viewport;
@@ -44,12 +45,15 @@ public class MainGameScreen implements Screen {
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
     private HashMap<Integer, TiledMapTile>    doorTiles;
     private Door                              doorToOpen;
-    private int                               framesToAnimateDoor;
     private int                               currentDoorFrameCount;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
+    }
+    
+    public static int getFramesToAnimateDoor() {
+        return FRAMES_TO_ANIMATE_DOOR;
     }
     
     public AudioData getSound() {
@@ -90,14 +94,6 @@ public class MainGameScreen implements Screen {
     
     public void setDoorToOpen(Door doorToOpen) {
         this.doorToOpen = doorToOpen;
-    }
-    
-    public int getFramesToAnimateDoor() {
-        return framesToAnimateDoor;
-    }
-    
-    public void setFramesToAnimateDoor(int framesToAnimateDoor) {
-        this.framesToAnimateDoor = framesToAnimateDoor;
     }
     
     public ArrayList<TiledMapTileLayer.Cell> getDoorsInMap() {
@@ -212,7 +208,6 @@ public class MainGameScreen implements Screen {
             }
         }
         setDoorToOpen(null);
-        setFramesToAnimateDoor(6);
         setCurrentDoorFrameCount(0);
     
         setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
