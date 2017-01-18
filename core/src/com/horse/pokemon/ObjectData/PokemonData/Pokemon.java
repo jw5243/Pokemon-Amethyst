@@ -1,6 +1,7 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
 import com.horse.pokemon.DataReaders.PokemonDataReader;
+import com.horse.pokemon.ObjectData.PokemonData.CalculateStats.CalculateStats;
 
 /**
  * The class for all PokemonData, containing all information that can be easily
@@ -37,6 +38,10 @@ public class Pokemon {
     
     public void setInformation(PokemonInformation information) {
         this.information = information;
+    }
+    
+    public void updateStats() {
+        getInformation().setBaseStats(CalculateStats.getStats(this));
     }
     
     @Override
