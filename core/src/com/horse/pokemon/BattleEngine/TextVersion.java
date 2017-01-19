@@ -13,5 +13,6 @@ public class TextVersion {
     
         userPokemon.updateStats();
         enemyPokemon.updateStats();
+    
     }
 }

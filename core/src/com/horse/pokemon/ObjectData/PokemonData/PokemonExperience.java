@@ -78,7 +78,7 @@ public class PokemonExperience {
             } else if(experienceType == ExperienceTypes.SLOW) {
                 return (int)(Math.cbrt(0.8 * currentExperience));
             } else if(experienceType == ExperienceTypes.MEDIUM_SLOW) {
-                return (int)((Math.cbrt((((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) - (-140 / (2 * 1.2))) + Math.sqrt(
+                return (int)((Math.cbrt(((-3375 / 46.656) + (-1500 / (6 * 1.44)) - (-140 / (2 * 1.2))) + Math.sqrt(
                         Math.pow(-Math.pow(-15, 3) + ((-15 * 100) / (Math.pow(6 * 1.2, 2)) - (-140 / (2 * 1.2))), 2) +
                         (100 / (3 * 1.2) - (Math.pow(-15, 2) / (9 * Math.pow(1.2, 2)))))) + Math.cbrt(
                         (((-Math.pow(-15, 3)) / (27 * Math.pow(1.2, 3))) + ((-15 * 100) / (6 * Math.pow(1.2, 2))) - (-140 / (2 * 1.2))) - Math.sqrt(
