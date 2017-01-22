@@ -29,6 +29,7 @@ import java.util.HashMap;
 
 public class MainGameScreen implements Screen {
     private static final int FRAMES_TO_ANIMATE_DOOR = 6;
+    private static final int START_DOOR_FRAME_COUNT = 0;
     private Engine                            engine;
     private OrthographicCamera                camera;
     private Viewport                          viewport;
@@ -50,6 +51,10 @@ public class MainGameScreen implements Screen {
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
+    }
+    
+    public static int getStartDoorFrameCount() {
+        return START_DOOR_FRAME_COUNT;
     }
     
     public static int getFramesToAnimateDoor() {
@@ -208,10 +213,10 @@ public class MainGameScreen implements Screen {
             }
         }
         setDoorToOpen(null);
-        setCurrentDoorFrameCount(0);
-    
+        setCurrentDoorFrameCount(getStartDoorFrameCount());
+        
         setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
-                             "Test Character Writer\n ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
+                             "Test Character Writer\nABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
                              "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
         ));
     }
@@ -281,14 +286,14 @@ public class MainGameScreen implements Screen {
     
     public void animateDoor() {
         for(TiledMapTileLayer.Cell cell : getDoorsInMap()) {
-            try {
-                int currentAnimationFrame = (int)(cell.getTile().getProperties().get("Door Animation"));
-                
-                currentAnimationFrame++;
-                
-                TiledMapTile newTile = getDoorTiles().get(currentAnimationFrame);
+            int currentAnimationFrame = (int)(cell.getTile().getProperties().get("Door Animation"));
+    
+            currentAnimationFrame++;
+    
+            TiledMapTile newTile = getDoorTiles().get(currentAnimationFrame);
+            if(newTile != null) {
                 cell.setTile(newTile);
-            } catch(NullPointerException e) {
+            } else {
                 if(getDoorToOpen() == null) {
                     return;
                 }
@@ -302,10 +307,8 @@ public class MainGameScreen implements Screen {
         for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
                 if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
-                    try {
+                    if(mapLayer instanceof TiledMapTileLayer) {
                         getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                    } catch(ClassCastException e) {
-                        e.printStackTrace();
                     }
                 }
             }
@@ -316,10 +319,8 @@ public class MainGameScreen implements Screen {
         for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
                 if(mapLayer.getName().equalsIgnoreCase("Objects")) {
-                    try {
+                    if(mapLayer instanceof TiledMapTileLayer) {
                         getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                    } catch(ClassCastException e) {
-                        e.printStackTrace();
                     }
                 }
             }

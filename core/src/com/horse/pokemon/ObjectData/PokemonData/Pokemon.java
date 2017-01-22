@@ -12,6 +12,9 @@ import com.horse.pokemon.ObjectData.PokemonData.CalculateStats.CalculateStats;
  * @since 1.0
  */
 public class Pokemon {
+    /**
+     * The information that sets all Pokemon apart, containing values such as a Pokemon's stats and changing values.
+     */
     private PokemonInformation information;
     
     /**
@@ -42,6 +45,11 @@ public class Pokemon {
     
     public void updateStats() {
         getInformation().setBaseStats(CalculateStats.getStats(this));
+    }
+    
+    public void updateLevel(int level) {
+        getInformation().setCurrentLevel(level);
+        updateStats();
     }
     
     @Override

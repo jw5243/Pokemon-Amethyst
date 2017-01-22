@@ -9,6 +9,8 @@ import com.horse.pokemon.Engine;
 public class MultiTiledMap extends TiledMap {
     private int offsetX;
     private int offsetY;
+    private int width;
+    private int height;
     
     public MultiTiledMap() {
         this(0, 0);
@@ -18,6 +20,22 @@ public class MultiTiledMap extends TiledMap {
         super();
         setOffsetX(offsetX);
         setOffsetY(offsetY);
+    }
+    
+    public int getWidth() {
+        return width;
+    }
+    
+    public void setWidth(int width) {
+        this.width = width;
+    }
+    
+    public int getHeight() {
+        return height;
+    }
+    
+    public void setHeight(int height) {
+        this.height = height;
     }
     
     public int getOffsetX() {

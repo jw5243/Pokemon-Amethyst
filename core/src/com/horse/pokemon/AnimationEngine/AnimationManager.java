@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
 
-import java.security.spec.InvalidParameterSpecException;
-
 /**
  * Class for getting an {@link Animation} instance of given pieces of information.
  *
@@ -30,20 +28,11 @@ public class AnimationManager {
      * @return {@link Animation} instance representing an object's specific action for graphical use.
      */
     public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int[] yPositions, int frameWidth, int frameHeight) {
-        
         if(frames != xPositions.length) {
-            try {
-                throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of xPositions array.");
-            } catch(InvalidParameterSpecException e) {
-                e.printStackTrace();
-            }
+            xPositions = new int[frames];
         }
         if(frames != yPositions.length) {
-            try {
-                throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of yPositions array.");
-            } catch(InvalidParameterSpecException e) {
-                e.printStackTrace();
-            }
+            yPositions = new int[frames];
         }
         
         Array<TextureRegion> animationFrames = new Array<>(true, frames, TextureRegion.class);
@@ -70,11 +59,7 @@ public class AnimationManager {
      */
     public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int[] xPositions, int yPosition, int frameWidth, int frameHeight) {
         if(frames != xPositions.length) {
-            try {
-                throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of xPositions array.");
-            } catch(InvalidParameterSpecException e) {
-                e.printStackTrace();
-            }
+            xPositions = new int[frames];
         }
         
         Array<TextureRegion> animationFrames = new Array<>(true, frames, TextureRegion.class);
@@ -101,11 +86,7 @@ public class AnimationManager {
      */
     public static Animation<TextureRegion> getAnimation(Texture textureSheet, int frames, float frameDuration, int xPosition, int[] yPositions, int frameWidth, int frameHeight) {
         if(frames != yPositions.length) {
-            try {
-                throw new InvalidParameterSpecException("Invalid parameter inputted.  Undesired size of yPositions array.");
-            } catch(InvalidParameterSpecException e) {
-                e.printStackTrace();
-            }
+            yPositions = new int[frames];
         }
         
         Array<TextureRegion> animationFrames = new Array<>(true, frames, TextureRegion.class);
