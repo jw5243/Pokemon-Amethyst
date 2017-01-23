@@ -118,6 +118,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      * system.
      *
      * @param fileName the filename
+     * @param widths Array of map width values.
+     * @param heights Array of map height values.
      *
      * @return the TiledMap
      */
@@ -247,6 +249,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      *
      * @param fileName   the filename
      * @param parameters specifies whether to use y-up, generate mip maps etc.
+     * @param widths Array of map width values.
+     * @param heights Array of map height values.
      *
      * @return the TiledMap
      */
@@ -281,6 +285,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      * @param root          the XML root element
      * @param tmxFile       the Filehandle of the tmx file
      * @param imageResolver the {@link ImageResolver}
+     * @param widths Array of map width values.
+     * @param heights Array of map height values.
      *
      * @return the {@link TiledMap}
      */

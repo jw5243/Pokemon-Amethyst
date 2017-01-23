@@ -1,5 +1,6 @@
 package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -31,6 +32,7 @@ import java.util.HashMap;
  * Class containing all the graphical pieces for when the {@link User} is on the screen state.  This is the {@link Screen} that is used the most as the major actions happen on this
  * screen.
  *
+ * @see Game
  * @see Screen
  * @see ArrayList
  * @see HashMap
@@ -62,8 +64,20 @@ public class MainGameScreen implements Screen {
      * The {@code int} representing the amount of iterations over {@link #render(float)} before the {@link Door} starts animating.
      */
     private static final int FRAMES_TO_ANIMATE_DOOR = 6;
+    
+    /**
+     * The {@code int} representing the beginning frame of {@link Door} when animating.
+     */
     private static final int START_DOOR_FRAME_COUNT = 0;
+    
+    /**
+     * The {@link Engine} instance representing the {@link Game} that is playing.
+     */
     private Engine                            engine;
+    
+    /**
+     * The {@link OrthographicCamera} instance representing the sight of the {@link User}.
+     */
     private OrthographicCamera                camera;
     private Viewport                          viewport;
     private Hud                               hud;
