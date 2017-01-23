@@ -177,8 +177,8 @@ public class IndividualValue {
      */
     public int trimStat(int statValue) {
         statValue = statValue < getMinimumIndividualValuePerStat() ? getMinimumIndividualValuePerStat() : statValue; //Ensure the new value is not below the minimum individual value.
-        statValue = statValue > getMaximumIndividualValuePerStat() ? getMaximumIndividualValuePerStat() : statValue; //Ensure the new value is not above the maximum individual value.
-        return statValue; //Return the newly clamped value.
+        return statValue > getMaximumIndividualValuePerStat() ? getMaximumIndividualValuePerStat() :
+               statValue; //Ensure the new value is not above the maximum individual value and return the value.
     }
     
     /**

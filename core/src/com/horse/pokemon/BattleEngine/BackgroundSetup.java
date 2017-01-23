@@ -6,10 +6,10 @@ import com.horse.pokemon.Engine;
 
 public class BackgroundSetup implements Disposable {
     private static final Vector2 SCREEN_TO_BACKGROUND_SIZE_RATIO =
-            new Vector2(Engine.getvWidth() / BackgroundData.getStandardBackgroundSize().x, Engine.getvHeight() / BackgroundData.getStandardBackgroundSize().y);
+            new Vector2(Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth(), Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight());
     private static final Vector2 BACKGROUND_POSITION             = new Vector2(0, 0);
     private static final Vector2 ENEMY_BASE_POSITION             =
-            new Vector2(Engine.getvWidth() - BackgroundData.getStandardEnemyBaseSize().x, Engine.getvHeight() - (BackgroundData.getStandardEnemyBaseSize().y * 1.2f));
+            new Vector2(Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth(), Engine.getvHeight() - (BackgroundData.getStandardEnemyBaseHeight() * 1.2f));
     private static final Vector2 USER_BASE_POSITION              = new Vector2(-128, 0);
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
@@ -55,16 +55,16 @@ public class BackgroundSetup implements Disposable {
         getEngine().getBatch().begin();
     
         getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundPosition().x, getBackgroundPosition().y,
-                                    BackgroundData.getStandardBackgroundSize().x * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardBackgroundSize().y * getScreenToBackgroundSizeRatio().y
+                                    BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundSizeRatio().x,
+                                    BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundSizeRatio().y
         );
         getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBasePosition().x, getEnemyBasePosition().y,
-                                    BackgroundData.getStandardEnemyBaseSize().x * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardEnemyBaseSize().y * getScreenToBackgroundSizeRatio().y
+                                    BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundSizeRatio().x,
+                                    BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundSizeRatio().y
         );
         getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBasePosition().x, getUserBasePosition().y,
-                                    BackgroundData.getStandardUserBaseSize().x * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardUserBaseSize().y * getScreenToBackgroundSizeRatio().y
+                                    BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundSizeRatio().x,
+                                    BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundSizeRatio().y
         );
         
         getEngine().getBatch().end();

@@ -4,34 +4,22 @@ import com.horse.pokemon.DataReaders.MoveDataReader;
 import com.horse.pokemon.DataReaders.PokemonDataReader;
 import com.horse.pokemon.RandomNumberGenerator;
 
+/**
+ * Class for calculating the amount of hitpoints to deduct off a {@link Pokemon} when a {@link Pokemon} uses one of its {@link Moves}.
+ *
+ * @see Pokemon
+ * @see Moves
+ */
 public class CalculateDamage {
-    private double userLevel;
-    private double userAttack;
-    private double movePower;
-    private double enemyDefense;
-    private double userSTAB;
-    private double userResistance;
-    private double randomNumber;
-    
-    public CalculateDamage(Pokemon userPokemon, Pokemon enemyPokemon, Moves moveUsed) {
-        userLevel = userPokemon.getInformation().getCurrentLevel();
-        userAttack = userPokemon.getInformation().getCurrentAttack();
-        movePower = moveUsed.getBasePower();
-        enemyDefense = enemyPokemon.getInformation().getCurrentDefense();
-        userSTAB = 1;
-        userResistance = 1;
-        randomNumber = RandomNumberGenerator.generateNumber(85, 100);
-    }
-    
     public static void main(String[] args) {
-        Pokemon         userPokemon  = PokemonDataReader.getPokemon("Ivysaur");
-        Pokemon         enemyPokemon = PokemonDataReader.getPokemon("Bulbasaur");
-        Moves           userMove     = MoveDataReader.getMove("Absorb");
-        CalculateDamage calculator   = new CalculateDamage(userPokemon, enemyPokemon, userMove);
-        System.out.println(calculator.getDamage());
+        Pokemon userPokemon  = PokemonDataReader.getPokemon("Ivysaur");
+        Pokemon enemyPokemon = PokemonDataReader.getPokemon("Bulbasaur");
+        Moves   userMove     = MoveDataReader.getMove("Absorb");
+        System.out.println(CalculateDamage.getDamage(userPokemon, enemyPokemon, userMove));
     }
     
-    public int getDamage() {
-        return (int)((((2 * userLevel / 5 + 2) * userAttack * movePower / enemyDefense) / 50 + 2) * userSTAB * userResistance * randomNumber / 100);
+    public static int getDamage(Pokemon userPokemon, Pokemon enemyPokemon, Moves moveUsed) {
+        return (int)((((2 * userPokemon.getInformation().getCurrentLevel() / 5 + 2) * userPokemon.getInformation().getCurrentAttack() * moveUsed.getBasePower() /
+                       enemyPokemon.getInformation().getCurrentDefense()) / 50 + 2) * 1.0f * 1.0f * RandomNumberGenerator.generateNumber(85, 100) / 100);
     }
 }

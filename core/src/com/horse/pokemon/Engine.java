@@ -15,18 +15,20 @@ import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
  */
 public class Engine extends Game {
     /**
-     * The {@link Integer} instance representing the virtual width for reference to all of the positions in the
-     * background.
-     */
-    private static final int V_WIDTH = (int)(BackgroundData.getStandardBackgroundSize().x);
-    
-    /**
-     * The {@link Integer} instance representing the virtual height for reference to all of the positions in the
+     * The {@code int} instance representing the virtual width for reference to all of the positions in the
      * background.
      *
-     * @see BackgroundData#getStandardBackgroundSize()
+     * @see BackgroundData#getStandardBackgroundWidth()
      */
-    private static final int V_HEIGHT = (int)(BackgroundData.getStandardBackgroundSize().y);
+    private static final int V_WIDTH = (int)(BackgroundData.getStandardBackgroundWidth());
+    
+    /**
+     * The {@code int} instance representing the virtual height for reference to all of the positions in the
+     * background.
+     *
+     * @see BackgroundData#getStandardBackgroundHeight()
+     */
+    private static final int V_HEIGHT = (int)(BackgroundData.getStandardBackgroundHeight());
     
     /**
      * The length of the size of a tile to reference collisions and presice positions of some actors.

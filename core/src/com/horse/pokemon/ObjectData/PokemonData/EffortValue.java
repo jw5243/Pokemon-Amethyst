@@ -1,8 +1,17 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
+/**
+ * Class for storing the value for a {@link Pokemon} that will raise each stat according to its corresponding {@code EffortValue} stat.  There is a mutable and immutable
+ * {@code EffortValue} for each stat.  The immutable stat is for when a {@link Pokemon} is defeated and the winner gains {@code EffortValue} points.  The mutable value is the
+ * changing number for when the opposing {@link Pokemon} is defeated (They keep track of the EV's).
+ *
+ * @see Pokemon
+ * @see IndividualValue
+ */
 public class EffortValue {
     private static final int MAX_EFFORT_VALUE_TOTAL    = 510;
     private static final int MAX_EFFORT_VALUE_PER_STAT = 255;
+    private static final int DEFAULT_EFFORT_VALUE      = 0;
     private int healthEV;
     private int attackEV;
     private int defenseEV;
@@ -17,7 +26,7 @@ public class EffortValue {
     private int immutableSpeedEV;
     
     public EffortValue() {
-        this(0, 0, 0, 0, 0, 0);
+        this(getDefaultEffortValue(), getDefaultEffortValue(), getDefaultEffortValue(), getDefaultEffortValue(), getDefaultEffortValue(), getDefaultEffortValue());
     }
     
     public EffortValue(int immutableHealthEV, int immutableAttackEV, int immutableDefenseEV, int immutableSpecialAttackEV, int immutableSpecialDefenseEV, int immutableSpeedEV) {
@@ -28,6 +37,18 @@ public class EffortValue {
         setImmutableSpecialAttackEV(immutableSpecialAttackEV);
         setImmutableSpecialDefenseEV(immutableSpecialDefenseEV);
         setImmutableSpeedEV(immutableSpeedEV);
+    }
+    
+    public static int getMaxEffortValueTotal() {
+        return MAX_EFFORT_VALUE_TOTAL;
+    }
+    
+    public static int getMaxEffortValuePerStat() {
+        return MAX_EFFORT_VALUE_PER_STAT;
+    }
+    
+    public static int getDefaultEffortValue() {
+        return DEFAULT_EFFORT_VALUE;
     }
     
     public static void main(String[] args) {
@@ -89,12 +110,12 @@ public class EffortValue {
     }
     
     public void resetEV() {
-        setHealthEV(0);
-        setAttackEV(0);
-        setDefenseEV(0);
-        setSpecialAttackEV(0);
-        setSpecialDefenseEV(0);
-        setSpeedEV(0);
+        setHealthEV(getDefaultEffortValue());
+        setAttackEV(getDefaultEffortValue());
+        setDefenseEV(getDefaultEffortValue());
+        setSpecialAttackEV(getDefaultEffortValue());
+        setSpecialDefenseEV(getDefaultEffortValue());
+        setSpeedEV(getDefaultEffortValue());
     }
     
     public void updateEV(Pokemon enemyPokemon) {
@@ -125,8 +146,8 @@ public class EffortValue {
     }
     
     public void setHealthEV(int healthEV) {
-        this.healthEV = totalEV() + healthEV <= MAX_EFFORT_VALUE_TOTAL ? getHealthEV() + healthEV : getHealthEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.healthEV = getHealthEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getHealthEV();
+        this.healthEV = totalEV() + healthEV <= getMaxEffortValueTotal() ? getHealthEV() + healthEV : getHealthEV() + (getMaxEffortValueTotal() - totalEV());
+        this.healthEV = getHealthEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getHealthEV();
     }
     
     public int getAttackEV() {
@@ -134,8 +155,8 @@ public class EffortValue {
     }
     
     public void setAttackEV(int attackEV) {
-        this.attackEV = totalEV() + attackEV <= MAX_EFFORT_VALUE_TOTAL ? getAttackEV() + attackEV : getAttackEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.attackEV = getAttackEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getAttackEV();
+        this.attackEV = totalEV() + attackEV <= getMaxEffortValueTotal() ? getAttackEV() + attackEV : getAttackEV() + (getMaxEffortValueTotal() - totalEV());
+        this.attackEV = getAttackEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getAttackEV();
     }
     
     public int getDefenseEV() {
@@ -143,8 +164,8 @@ public class EffortValue {
     }
     
     public void setDefenseEV(int defenseEV) {
-        this.defenseEV = totalEV() + defenseEV <= MAX_EFFORT_VALUE_TOTAL ? getDefenseEV() + defenseEV : getDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.defenseEV = getDefenseEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getDefenseEV();
+        this.defenseEV = totalEV() + defenseEV <= MAX_EFFORT_VALUE_TOTAL ? getDefenseEV() + defenseEV : getDefenseEV() + (getMaxEffortValueTotal() - totalEV());
+        this.defenseEV = getDefenseEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getDefenseEV();
     }
     
     public int getSpecialAttackEV() {
@@ -153,8 +174,8 @@ public class EffortValue {
     
     public void setSpecialAttackEV(int specialAttackEV) {
         this.specialAttackEV =
-                totalEV() + specialAttackEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialAttackEV() + specialAttackEV : getSpecialAttackEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.specialAttackEV = getSpecialAttackEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getSpecialAttackEV();
+                totalEV() + specialAttackEV <= getMaxEffortValueTotal() ? getSpecialAttackEV() + specialAttackEV : getSpecialAttackEV() + (getMaxEffortValueTotal() - totalEV());
+        this.specialAttackEV = getSpecialAttackEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getSpecialAttackEV();
     }
     
     public int getSpecialDefenseEV() {
@@ -163,8 +184,8 @@ public class EffortValue {
     
     public void setSpecialDefenseEV(int specialDefenseEV) {
         this.specialDefenseEV =
-                totalEV() + specialDefenseEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialDefenseEV() + specialDefenseEV : getSpecialDefenseEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.specialDefenseEV = getSpecialDefenseEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getSpecialDefenseEV();
+                totalEV() + specialDefenseEV <= MAX_EFFORT_VALUE_TOTAL ? getSpecialDefenseEV() + specialDefenseEV : getSpecialDefenseEV() + (getMaxEffortValueTotal() - totalEV());
+        this.specialDefenseEV = getSpecialDefenseEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getSpecialDefenseEV();
     }
     
     public int getSpeedEV() {
@@ -172,7 +193,7 @@ public class EffortValue {
     }
     
     public void setSpeedEV(int speedEV) {
-        this.speedEV = totalEV() + speedEV <= MAX_EFFORT_VALUE_TOTAL ? getSpeedEV() + speedEV : getSpeedEV() + (MAX_EFFORT_VALUE_TOTAL - totalEV());
-        this.speedEV = getSpeedEV() > MAX_EFFORT_VALUE_PER_STAT ? MAX_EFFORT_VALUE_PER_STAT : getSpeedEV();
+        this.speedEV = totalEV() + speedEV <= getMaxEffortValueTotal() ? getSpeedEV() + speedEV : getSpeedEV() + (getMaxEffortValueTotal() - totalEV());
+        this.speedEV = getSpeedEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getSpeedEV();
     }
 }

@@ -27,7 +27,40 @@ import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Class containing all the graphical pieces for when the {@link User} is on the screen state.  This is the {@link Screen} that is used the most as the major actions happen on this
+ * screen.
+ *
+ * @see Screen
+ * @see ArrayList
+ * @see HashMap
+ * @see Door
+ * @see User
+ * @see Gdx
+ * @see FPSLogger
+ * @see GL20
+ * @see OrthographicCamera
+ * @see MapLayer
+ * @see TiledMapTile
+ * @see TiledMapTileLayer
+ * @see TiledMapTileSet
+ * @see Stage
+ * @see FitViewport
+ * @see Viewport
+ * @see AudioData
+ * @see Engine
+ * @see Dialog
+ * @see TextSpeeds
+ * @see MapCreator
+ * @see Maps
+ * @see MultiTileMapRenderer
+ * @see MultiTiledMap
+ * @see MultiTmxMapLoader
+ */
 public class MainGameScreen implements Screen {
+    /**
+     * The {@code int} representing the amount of iterations over {@link #render(float)} before the {@link Door} starts animating.
+     */
     private static final int FRAMES_TO_ANIMATE_DOOR = 6;
     private static final int START_DOOR_FRAME_COUNT = 0;
     private Engine                            engine;
