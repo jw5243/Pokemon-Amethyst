@@ -270,11 +270,11 @@ public final class User extends AbstractPlayer implements AnimationInterface {
         return USER_WALK_HEIGHT;
     }
     
-    public MainGameScreen getMainGameScreen() {
+    private MainGameScreen getMainGameScreen() {
         return mainGameScreen;
     }
     
-    public void setMainGameScreen(MainGameScreen mainGameScreen) {
+    private void setMainGameScreen(MainGameScreen mainGameScreen) {
         this.mainGameScreen = mainGameScreen;
     }
     

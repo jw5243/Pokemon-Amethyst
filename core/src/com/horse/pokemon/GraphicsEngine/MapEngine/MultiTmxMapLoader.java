@@ -58,7 +58,7 @@ public class MultiTmxMapLoader extends TmxMapLoader {
         }
         MultiTiledMap[] tiledMaps = new MultiTiledMap[mapNames.length];
         for(int index = 0; index < mapNames.length; index++) {
-            MultiTiledMap multiTiledMap = load(mapNames[index], true);
+            MultiTiledMap multiTiledMap = load(mapNames[index]);
             offsetMap.put(multiTiledMap.getConnectingMap(), multiTiledMap.getConnectionOffset());
             widthArray[index] = multiTiledMap.getWidth();
             heightArray[index] = multiTiledMap.getHeight();
@@ -77,11 +77,11 @@ public class MultiTmxMapLoader extends TmxMapLoader {
     
     protected void loadTileLayer(TiledMap map, XmlReader.Element element, int totalWidth, int totalHeight) {
         if(element.getName().equals("layer")) {
-            int               width      = element.getIntAttribute("width", 0);
-            int               height     = element.getIntAttribute("height", 0);
-            int               tileWidth  = element.getParent().getIntAttribute("tilewidth", 0);
-            int               tileHeight = element.getParent().getIntAttribute("tileheight", 0);
-            System.out.println(totalWidth);
+            int width      = element.getIntAttribute("width", 0);
+            int height     = element.getIntAttribute("height", 0);
+            int tileWidth  = element.getParent().getIntAttribute("tilewidth", 0);
+            int tileHeight = element.getParent().getIntAttribute("tileheight", 0);
+            
             TiledMapTileLayer layer = new TiledMapTileLayer(totalWidth, totalHeight, tileWidth, tileHeight);
             
             loadBasicLayerInfo(layer, element);
@@ -134,8 +134,111 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      *
      * @return the TiledMap
      */
-    public MultiTiledMap load(String fileName, boolean onlyObjects) {
-        return load(fileName, new TmxMapLoader.Parameters(), onlyObjects);
+    @Override
+    public MultiTiledMap load(String fileName) {
+        return load(fileName, new TmxMapLoader.Parameters());
+    }
+    
+    /**
+     * Loads the {@link TiledMap} from the given file. The file is resolved via the {@link FileHandleResolver} set in the
+     * constructor of this class. By default it will resolve to an internal file.
+     *
+     * @param fileName   the filename
+     * @param parameters specifies whether to use y-up, generate mip maps etc.
+     *
+     * @return the TiledMap
+     */
+    @Override
+    public MultiTiledMap load(String fileName, TmxMapLoader.Parameters parameters) {
+        try {
+            this.convertObjectToTileSpace = parameters.convertObjectToTileSpace;
+            this.flipY = parameters.flipY;
+            FileHandle tmxFile = resolve(fileName);
+            root = xml.parse(tmxFile);
+            ObjectMap<String, Texture> textures     = new ObjectMap<>();
+            Array<FileHandle>          textureFiles = loadTilesets(root, tmxFile);
+            textureFiles.addAll(loadImages(root, tmxFile));
+            
+            for(FileHandle textureFile : textureFiles) {
+                Texture texture = new Texture(textureFile, parameters.generateMipMaps);
+                texture.setFilter(parameters.textureMinFilter, parameters.textureMagFilter);
+                textures.put(textureFile.path(), texture);
+            }
+            
+            ImageResolver.DirectImageResolver imageResolver = new ImageResolver.DirectImageResolver(textures);
+            MultiTiledMap                     map           = loadTilemap(root, tmxFile, imageResolver);
+            map.setOwnedResources(textures.values().toArray());
+            return map;
+        } catch(IOException e) {
+            throw new GdxRuntimeException("Couldn't load tilemap '" + fileName + "'", e);
+        }
+    }
+    
+    protected MultiTiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver) {
+        MultiTiledMap map = new MultiTiledMap(getOffsetX(), getOffsetY());
+        
+        String mapOrientation     = root.getAttribute("orientation", null);
+        int    mapWidth           = root.getIntAttribute("width", 0);
+        int    mapHeight          = root.getIntAttribute("height", 0);
+        int    tileWidth          = root.getIntAttribute("tilewidth", 0);
+        int    tileHeight         = root.getIntAttribute("tileheight", 0);
+        int    hexSideLength      = root.getIntAttribute("hexsidelength", 0);
+        String staggerAxis        = root.getAttribute("staggeraxis", null);
+        String staggerIndex       = root.getAttribute("staggerindex", null);
+        String mapBackgroundColor = root.getAttribute("backgroundcolor", null);
+        
+        map.setWidth(mapWidth);
+        map.setHeight(mapHeight);
+        
+        MapProperties mapProperties = map.getProperties();
+        if(mapOrientation != null) {
+            mapProperties.put("orientation", mapOrientation);
+        }
+        mapProperties.put("width", mapWidth);
+        mapProperties.put("height", mapHeight);
+        mapProperties.put("tilewidth", tileWidth);
+        mapProperties.put("tileheight", tileHeight);
+        mapProperties.put("hexsidelength", hexSideLength);
+        if(staggerAxis != null) {
+            mapProperties.put("staggeraxis", staggerAxis);
+        }
+        if(staggerIndex != null) {
+            mapProperties.put("staggerindex", staggerIndex);
+        }
+        if(mapBackgroundColor != null) {
+            mapProperties.put("backgroundcolor", mapBackgroundColor);
+        }
+        mapTileWidth = tileWidth;
+        mapTileHeight = tileHeight;
+        mapWidthInPixels = mapWidth * tileWidth;
+        mapHeightInPixels = mapHeight * tileHeight;
+        
+        if(mapOrientation != null) {
+            if("staggered".equals(mapOrientation)) {
+                if(mapHeight > 1) {
+                    mapWidthInPixels += tileWidth / 2;
+                    mapHeightInPixels = mapHeightInPixels / 2 + tileHeight / 2;
+                }
+            }
+        }
+        
+        XmlReader.Element properties = root.getChildByName("properties");
+        if(properties != null) {
+            loadProperties(map.getProperties(), properties);
+        }
+        Array<XmlReader.Element> tilesets = root.getChildrenByName("tileset");
+        for(XmlReader.Element element : tilesets) {
+            loadTileSet(map, element, tmxFile, imageResolver);
+            root.removeChild(element);
+        }
+        for(int i = 0, j = root.getChildCount(); i < j; i++) {
+            XmlReader.Element element = root.getChild(i);
+            String            name    = element.getName();
+            if(name.equals("objectgroup")) {
+                loadObjectGroup(map, element);
+            }
+        }
+        return map;
     }
     
     /**
@@ -165,40 +268,6 @@ public class MultiTmxMapLoader extends TmxMapLoader {
             
             ImageResolver.DirectImageResolver imageResolver = new ImageResolver.DirectImageResolver(textures);
             MultiTiledMap                     map           = loadTilemap(root, tmxFile, imageResolver, widths, heights);
-            map.setOwnedResources(textures.values().toArray());
-            return map;
-        } catch(IOException e) {
-            throw new GdxRuntimeException("Couldn't load tilemap '" + fileName + "'", e);
-        }
-    }
-    
-    /**
-     * Loads the {@link TiledMap} from the given file. The file is resolved via the {@link FileHandleResolver} set in the
-     * constructor of this class. By default it will resolve to an internal file.
-     *
-     * @param fileName   the filename
-     * @param parameters specifies whether to use y-up, generate mip maps etc.
-     *
-     * @return the TiledMap
-     */
-    public MultiTiledMap load(String fileName, TmxMapLoader.Parameters parameters, boolean onlyObjects) {
-        try {
-            this.convertObjectToTileSpace = parameters.convertObjectToTileSpace;
-            this.flipY = parameters.flipY;
-            FileHandle tmxFile = resolve(fileName);
-            root = xml.parse(tmxFile);
-            ObjectMap<String, Texture> textures     = new ObjectMap<>();
-            Array<FileHandle>          textureFiles = loadTilesets(root, tmxFile);
-            textureFiles.addAll(loadImages(root, tmxFile));
-        
-            for(FileHandle textureFile : textureFiles) {
-                Texture texture = new Texture(textureFile, parameters.generateMipMaps);
-                texture.setFilter(parameters.textureMinFilter, parameters.textureMagFilter);
-                textures.put(textureFile.path(), texture);
-            }
-        
-            ImageResolver.DirectImageResolver imageResolver = new ImageResolver.DirectImageResolver(textures);
-            MultiTiledMap                     map           = loadTilemap(root, tmxFile, imageResolver, onlyObjects);
             map.setOwnedResources(textures.values().toArray());
             return map;
         } catch(IOException e) {
@@ -287,80 +356,6 @@ public class MultiTmxMapLoader extends TmxMapLoader {
                 loadObjectGroup(map, element);
             } else if(name.equals("imagelayer")) {
                 loadImageLayer(map, element, tmxFile, imageResolver);
-            }
-        }
-        return map;
-    }
-    
-    protected MultiTiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver, boolean onlyObjects) {
-        MultiTiledMap map = new MultiTiledMap(getOffsetX(), getOffsetY());
-        
-        String mapOrientation     = root.getAttribute("orientation", null);
-        int    mapWidth           = root.getIntAttribute("width", 0);
-        int    mapHeight          = root.getIntAttribute("height", 0);
-        int    tileWidth          = root.getIntAttribute("tilewidth", 0);
-        int    tileHeight         = root.getIntAttribute("tileheight", 0);
-        int    hexSideLength      = root.getIntAttribute("hexsidelength", 0);
-        String staggerAxis        = root.getAttribute("staggeraxis", null);
-        String staggerIndex       = root.getAttribute("staggerindex", null);
-        String mapBackgroundColor = root.getAttribute("backgroundcolor", null);
-        
-        map.setWidth(mapWidth);
-        map.setHeight(mapHeight);
-        
-        MapProperties mapProperties = map.getProperties();
-        if(mapOrientation != null) {
-            mapProperties.put("orientation", mapOrientation);
-        }
-        mapProperties.put("width", mapWidth);
-        mapProperties.put("height", mapHeight);
-        mapProperties.put("tilewidth", tileWidth);
-        mapProperties.put("tileheight", tileHeight);
-        mapProperties.put("hexsidelength", hexSideLength);
-        if(staggerAxis != null) {
-            mapProperties.put("staggeraxis", staggerAxis);
-        }
-        if(staggerIndex != null) {
-            mapProperties.put("staggerindex", staggerIndex);
-        }
-        if(mapBackgroundColor != null) {
-            mapProperties.put("backgroundcolor", mapBackgroundColor);
-        }
-        mapTileWidth = tileWidth;
-        mapTileHeight = tileHeight;
-        mapWidthInPixels = mapWidth * tileWidth;
-        mapHeightInPixels = mapHeight * tileHeight;
-        
-        if(mapOrientation != null) {
-            if("staggered".equals(mapOrientation)) {
-                if(mapHeight > 1) {
-                    mapWidthInPixels += tileWidth / 2;
-                    mapHeightInPixels = mapHeightInPixels / 2 + tileHeight / 2;
-                }
-            }
-        }
-        
-        XmlReader.Element properties = root.getChildByName("properties");
-        if(properties != null) {
-            loadProperties(map.getProperties(), properties);
-        }
-        Array<XmlReader.Element> tilesets = root.getChildrenByName("tileset");
-        for(XmlReader.Element element : tilesets) {
-            loadTileSet(map, element, tmxFile, imageResolver);
-            root.removeChild(element);
-        }
-        for(int i = 0, j = root.getChildCount(); i < j; i++) {
-            XmlReader.Element element = root.getChild(i);
-            String            name    = element.getName();
-            if(!onlyObjects) {
-                if(name.equals("layer")) {
-                    loadTileLayer(map, element, map.getWidth(), map.getHeight());
-                } else if(name.equals("imagelayer")) {
-                    loadImageLayer(map, element, tmxFile, imageResolver);
-                }
-            }
-            if(name.equals("objectgroup")) {
-                loadObjectGroup(map, element);
             }
         }
         return map;

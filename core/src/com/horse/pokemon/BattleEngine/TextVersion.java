@@ -20,7 +20,7 @@ public class TextVersion {
             System.out.println("Your Pokemon's Stats:");
             System.out.println("\t" + userPokemon.getInformation().getName() + " Health: " + +userPokemon.getInformation().getBaseStats()[0] + "/" +
                                userPokemon.getInformation().getCurrentHealth());
-        
+    
             String input = scanner.next();
             if(input.equalsIgnoreCase("Quit")) {
                 running = false;

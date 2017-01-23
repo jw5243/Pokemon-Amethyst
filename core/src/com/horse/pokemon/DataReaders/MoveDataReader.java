@@ -15,11 +15,11 @@ public class MoveDataReader {
     static {
         moveData = new HashMap<>();
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(moveFileData))) {
-            String pokemon = bufferedReader.readLine();
-            while(pokemon != null) {
-                String[] data = pokemon.split(";");
+            String move = bufferedReader.readLine();
+            while(move != null) {
+                String[] data = move.split(";");
                 moveData.put(data[0], getMove(data));
-                pokemon = bufferedReader.readLine();
+                move = bufferedReader.readLine();
             }
         } catch(Exception e) {
             e.printStackTrace();
