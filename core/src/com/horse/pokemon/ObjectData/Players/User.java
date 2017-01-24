@@ -263,6 +263,9 @@ public class User extends AbstractPlayer {
      */
     private boolean swimming;
     
+    /**
+     * The {@link MainGameScreen} instance representing the current {@link Screen} the {@code User} is placed in.
+     */
     private MainGameScreen mainGameScreen;
     
     /**
@@ -393,6 +396,11 @@ public class User extends AbstractPlayer {
         return USER_WALK_HEIGHT;
     }
     
+    /**
+     * Returns the {@link Animation} array representing the frames for when the {@code User} is animating on land at a quick pace.
+     *
+     * @return {@link #userRun}
+     */
     private static Animation[] getUserRun() {
         return userRun;
     }
@@ -488,24 +496,53 @@ public class User extends AbstractPlayer {
         setCurrentCollisionRectangle(new Rectangle(getX(), getY(), Engine.getHalfTileSize(), Engine.getHalfTileSize()));
     }
     
+    /**
+     * Returns the {@code boolean} representing if the {@code User} is on {@link Water}.
+     *
+     * @return {@link #swimming}
+     */
     private boolean isSwimming() {
         return swimming;
     }
     
+    /**
+     * Sets whether the {@code User} is overlapping {@link Water} or not.
+     *
+     * @param swimming {@link #swimming}
+     */
     private void setSwimming(boolean swimming) {
         this.swimming = swimming;
     }
     
+    /**
+     * Replace the current position of the {@code User} and set it to the current {@link MapCreator#getStartPosition()} value.
+     */
     private void resetPosition() {
         resetPosition(getMapCreator(), false);
     }
     
+    /**
+     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the {@code User} position to it.  Also, the {@link #mapCreator} will be
+     * changed if {@code resetMapCreator} is true.
+     *
+     * @param mapCreator      New instance of a {@link MapCreator} to set a new position.
+     * @param resetMapCreator Determines if the value of {@link #mapCreator} is altered to the {@code mapCreator} parameter.
+     *
+     * @see MapCreator
+     * @see MapCreator#startPosition
+     * @see #mapCreator
+     */
     public void resetPosition(final MapCreator mapCreator, final boolean resetMapCreator) {
         setMapCreator(resetMapCreator ? mapCreator : getMapCreator()); //Check if the mapCreator should be replaced depending on the resetMapCreator parameter.
         setPositionX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() / 2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
         setPositionY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() / 2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
     }
     
+    /**
+     * Returns the speed it takes a frame before it transitions to another frame.
+     *
+     * @return {@link #ANIMATION_SPEED}
+     */
     private float getAnimationSpeed() {
         return ANIMATION_SPEED;
     }
@@ -636,10 +673,20 @@ public class User extends AbstractPlayer {
         return null;
     }
     
+    /**
+     * Returns the {@link HandleInput} to check for general key presses with {@link HandleInput#update(float)}.
+     *
+     * @return {@link #handleInput}
+     */
     private HandleInput getHandleInput() {
         return handleInput;
     }
     
+    /**
+     * Checks {@code User} values and updates them according to actions made in {@link #handleInput(float)}.
+     *
+     * @param deltaTime Amount of time between each frame.
+     */
     @Override
     public void update(final float deltaTime) {
         updateAlignment();
@@ -649,6 +696,12 @@ public class User extends AbstractPlayer {
         updateAnimation(deltaTime);
     }
     
+    /**
+     * Method for drawing the {@code User} onto the {@link Screen}, based on the movement and action of the {@code User}.
+     *
+     * @param batch       Drawing tool.
+     * @param parentAlpha Alpha value to add transparency to all children.
+     */
     @Override
     public void draw(final Batch batch, final float parentAlpha) {
         if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING || getCurrentState() == PlayerActions.RUNNING) {
@@ -658,14 +711,25 @@ public class User extends AbstractPlayer {
         }
     }
     
+    /**
+     * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if {@link #handleInput(float)} gets no feedback.
+     */
     private void updateAlignment() {
         setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 && (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
     }
     
+    /**
+     * Checks whether the {@code User} is on {@link Water} or not by getting the collision box of the {@code User}.
+     */
     private void updateSwimming() {
         setSwimming(getCollidingTileObject(getCurrentCollisionRectangle()) instanceof Water);
     }
     
+    /**
+     * Updates the frame of the {@code User} by the amount of time that has passed.
+     *
+     * @param deltaTime Amount of time between each frame.
+     */
     private void updateAnimation(final float deltaTime) {
         getUserSprite().setRegion(getFrame(deltaTime));
     }
