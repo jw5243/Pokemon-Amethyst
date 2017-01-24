@@ -1,7 +1,10 @@
 package com.horse.pokemon.ObjectData.Players;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -13,20 +16,128 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.horse.pokemon.AnimationEngine.AnimationInterface;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
+import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
+import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
+import com.horse.pokemon.ObjectData.TiledObjects.Barrier;
 import com.horse.pokemon.ObjectData.TiledObjects.CollidableTileObject;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.pokemon.ObjectData.TiledObjects.Sign;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 /**
- * Class acting as the protagonist in the Pokemon game, acting as the graphics, input, and movement for the character.  {@code User} is also generally used
- * as the center of the camera of the screen.  {@code User} extends {@link AbstractPlayer} which then extends {@link Actor}, so the user can be added onto
- * the screen using a {@link Stage}, where the {@code User}'s {@link #draw(Batch, float)} is overridden to draw the sprite that this class stores.  A user
- * instance is created with a {@code MapCreator}.  In the render method of the screen, a {@code Stage} has to have an instance of {@code User} and be
- * calling {@link Stage#draw()} to draw the user every frame.
+ * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#camera} revolves around a {@code User} instance by following the {@code User} when
+ * moving.  The {@code User} moves by key presses of the arrow keys, and other actions are represented with other various keys.
+ * <p>
+ * Actions with the corresponding key:
+ * <ul>
+ * <li>Up Arrow     - Moves the {@code User} upwards.</li>
+ * <li>Down Arrow   - Moves the {@code User} downwards.</li>
+ * <li>Right Arrow  - Moves the {@code User} to the right.</li>
+ * <li>Left Arrow   - Moves the {@code User} to the left.</li>
+ * <li>Shift (Both) - Alters {@code User} action by running if on land.</li>
+ * <li>X Key        - Various actions depending on the situation:
+ * <ul>
+ * <li>Asks to swim when next to a {@link Water} tile.</li>
+ * <li>{@link Dialog} appears from being next to a {@link Sign}.</li>
+ * <li>Speaks to an {@link NPC} with a {@link Dialog}.</li>
+ * <li>Progresses a conversion through the {@link Dialog}.</li>
+ * </ul>
+ * </li>
+ * </ul>
+ * <p>
+ * The {@code User} can go through a battle and have {@link Pokemon} from progressing through the {@link Game}.  {@link Pokemon} are obtained by the {@code User} by 'catching' them
+ * with things called Pokeballs, which can be bought from a store called the Pokemart.  There should only be a single {@code User} instance per {@link Game}, otherwise the {@link MainGameScreen#camera}
+ * will have a hard time determining which {@code User} to follow and all keyboard actions will cause both {@code User}s to act identically.
+ * <p>
+ * The {@code User} is draw onto the {@link MainGameScreen} by the {@link #draw(Batch, float)} method, which is called every frame by the {@link MainGameScreen#render(float)} method.  It
+ * is important that the {@link #userSprite} is updated according to the delta time, {@link #getDirection()}, and {@link #getCurrentState()}, as the animation adds realism to the {@link Game}.
+ * It is also good to not that the {@code User} is an {@link AbstractPlayer} which is also an {@link Actor}, meaning that the {@code User} is to be a part of a {@link Stage}.
+ * <p>
+ * There are many different actions that the {@code User} can execute:
+ * <ul>
+ * <li>Idle          - Non-moving action.</li>
+ * <li>Walking       - {@code User} moves at a decent pace on land.</li>
+ * <li>Running       - {@code User} moves at a quick pace on land.</li>
+ * <li>Biking        - {@code User} swiftly glides through the ground on a bike (And of course on land).</li>
+ * <li>Swimming      - {@code User} travels at a decent pace on {@link Water}.</li>
+ * <li>Using HM Move - {@code User} uses a {@link Pokemon} in order to accomplish some sort of in-game task.</li>
+ * <li>Fishing       - {@code User} uses a fishing rod to obtain an item or encounter a {@link Pokemon} in the {@link Water}.</li>
+ * <li>In Battle     - When the {@code User} is fighting against another {@link AbstractPlayer}, adding a lot of functionality to the {@link Game}, and allowing the {@link Pokemon} to level up.</li>
+ * </ul>
+ * <p>
+ * For setting up a {@link Screen} for a {@code User} to be in, an {@link Engine} is required to be in the {@link Screen}.  The {@code User} must be extended with the constructor changed as
+ * it required a {@link MainGameScreen}, not just a {@link Screen}, as the major values in the {@link MainGameScreen} are required for the {@code User} to use to function properly.  Another
+ * way could be to have a new class extend {@link MainGameScreen} and work from there.
+ * <p>
+ * In order to create a {@code User} in the {@link Screen#show()} method of a {@link Screen}, for example:
+ * <blockquote><pre>
+ *     private MultiTmxMapLoader mapLoader;
+ *     private MultiTiledMap[] maps;
+ *     private MapCreator mapCreator;
+ *     private User user;
+ *
+ *     public void show() {
+ *         mapLoader = new MultiTmxMapLoader();
+ *         maps = mapLoader.loadAllMaps(Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath())
+ *         mapCreator = new MapCreator(this, maps);
+ *         user = new User();
+ *     }
+ * </pre></blockquote>
+ * <p>
+ * To draw the {@code User} onto the {@link Screen}, in the {@link Screen}, add:
+ * <blockquote><pre>
+ *     private Stage stage;
+ *
+ *     public void show() {
+ *         stage = new Stage();
+ *         stage.addActor(user);
+ *     }
+ *
+ *     public void render(float delta) {
+ *         stage.act(delta);
+ *         stage.draw();
+ *     }
+ * </pre></blockquote>
+ * <p>
+ * At the end, remember to dispose of the {@link Stage} when the {@link Game} ends, by doing:
+ * <blockquote><pre>
+ *     public void dispose() {
+ *         stage.dispose();
+ *     }
+ * </pre></blockquote>
+ * <p>
+ * Finally, to get a {@link OrthographicCamera} to follow the {@code User}, an example is:
+ * <blockquote><pre>
+ *     private static final int WORLD_WIDTH  = 720;
+ *     private static final int WORLD_HEIGHT = 640;
+ *     private static final int ZOOM_SCALE   = 2;
+ *     private OrthographicCamera camera;
+ *     private Viewport viewport;
+ *     private MultiTileMapRenderer renderer;
+ *     private SpriteBatch batch;
+ *
+ *     public void show() {
+ *         camera = new OrthographicCamera();
+ *         viewport = new FitViewport(WORLD_WIDTH / ZOOM_SCALE, WORLD_HEIGHT / ZOOM_SCALE, camera);
+ *         if(batch == null) {
+ *             batch = new SpriteBatch();
+ *         }
+ *         renderer = new MultiTileMapRenderer(1.0f, batch);
+ *     }
+ *
+ *     public void render(float delta) {
+ *         user.update(delta);
+ *
+ *         camera.position.x = user.getPositionX();
+ *         camera.position.y = user.getPositionY();
+ *
+ *         camera.update();
+ *         renderer.setView(camera);
+ *     }
+ * </pre></blockquote>
  *
  * @see Stage
  * @see AbstractPlayer
@@ -39,7 +150,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  * @see Sprite
  * @see Rectangle
  */
-public final class User extends AbstractPlayer {
+public class User extends AbstractPlayer {
     /**
      * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
      * {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the user
@@ -163,7 +274,7 @@ public final class User extends AbstractPlayer {
      * @see NullPointerException
      * @see MapCreator
      */
-    public User(MainGameScreen mainGameScreen) {
+    public User(final MainGameScreen mainGameScreen) {
         setPreviousState(getCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
         setStateTimer(0);                    //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
         setDirection(getDOWN());             //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
@@ -296,34 +407,75 @@ public final class User extends AbstractPlayer {
         return userIdleOnWater;
     }
     
+    /**
+     * Returns the {@link Animation} array representing the frames for when the {@code User} is animating on the water.
+     *
+     * @return {@link #userSwim}
+     */
     private static Animation[] getUserSwim() {
         return userSwim;
     }
     
+    /**
+     * Returns the {@link Sprite} representing the picture containing all the {@code User} frames.
+     *
+     * @return {@link #userSprite}
+     */
     private static Sprite getUserSprite() {
         return userSprite;
     }
     
+    /**
+     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link PlayerActions#IDLE}
+     * positions for when the {@code User} is not moving on land.
+     *
+     * @return {@link #userIdleOnLand}
+     */
     private static TextureRegion[] getUserIdleOnLand() {
         return userIdleOnLand;
     }
     
+    /**
+     * Returns the {@link Animation} array representing the frames for when the {@code User} is animating on land.
+     *
+     * @return {@link #userWalk}
+     */
     private static Animation[] getUserWalk() {
         return userWalk;
     }
     
+    /**
+     * Returns the {@link MainGameScreen} instance containing general values for the {@code User} to use.
+     *
+     * @return {@link #mainGameScreen}
+     */
     private MainGameScreen getMainGameScreen() {
         return mainGameScreen;
     }
     
+    /**
+     * Sets the {@link #mainGameScreen}.
+     *
+     * @param mainGameScreen {@link #mainGameScreen}
+     */
     private void setMainGameScreen(MainGameScreen mainGameScreen) {
         this.mainGameScreen = mainGameScreen;
     }
     
+    /**
+     * Returns the amount of time a recurring key has been held.
+     *
+     * @return {@link #movementKeyHeldDownTime}
+     */
     private float getMovementKeyHeldDownTime() {
         return movementKeyHeldDownTime;
     }
     
+    /**
+     * Sets the amount of time a recurring key has been held.
+     *
+     * @param movementKeyHeldDownTime {@link #movementKeyHeldDownTime}
+     */
     private void setMovementKeyHeldDownTime(float movementKeyHeldDownTime) {
         this.movementKeyHeldDownTime = movementKeyHeldDownTime;
     }
@@ -348,7 +500,7 @@ public final class User extends AbstractPlayer {
         resetPosition(getMapCreator(), false);
     }
     
-    public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
+    public void resetPosition(final MapCreator mapCreator, final boolean resetMapCreator) {
         setMapCreator(resetMapCreator ? mapCreator : getMapCreator()); //Check if the mapCreator should be replaced depending on the resetMapCreator parameter.
         setPositionX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() / 2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
         setPositionY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() / 2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
@@ -358,11 +510,19 @@ public final class User extends AbstractPlayer {
         return ANIMATION_SPEED;
     }
     
-    private Rectangle getFutureRectangle(float offsetX, float offsetY) {
-        Rectangle futureRectangle = getCurrentCollisionRectangle();
-        futureRectangle.setX(futureRectangle.getX() + offsetX);
-        futureRectangle.setY(futureRectangle.getY() + offsetY);
-        return futureRectangle;
+    /**
+     * Returns a {@link Rectangle} instance representing a future position of the {@code User} or the position of a {@link CollidableTileObject}.
+     *
+     * @param offsetX X-Position difference between the new x-position and the {@code User} x-position.
+     * @param offsetY Y-Position difference between the new y-position and the {@code User} y-position.
+     *
+     * @return {@link Rectangle} instance of the future position of the {@code User} or the position of a {@link CollidableTileObject}.
+     */
+    private Rectangle getFutureRectangle(final float offsetX, final float offsetY) {
+        Rectangle futureRectangle = getCurrentCollisionRectangle(); //Get the rectangle instance of the collision box of the User.
+        futureRectangle.setX(futureRectangle.getX() + offsetX); //Add the offset onto the x-position of the collision box of the User.
+        futureRectangle.setY(futureRectangle.getY() + offsetY); //Add the offset onto the y-position of the collision box of the User.
+        return futureRectangle; //Return the new rectangle instance representing the future position.
     }
     
     /**
@@ -370,7 +530,7 @@ public final class User extends AbstractPlayer {
      *
      * @param deltaTime Time between frames.
      */
-    public void handleInput(float deltaTime) {
+    public void handleInput(final float deltaTime) {
         getHandleInput().update(deltaTime); //Update the general movements and direction of the User.
         if(!isAligned() && !isFutureCollision() && !isRestrictedMovement()) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
             if(getDirection() == getUP()) { //Checks if the current direction of the User if upwards.
@@ -388,7 +548,7 @@ public final class User extends AbstractPlayer {
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
                   !isRestrictedMovement()) { //If the User is not currently trying to move to a new location, check if the User is allowed to move when the X key is pressed.
-        
+    
             //Create a lambda for moving the User a single tile in the direction the User is pointing to.
             AlterPlayerPosition alterPlayerPosition =
                     (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod.accept(getPositionMethod.get() + alterValue);
@@ -398,7 +558,7 @@ public final class User extends AbstractPlayer {
                                         (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) : getFutureRectangle(-Engine.getTileSize(),
                                                                                                                                           0
                                         ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
-        
+    
             if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
                 Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
                                        (getDirection() == getDOWN()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
@@ -406,7 +566,7 @@ public final class User extends AbstractPlayer {
                                        () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX,
                                                                                -Engine.getTileSize()
                                        ); //Creates an action to move the User depending on the direction of the User.
-            
+        
                 alterAction.run(); //Executes the action for moving the User.
             } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
                 getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.
@@ -419,8 +579,28 @@ public final class User extends AbstractPlayer {
         }
     }
     
-    private boolean isColliding(Rectangle rectangle, boolean activateCollisionMethod) {
-        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) {
+    /**
+     * The method {@code isColliding} checks to see whether a {@link Rectangle} instance overlaps with any of the {@link CollidableTileObject}s in {@link MapCreator#collidableTileObjects}.
+     * According to whether activateCollisionMethod is true or not, the {@link CollidableTileObject#onCollide()} will be notified is a collision is present.
+     * <p>
+     * For {@link Water} overlapping, the method will ignore the collision as {@link Water} does not have the same properties as other {@link CollidableTileObject}s like {@link Barrier}.
+     * As for {@link Door}s, the {@link Door#onCollide()} method will be called and the {@link Door} instance will start transitioning to the next room.
+     *
+     * @param rectangle               {@link Rectangle} instance to check among all other obstacles in {@link MapCreator#collidableTileObjects}.
+     * @param activateCollisionMethod Value for whether or not the {@link CollidableTileObject#onCollide()} is to be called if there is a collision.
+     *
+     * @return Value of if there is a collision between the {@link Rectangle} instance and values in {@link MapCreator#collidableTileObjects}.
+     *
+     * @see Rectangle
+     * @see CollidableTileObject
+     * @see CollidableTileObject#onCollide()
+     * @see MapCreator#collidableTileObjects
+     * @see Door
+     * @see Water
+     * @see Barrier
+     */
+    private boolean isColliding(final Rectangle rectangle, final boolean activateCollisionMethod) {
+        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) { //Iterate through all the objects stored in the current map.
             if(collidableTileObject.isColliding(rectangle)) {
                 if(activateCollisionMethod) {
                     if(collidableTileObject instanceof Door) {
@@ -436,7 +616,18 @@ public final class User extends AbstractPlayer {
         return false;
     }
     
-    private CollidableTileObject getCollidingTileObject(Rectangle rectangle) {
+    /**
+     * Gets the {@link CollidableTileObject} that has the same positions as the {@link Rectangle} instance inputted.  A null value is returned if no object ends up being found from the
+     * current map.
+     *
+     * @param rectangle {@link Rectangle} instance to check if there is a similar {@link CollidableTileObject} in the current map.
+     *
+     * @return {@link CollidableTileObject} that has similar values to the inputted {@link Rectangle}.
+     *
+     * @see CollidableTileObject
+     * @see Rectangle
+     */
+    private CollidableTileObject getCollidingTileObject(final Rectangle rectangle) {
         for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) {
             if(collidableTileObject.isColliding(rectangle)) {
                 return collidableTileObject;
@@ -450,7 +641,7 @@ public final class User extends AbstractPlayer {
     }
     
     @Override
-    public void update(float deltaTime) {
+    public void update(final float deltaTime) {
         updateAlignment();
         updateActorXY();
         updateCurrentCollisionRectangle();
@@ -459,7 +650,7 @@ public final class User extends AbstractPlayer {
     }
     
     @Override
-    public void draw(Batch batch, float parentAlpha) {
+    public void draw(final Batch batch, final float parentAlpha) {
         if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING || getCurrentState() == PlayerActions.RUNNING) {
             batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2, getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(), getUserWalkHeight());
         } else if(isSwimming()) {
@@ -475,7 +666,7 @@ public final class User extends AbstractPlayer {
         setSwimming(getCollidingTileObject(getCurrentCollisionRectangle()) instanceof Water);
     }
     
-    private void updateAnimation(float deltaTime) {
+    private void updateAnimation(final float deltaTime) {
         getUserSprite().setRegion(getFrame(deltaTime));
     }
     
@@ -484,7 +675,7 @@ public final class User extends AbstractPlayer {
         setY(getPositionY() - getUserWalkHeight() / 2);
     }
     
-    private TextureRegion getFrame(float deltaTime) {
+    private TextureRegion getFrame(final float deltaTime) {
         float stateTime = getStateTimer() * getAnimationSpeed();
         
         setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
