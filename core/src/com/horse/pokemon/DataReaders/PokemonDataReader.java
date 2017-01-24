@@ -94,11 +94,13 @@ public final class PokemonDataReader {
         for(int index = 0; index < effortValue.size(); index += 2) {
             EffortValueMethod effortValueMethod;
             StatTypes         statType = StatTypes.valueOf(effortValue.get(index).trim());
-            effortValueMethod = (statType == StatTypes.HEALTH) ? pokemonEffortValues::setImmutableHealthEV :
-                                (statType == StatTypes.ATTACK) ? pokemonEffortValues::setImmutableAttackEV :
-                                (statType == StatTypes.DEFENSE) ? pokemonEffortValues::setImmutableDefenseEV :
-                                (statType == StatTypes.SPECIAL_ATTACK) ? pokemonEffortValues::setImmutableSpecialAttackEV :
-                                (statType == StatTypes.SPECIAL_DEFENSE) ? pokemonEffortValues::setImmutableSpecialDefenseEV : pokemonEffortValues::setImmutableSpeedEV;
+            effortValueMethod = (statType == StatTypes.HEALTH) ? pokemonEffortValues::setImmutableHealthEV : (statType == StatTypes.ATTACK) ? pokemonEffortValues::setImmutableAttackEV :
+                                                                                                             (statType == StatTypes.DEFENSE) ? pokemonEffortValues::setImmutableDefenseEV :
+                                                                                                             (statType == StatTypes.SPECIAL_ATTACK) ?
+                                                                                                             pokemonEffortValues::setImmutableSpecialAttackEV :
+                                                                                                             (statType == StatTypes.SPECIAL_DEFENSE) ?
+                                                                                                             pokemonEffortValues::setImmutableSpecialDefenseEV :
+                                                                                                             pokemonEffortValues::setImmutableSpeedEV;
             effortValueMethod.setEffortValue(Integer.parseInt(effortValue.get(index + 1)));
         }
         

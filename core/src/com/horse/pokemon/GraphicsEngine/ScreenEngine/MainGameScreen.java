@@ -73,7 +73,7 @@ public class MainGameScreen implements Screen {
     /**
      * The {@link Engine} instance representing the {@link Game} that is playing.
      */
-    private Engine                            engine;
+    private Engine engine;
     
     /**
      * The {@link OrthographicCamera} instance representing the sight of the {@link User}.

@@ -114,8 +114,8 @@ public class Moves {
     public String toString() {
         return String.format("{Name = %s, Category = %s, Move Type = %s, Power Points = %s, Base Power = %s, Accuracy = %s, " +
                              "Effect = %s, TM Number = %s, Speed Priority = %s, Battle Effect = %s, Secondary Effect = %s, " + "Current Power Points = %s}", getName(), getCategory(),
-                             getMoveType(), getPowerPoints(), getBasePower(), getAccuracy(), getEffect(), getTechnicalMachine(), getSpeedPriority(), getBattleEffect(),
-                             getSecondaryEffect(), getCurrentPowerPoints()
+                             getMoveType(), getPowerPoints(), getBasePower(), getAccuracy(), getEffect(), getTechnicalMachine(), getSpeedPriority(), getBattleEffect(), getSecondaryEffect(),
+                             getCurrentPowerPoints()
         );
     }
 }

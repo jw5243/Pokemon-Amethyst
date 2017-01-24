@@ -135,9 +135,9 @@ public class EffortValue {
     @Override
     public String toString() {
         return String.format("{Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s, " +
-                             "Immutables: Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s}", getHealthEV(),
-                             getAttackEV(), getDefenseEV(), getSpecialAttackEV(), getSpecialDefenseEV(), getSpeedEV(), getImmutableHealthEV(), getImmutableAttackEV(),
-                             getImmutableDefenseEV(), getImmutableSpecialAttackEV(), getImmutableSpecialDefenseEV(), getImmutableSpeedEV()
+                             "Immutables: Health EV = %s, Attack EV = %s, Defense EV = %s, Special Attack EV = %s, Special Defense EV = %s, Speed EV = %s}", getHealthEV(), getAttackEV(),
+                             getDefenseEV(), getSpecialAttackEV(), getSpecialDefenseEV(), getSpeedEV(), getImmutableHealthEV(), getImmutableAttackEV(), getImmutableDefenseEV(),
+                             getImmutableSpecialAttackEV(), getImmutableSpecialDefenseEV(), getImmutableSpeedEV()
         );
     }
     
