@@ -35,6 +35,15 @@ public abstract class AbstractPlayer extends Actor {
      */
     private static final byte LEFT = 4;
     
+    /*private static final byte IDLE          = 1;
+    private static final byte WALKING       = 2;
+    private static final byte RUNNING       = 3;
+    private static final byte BIKING        = 4;
+    private static final byte SWIMMING      = 5;
+    private static final byte USING_HM_MOVE = 6;
+    private static final byte FISHING       = 7;
+    private static final byte IN_BATTLE     = 8;*/
+    
     /**
      * The max amount of slots with PokemonData a Player can have at one time.
      */

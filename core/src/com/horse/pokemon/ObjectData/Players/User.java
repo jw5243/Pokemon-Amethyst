@@ -52,7 +52,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  * with things called Pokeballs, which can be bought from a store called the Pokemart.  There should only be a single {@code User} instance per {@link Game}, otherwise the {@link MainGameScreen#camera}
  * will have a hard time determining which {@code User} to follow and all keyboard actions will cause both {@code User}s to act identically.
  * <p>
- * The {@code User} is draw onto the {@link MainGameScreen} by the {@link #draw(Batch, float)} method, which is called every frame by the {@link MainGameScreen#render(float)} method.  It
+ * The {@code User} is drawn onto the {@link MainGameScreen} by the {@link #draw(Batch, float)} method, which is called every frame by the {@link MainGameScreen#render(float)} method.  It
  * is important that the {@link #userSprite} is updated according to the delta time, {@link #getDirection()}, and {@link #getCurrentState()}, as the animation adds realism to the {@link Game}.
  * It is also good to not that the {@code User} is an {@link AbstractPlayer} which is also an {@link Actor}, meaning that the {@code User} is to be a part of a {@link Stage}.
  * <p>
@@ -69,10 +69,10 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  * </ul>
  * <p>
  * For setting up a {@link Screen} for a {@code User} to be in, an {@link Engine} is required to be in the {@link Screen}.  The {@code User} must be extended with the constructor changed as
- * it required a {@link MainGameScreen}, not just a {@link Screen}, as the major values in the {@link MainGameScreen} are required for the {@code User} to use to function properly.  Another
+ * it requires a {@link MainGameScreen}, not just a {@link Screen}, as the major values in the {@link MainGameScreen} are required for the {@code User} to use to function properly.  Another
  * way could be to have a new class extend {@link MainGameScreen} and work from there.
  * <p>
- * In order to create a {@code User} in the {@link Screen#show()} method of a {@link Screen}, for example:
+ * In order to create a {@code User} in the {@link Screen#show()} method of a {@link Screen}, an example is:
  * <blockquote><pre>
  *     private MultiTmxMapLoader mapLoader;
  *     private MultiTiledMap[] maps;
@@ -618,7 +618,7 @@ public class User extends AbstractPlayer {
     
     /**
      * The method {@code isColliding} checks to see whether a {@link Rectangle} instance overlaps with any of the {@link CollidableTileObject}s in {@link MapCreator#collidableTileObjects}.
-     * According to whether activateCollisionMethod is true or not, the {@link CollidableTileObject#onCollide()} will be notified is a collision is present.
+     * According to whether activateCollisionMethod is {@code true} or {@code false}, the {@link CollidableTileObject#onCollide()} will be notified if a collision is present.
      * <p>
      * For {@link Water} overlapping, the method will ignore the collision as {@link Water} does not have the same properties as other {@link CollidableTileObject}s like {@link Barrier}.
      * As for {@link Door}s, the {@link Door#onCollide()} method will be called and the {@link Door} instance will start transitioning to the next room.
