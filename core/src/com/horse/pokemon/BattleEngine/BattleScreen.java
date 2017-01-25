@@ -1,5 +1,7 @@
 package com.horse.pokemon.BattleEngine;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.horse.pokemon.Engine;
 
@@ -35,6 +37,9 @@ public class BattleScreen implements Screen {
     
     @Override
     public void render(float delta) {
+        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+            getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.MAIN_GAME_SCREEN));
+        }
         getBackgroundSetup().render();
     }
     
