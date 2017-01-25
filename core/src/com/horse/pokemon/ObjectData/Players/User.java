@@ -734,11 +734,22 @@ public class User extends AbstractPlayer {
         getUserSprite().setRegion(getFrame(deltaTime));
     }
     
+    /**
+     * Sets the position of the {@link Actor} part of the {@code User} relative to the position values so that the {@link MainGameScreen#camera} can follow the {@code User} properly, as the
+     * positions inside {@code User} are offset because the position is the bottom left corner of the {@code User}.
+     */
     private void updateActorXY() {
         setX(getPositionX() - getUserWalkWidth() / 2);
         setY(getPositionY() - getUserWalkHeight() / 2);
     }
     
+    /**
+     * Gets the current {@link TextureRegion} representing the frame that the {@code User} is at according to its {@link #getCurrentState()} value and time that has passed by.
+     *
+     * @param deltaTime Amount of time between each frame.
+     *
+     * @return {@link TextureRegion} instance of the frame the {@link User} will use to draw onto the {@link #mainGameScreen}.
+     */
     private TextureRegion getFrame(final float deltaTime) {
         float stateTime = getStateTimer() * getAnimationSpeed();
         
@@ -768,6 +779,11 @@ public class User extends AbstractPlayer {
                                                                                                                                 getUserIdleOnLand()[3];
     }
     
+    /**
+     * Finds the current action of the {@code User} and returns the type of action.
+     *
+     * @return Action the {@code User} is performing at the current frame.
+     */
     private PlayerActions getCurrentState() {
         if(isMoving() && !isRestrictedMovement()) {
             if(isSwimming()) {
