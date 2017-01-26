@@ -3,27 +3,10 @@ package com.horse.pokemon.BattleEngine;
 import com.badlogic.gdx.utils.Disposable;
 
 public enum BackgroundInformation implements Disposable {
-    CAVE("Battlebacks\\battlebgCave.png", "Battlebacks\\enemybaseCave.png", "Battlebacks\\playerbaseCave.png") {
-        @Override
-        public void dispose() {
-            getBackgroundData().dispose();
-        }
-    }, CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png", "Battlebacks\\playerbaseCaveDark.png") {
-        @Override
-        public void dispose() {
-            getBackgroundData().dispose();
-        }
-    }, CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png", "Battlebacks\\playerbaseCaveDarker.png") {
-        @Override
-        public void dispose() {
-            getBackgroundData().dispose();
-        }
-    }, CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png", "Battlebacks\\playerbaseChampion.png") {
-        @Override
-        public void dispose() {
-            getBackgroundData().dispose();
-        }
-    };
+    CAVE("Battlebacks\\battlebgCave.png", "Battlebacks\\enemybaseCave.png", "Battlebacks\\playerbaseCave.png"),
+    CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png", "Battlebacks\\playerbaseCaveDark.png"),
+    CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png", "Battlebacks\\playerbaseCaveDarker.png"),
+    CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png", "Battlebacks\\playerbaseChampion.png");
     
     private BackgroundData backgroundData;
     
@@ -42,5 +25,10 @@ public enum BackgroundInformation implements Disposable {
     @Override
     public String toString() {
         return backgroundData.toString();
+    }
+    
+    @Override
+    public void dispose() {
+        getBackgroundData().dispose();
     }
 }

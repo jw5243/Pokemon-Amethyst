@@ -1,38 +1,62 @@
 package com.horse.pokemon.BattleEngine;
 
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import com.horse.pokemon.Engine;
 
 public class BackgroundSetup implements Disposable {
-    private static final Vector2 SCREEN_TO_BACKGROUND_SIZE_RATIO =
-            new Vector2(Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth(), Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight());
-    private static final Vector2 BACKGROUND_POSITION             = new Vector2(0, 0);
-    private static final Vector2 ENEMY_BASE_POSITION             =
-            new Vector2(Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth(), Engine.getvHeight() - (BackgroundData.getStandardEnemyBaseHeight() * 1.2f));
-    private static final Vector2 USER_BASE_POSITION              = new Vector2(-128, 0);
+    private static final int SCREEN_TO_BACKGROUND_WIDTH_RATIO  = Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth();
+    private static final int SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
+    private static final int BACKGROUND_X_POSITION             = 0;
+    private static final int BACKGROUND_Y_POSITION             = 0;
+    private static final int ENEMY_BASE_X_POSITION             = (Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio();
+    private static final int ENEMY_BASE_Y_POSITION             = (Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio();
+    private static final int USER_BASE_X_POSITION              = -128;
+    private static final int USER_BASE_Y_POSITION              = 0;
+    private static final int TRANSITION_TIME                   = 4;
+    private float                 currentTransitionTime;
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
     
     public BackgroundSetup(Engine engine, BackgroundInformation backgroundInformation) {
+        setCurrentTransitionTime(0f);
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
     }
     
-    public static Vector2 getScreenToBackgroundSizeRatio() {
-        return SCREEN_TO_BACKGROUND_SIZE_RATIO;
+    public static int getScreenToBackgroundWidthRatio() {
+        return SCREEN_TO_BACKGROUND_WIDTH_RATIO;
     }
     
-    public static Vector2 getBackgroundPosition() {
-        return BACKGROUND_POSITION;
+    public static int getScreenToBackgroundHeightRatio() {
+        return SCREEN_TO_BACKGROUND_HEIGHT_RATIO;
     }
     
-    public static Vector2 getEnemyBasePosition() {
-        return ENEMY_BASE_POSITION;
+    public static int getBackgroundXPosition() {
+        return BACKGROUND_X_POSITION;
     }
     
-    public static Vector2 getUserBasePosition() {
-        return USER_BASE_POSITION;
+    public static int getBackgroundYPosition() {
+        return BACKGROUND_Y_POSITION;
+    }
+    
+    public static int getEnemyBaseXPosition() {
+        return ENEMY_BASE_X_POSITION;
+    }
+    
+    public static int getEnemyBaseYPosition() {
+        return ENEMY_BASE_Y_POSITION;
+    }
+    
+    public static int getUserBaseXPosition() {
+        return USER_BASE_X_POSITION;
+    }
+    
+    public static int getUserBaseYPosition() {
+        return USER_BASE_Y_POSITION;
+    }
+    
+    public static int getTransitionTime() {
+        return TRANSITION_TIME;
     }
     
     public Engine getEngine() {
@@ -51,23 +75,34 @@ public class BackgroundSetup implements Disposable {
         this.backgroundInformation = backgroundInformation;
     }
     
-    public void render() {
+    public void render(float delta) {
+        setCurrentTransitionTime(getCurrentTransitionTime() >= getTransitionTime() ? getTransitionTime() : getCurrentTransitionTime() + delta);
+        
         getEngine().getBatch().begin();
-    
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundPosition().x, getBackgroundPosition().y,
-                                    BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundSizeRatio().y
+        
+        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundXPosition(), getBackgroundYPosition(),
+                                    BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundWidthRatio(),
+                                    BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundHeightRatio()
         );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBasePosition().x, getEnemyBasePosition().y,
-                                    BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundSizeRatio().y
+        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBaseXPosition(), getEnemyBaseYPosition(),
+                                    BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundWidthRatio(),
+                                    BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundHeightRatio()
         );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBasePosition().x, getUserBasePosition().y,
-                                    BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundSizeRatio().x,
-                                    BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundSizeRatio().y
+        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBaseXPosition() * (getCurrentTransitionTime() / getTransitionTime()),
+                                    getUserBaseYPosition() * (getCurrentTransitionTime() / getTransitionTime()),
+                                    BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundWidthRatio(),
+                                    BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundHeightRatio()
         );
         
         getEngine().getBatch().end();
+    }
+    
+    public float getCurrentTransitionTime() {
+        return currentTransitionTime;
+    }
+    
+    public void setCurrentTransitionTime(float currentTransitionTime) {
+        this.currentTransitionTime = currentTransitionTime;
     }
     
     @Override

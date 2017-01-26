@@ -83,7 +83,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  *         mapLoader = new MultiTmxMapLoader();
  *         maps = mapLoader.loadAllMaps(Maps.TWINLEAF_TOWN.getTmxPath(), Maps.ROUTE_201.getTmxPath())
  *         mapCreator = new MapCreator(this, maps);
- *         user = new User();
+ *         user = new User(this);
  *     }
  * </pre></blockquote>
  * <p>

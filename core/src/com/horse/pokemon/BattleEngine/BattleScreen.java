@@ -40,7 +40,7 @@ public class BattleScreen implements Screen {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.MAIN_GAME_SCREEN));
         }
-        getBackgroundSetup().render();
+        getBackgroundSetup().render(delta);
     }
     
     @Override
