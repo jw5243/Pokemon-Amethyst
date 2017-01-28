@@ -3,15 +3,25 @@ package com.horse.pokemon.BattleEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
 
 public class BattleScreen implements Screen {
     private Engine          engine;
     private BackgroundSetup backgroundSetup;
+    private AudioData       sound;
     
     public BattleScreen(Engine engine) {
         setEngine(engine);
         setBackgroundSetup(new BackgroundSetup(getEngine(), BackgroundInformation.CAVE));
+    }
+    
+    public AudioData getSound() {
+        return sound;
+    }
+    
+    public void setSound(AudioData sound) {
+        this.sound = sound;
     }
     
     public BackgroundSetup getBackgroundSetup() {
@@ -32,13 +42,15 @@ public class BattleScreen implements Screen {
     
     @Override
     public void show() {
-        
+        setSound(AudioData.BATTLE_WILD_POKEMON);
+        getSound().playAudio();
     }
     
     @Override
     public void render(float delta) {
         if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.MAIN_GAME_SCREEN));
+            getSound().getAudio().dispose();
         }
         getBackgroundSetup().render(delta);
     }

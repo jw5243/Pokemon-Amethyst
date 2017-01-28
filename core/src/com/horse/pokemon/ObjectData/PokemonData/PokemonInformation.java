@@ -1,5 +1,7 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
+import gnu.trove.map.hash.TIntObjectHashMap;
+
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -77,9 +79,9 @@ public class PokemonInformation {
     private int baseHappiness;
     
     /**
-     * The {@link HashMap} instance representing a PokemonData's attack list.
+     * The {@link TIntObjectHashMap} instance representing a PokemonData's attack list.
      */
-    private HashMap<Integer, Moves> moveList;
+    private TIntObjectHashMap<Moves> moveList;
     
     /**
      * The {@link HashMap} two-dimensional array instance representing a PokemonData's effort values.
@@ -435,7 +437,7 @@ public class PokemonInformation {
      *
      * @return {@link #moveList}
      */
-    public HashMap<Integer, Moves> getMoveList() {
+    public TIntObjectHashMap<Moves> getMoveList() {
         return moveList;
     }
     
@@ -444,7 +446,7 @@ public class PokemonInformation {
      *
      * @param moveList {@link #moveList}
      */
-    public void setMoveList(HashMap<Integer, Moves> moveList) {
+    public void setMoveList(TIntObjectHashMap<Moves> moveList) {
         this.moveList = moveList;
     }
     

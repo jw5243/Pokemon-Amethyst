@@ -8,6 +8,7 @@ import com.horse.pokemon.ObjectData.PokemonData.PokemonExperience;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonInformation;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonTypes;
 import com.horse.pokemon.ObjectData.PokemonData.StatTypes;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,14 +55,10 @@ public final class PokemonDataReader {
             data[index] = data[index].trim();
         }
         String[] pokemonTypes = data[5].split(",");
-        
-        if(pokemonTypes.length == 1) {
-            pokemon.getInformation().setPokemonTypes(new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0].trim())});
-        } else if(pokemonTypes.length == 2) {
-            pokemon.getInformation().setPokemonTypes(new PokemonTypes[] {
-                    PokemonTypes.valueOf(pokemonTypes[0].trim()), PokemonTypes.valueOf(pokemonTypes[1].trim())
-            });
-        }
+    
+        pokemon.getInformation().setPokemonTypes(pokemonTypes.length == 1 ? new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0].trim())} : new PokemonTypes[] {
+                PokemonTypes.valueOf(pokemonTypes[0].trim()), PokemonTypes.valueOf(pokemonTypes[1].trim())
+        });
         
         pokemon.getInformation().setHeight(data[6]);
         pokemon.getInformation().setWeight(data[7]);
@@ -70,10 +67,10 @@ public final class PokemonDataReader {
         pokemon.getInformation().setAbility(data[10]);
         pokemon.getInformation().setExperienceRate(ExperienceTypes.valueOf(data[11]));
         pokemon.getInformation().setBaseHappiness(Integer.parseInt(data[12]));
-        
-        HashMap<Integer, Moves> moveList   = new HashMap<>();
-        String[]                moves      = data[13].split(",");
-        ArrayList<String>       moveValues = new ArrayList<>(moves.length * 2);
+    
+        TIntObjectHashMap<Moves> moveList   = new TIntObjectHashMap<>();
+        String[]                 moves      = data[13].split(",");
+        ArrayList<String>        moveValues = new ArrayList<>(moves.length * 2);
         for(int moveIndex = 0; moveIndex < moves.length; moveIndex++) {
             for(String value : moves) {
                 Collections.addAll(moveValues, value.split(":"));

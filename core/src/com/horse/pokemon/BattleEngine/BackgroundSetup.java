@@ -4,15 +4,15 @@ import com.badlogic.gdx.utils.Disposable;
 import com.horse.pokemon.Engine;
 
 public class BackgroundSetup implements Disposable {
-    private static final int SCREEN_TO_BACKGROUND_WIDTH_RATIO  = Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth();
-    private static final int SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
-    private static final int BACKGROUND_X_POSITION             = 0;
-    private static final int BACKGROUND_Y_POSITION             = 0;
-    private static final int ENEMY_BASE_X_POSITION             = (Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio();
-    private static final int ENEMY_BASE_Y_POSITION             = (Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio();
-    private static final int USER_BASE_X_POSITION              = -128;
-    private static final int USER_BASE_Y_POSITION              = 0;
-    private static final int TRANSITION_TIME                   = 4;
+    private static final float SCREEN_TO_BACKGROUND_WIDTH_RATIO  = Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth();
+    private static final float SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
+    private static final int   BACKGROUND_X_POSITION             = 0;
+    private static final int   BACKGROUND_Y_POSITION             = 0;
+    private static final int   ENEMY_BASE_X_POSITION             = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
+    private static final int   ENEMY_BASE_Y_POSITION             = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
+    private static final int   USER_BASE_X_POSITION              = -128;
+    private static final int   USER_BASE_Y_POSITION              = 0;
+    private static final int   TRANSITION_TIME                   = 2;
     private float                 currentTransitionTime;
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
@@ -23,11 +23,11 @@ public class BackgroundSetup implements Disposable {
         setBackgroundInformation(backgroundInformation);
     }
     
-    public static int getScreenToBackgroundWidthRatio() {
+    public static float getScreenToBackgroundWidthRatio() {
         return SCREEN_TO_BACKGROUND_WIDTH_RATIO;
     }
     
-    public static int getScreenToBackgroundHeightRatio() {
+    public static float getScreenToBackgroundHeightRatio() {
         return SCREEN_TO_BACKGROUND_HEIGHT_RATIO;
     }
     
@@ -84,12 +84,13 @@ public class BackgroundSetup implements Disposable {
                                     BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundWidthRatio(),
                                     BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundHeightRatio()
         );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(), getEnemyBaseXPosition(), getEnemyBaseYPosition(),
+        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(),
+                                    getEnemyBaseXPosition() - ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getEnemyBaseYPosition(),
                                     BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundWidthRatio(),
                                     BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundHeightRatio()
         );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(), getUserBaseXPosition() * (getCurrentTransitionTime() / getTransitionTime()),
-                                    getUserBaseYPosition() * (getCurrentTransitionTime() / getTransitionTime()),
+        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(),
+                                    getUserBaseXPosition() + ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getUserBaseYPosition(),
                                     BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundWidthRatio(),
                                     BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundHeightRatio()
         );

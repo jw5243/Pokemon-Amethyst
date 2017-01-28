@@ -25,40 +25,13 @@ import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTiledMap;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTmxMapLoader;
 import com.horse.pokemon.ObjectData.Players.User;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
+import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Class containing all the graphical pieces for when the {@link User} is on the screen state.  This is the {@link Screen} that is used the most as the major actions happen on this
  * screen.
- *
- * @see Game
- * @see Screen
- * @see ArrayList
- * @see HashMap
- * @see Door
- * @see User
- * @see Gdx
- * @see FPSLogger
- * @see GL20
- * @see OrthographicCamera
- * @see MapLayer
- * @see TiledMapTile
- * @see TiledMapTileLayer
- * @see TiledMapTileSet
- * @see Stage
- * @see FitViewport
- * @see Viewport
- * @see AudioData
- * @see Engine
- * @see Dialog
- * @see TextSpeeds
- * @see MapCreator
- * @see Maps
- * @see MultiTileMapRenderer
- * @see MultiTiledMap
- * @see MultiTmxMapLoader
  */
 public class MainGameScreen implements Screen {
     /**
@@ -92,7 +65,7 @@ public class MainGameScreen implements Screen {
     private FPSLogger                         fpsLogger;
     private MapCreator                        mapCreator;
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
-    private HashMap<Integer, TiledMapTile>    doorTiles;
+    private TIntObjectHashMap<TiledMapTile>   doorTiles;
     private Door                              doorToOpen;
     private int                               currentDoorFrameCount;
     
@@ -157,11 +130,11 @@ public class MainGameScreen implements Screen {
         this.doorsInMap = doorsInMap;
     }
     
-    public HashMap<Integer, TiledMapTile> getDoorTiles() {
+    public TIntObjectHashMap<TiledMapTile> getDoorTiles() {
         return doorTiles;
     }
     
-    public void setDoorTiles(HashMap<Integer, TiledMapTile> doorTiles) {
+    public void setDoorTiles(TIntObjectHashMap<TiledMapTile> doorTiles) {
         this.doorTiles = doorTiles;
     }
     
@@ -238,8 +211,8 @@ public class MainGameScreen implements Screen {
         getSound().playAudio();
         
         TiledMapTileSet tileSet = getMaps()[0].getTileSets().getTileSet("SinnohTileSet");
-        
-        setDoorTiles(new HashMap<>());
+    
+        setDoorTiles(new TIntObjectHashMap<>());
         for(TiledMapTile tile : tileSet) {
             Object property = tile.getProperties().get("Door Animation");
             if(property != null) {
