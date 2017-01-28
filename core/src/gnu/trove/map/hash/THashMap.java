@@ -222,6 +222,36 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
     }
     
     /**
+     * Transform the values in this map using <tt>function</tt>.
+     *
+     * @param function a <code>TObjectFunction</code> value
+     */
+    public void transformValues(TObjectFunction<V, V> function) {
+        V[]      values = _values;
+        Object[] set    = _set;
+        for(int i = values.length; i-- > 0; ) {
+            if(set[i] != FREE && set[i] != REMOVED) {
+                values[i] = function.execute(values[i]);
+            }
+        }
+    }
+    private V doPut(V value, int index) {
+        V       previous     = null;
+        boolean isNewMapping = true;
+        if(index < 0) {
+            index = -index - 1;
+            previous = _values[index];
+            isNewMapping = false;
+        }
+        _values[index] = value;
+        if(isNewMapping) {
+            postInsertHook(consumeFreeSlot);
+        }
+        
+        return previous;
+    }
+    
+    /**
      * Compares this map with another map for equality of their stored
      * entries.
      *
@@ -239,60 +269,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
             return false;
         }
         return forEachEntry(new EqProcedure<K, V>(that));
-    }
-    
-    /**
-     * Transform the values in this map using <tt>function</tt>.
-     *
-     * @param function a <code>TObjectFunction</code> value
-     */
-    public void transformValues(TObjectFunction<V, V> function) {
-        V[]      values = _values;
-        Object[] set    = _set;
-        for(int i = values.length; i-- > 0; ) {
-            if(set[i] != FREE && set[i] != REMOVED) {
-                values[i] = function.execute(values[i]);
-            }
-        }
-    }
-    
-    private V doPut(V value, int index) {
-        V       previous     = null;
-        boolean isNewMapping = true;
-        if(index < 0) {
-            index = -index - 1;
-            previous = _values[index];
-            isNewMapping = false;
-        }
-        _values[index] = value;
-        if(isNewMapping) {
-            postInsertHook(consumeFreeSlot);
-        }
-        
-        return previous;
-    }
-    
-    public String toString() {
-        final StringBuilder buf = new StringBuilder("{");
-        forEachEntry(new TObjectObjectProcedure<K, V>() {
-            private boolean first = true;
-            
-            
-            public boolean execute(K key, V value) {
-                if(first) {
-                    first = false;
-                } else {
-                    buf.append(", ");
-                }
-                
-                buf.append(key);
-                buf.append("=");
-                buf.append(value);
-                return true;
-            }
-        });
-        buf.append("}");
-        return buf.toString();
     }
     
     public int hashCode() {
@@ -353,7 +329,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
         // Last check: size before and after should be the same
         reportPotentialConcurrentMod(size(), oldSize);
     }
-    
     /**
      * removes the mapping at <tt>index</tt> from the map.
      *
@@ -362,6 +337,29 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
     public void removeAt(int index) {
         _values[index] = null;
         super.removeAt(index);  // clear key, state; adjust size
+    }
+    
+    public String toString() {
+        final StringBuilder buf = new StringBuilder("{");
+        forEachEntry(new TObjectObjectProcedure<K, V>() {
+            private boolean first = true;
+            
+            
+            public boolean execute(K key, V value) {
+                if(first) {
+                    first = false;
+                } else {
+                    buf.append(", ");
+                }
+                
+                buf.append(key);
+                buf.append("=");
+                buf.append(value);
+                return true;
+            }
+        });
+        buf.append("}");
+        return buf.toString();
     }
     
     /**
@@ -633,11 +631,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
             return entry.getKey();
         }
         
-        @SuppressWarnings({"unchecked"})
-        public Iterator<Map.Entry<K, V>> iterator() {
-            return new EntryIterator(THashMap.this);
-        }
-        
         private final class EntryIterator extends TObjectHashIterator {
             
             EntryIterator(THashMap<K, V> map) {
@@ -650,7 +643,13 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
                 return new Entry((K)_set[index], _values[index], index);
             }
         }
-        
+    
+        @SuppressWarnings({"unchecked"})
+        public Iterator<Map.Entry<K, V>> iterator() {
+            return new EntryIterator(THashMap.this);
+        }
+    
+    
         public boolean removeElement(Map.Entry<K, V> entry) {
             if(entry == null) {
                 return false;

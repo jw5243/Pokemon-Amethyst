@@ -141,6 +141,10 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
         putAll(map);
     }
     
+    protected void removeAt(int index) {
+        _values[index] = null;
+        super.removeAt(index);  // clear key, state; adjust size
+    }
     
     @SuppressWarnings({"unchecked"})
     protected int setUp(int initialCapacity) {
@@ -149,11 +153,6 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
         capacity = super.setUp(initialCapacity);
         _values = (V[])new Object[capacity];
         return capacity;
-    }
-    
-    protected void removeAt(int index) {
-        _values[index] = null;
-        super.removeAt(index);  // clear key, state; adjust size
     }
     
     
@@ -449,6 +448,41 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
         }
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        
+        // VERSION
+        in.readByte();
+        
+        // SUPER
+        super.readExternal(in);
+        
+        // NO_ENTRY_KEY
+        no_entry_key = in.readLong();
+        
+        // NUMBER OF ENTRIES
+        int size = in.readInt();
+        setUp(size);
+        
+        // ENTRIES
+        while(size-- > 0) {
+            long key = in.readLong();
+            V    val = (V)in.readObject();
+            put(key, val);
+        }
+    }
+    public int hashCode() {
+        int    hashcode = 0;
+        V[]    values   = _values;
+        byte[] states   = _states;
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
+            }
+        }
+        return hashcode;
+    }
+    
     public boolean equals(Object other) {
         if(!(other instanceof TLongObjectMap)) {
             return false;
@@ -477,42 +511,6 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
             // unused.
         }
         return true;
-    }
-    
-    @SuppressWarnings({"unchecked"})
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        
-        // VERSION
-        in.readByte();
-        
-        // SUPER
-        super.readExternal(in);
-        
-        // NO_ENTRY_KEY
-        no_entry_key = in.readLong();
-        
-        // NUMBER OF ENTRIES
-        int size = in.readInt();
-        setUp(size);
-        
-        // ENTRIES
-        while(size-- > 0) {
-            long key = in.readLong();
-            V    val = (V)in.readObject();
-            put(key, val);
-        }
-    }
-    
-    public int hashCode() {
-        int    hashcode = 0;
-        V[]    values   = _values;
-        byte[] states   = _states;
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
-            }
-        }
-        return hashcode;
     }
     
     class KeyView implements TLongSet {

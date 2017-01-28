@@ -1295,35 +1295,6 @@ public class TIntFloatHashMap extends TIntFloatHash implements TIntFloatMap, Ext
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TIntFloatMap)) {
-            return false;
-        }
-        TIntFloatMap that = (TIntFloatMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        float[] values              = _values;
-        byte[]  states              = _states;
-        float   this_no_entry_value = getNoEntryValue();
-        float   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                int   key        = _set[i];
-                float that_value = that.get(key);
-                float this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TIntFloatHashIterator extends THashPrimitiveIterator implements TIntFloatIterator {
         
         /**
@@ -1380,6 +1351,36 @@ public class TIntFloatHashMap extends TIntFloatHash implements TIntFloatMap, Ext
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TIntFloatMap)) {
+            return false;
+        }
+        TIntFloatMap that = (TIntFloatMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        float[] values              = _values;
+        byte[]  states              = _states;
+        float   this_no_entry_value = getNoEntryValue();
+        float   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                int   key        = _set[i];
+                float that_value = that.get(key);
+                float this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

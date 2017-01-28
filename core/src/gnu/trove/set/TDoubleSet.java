@@ -305,22 +305,6 @@ public interface TDoubleSet extends TDoubleCollection {
     // Comparison and hashing
     
     /**
-     * Compares the specified object with this set for equality.  Returns
-     * <tt>true</tt> if the specified object is also a set, the two sets
-     * have the same size, and every member of the specified set is
-     * contained in this set (or equivalently, every member of this set is
-     * contained in the specified set).  This definition ensures that the
-     * equals method works properly across different implementations of the
-     * set interface.
-     *
-     * @param o object to be compared for equality with this set
-     *
-     * @return <tt>true</tt> if the specified object is equal to this set
-     */
-    boolean equals(Object o);
-    
-    
-    /**
      * Returns the hash code value for this set.  The hash code of a set is
      * defined to be the sum of the hash codes of the elements in the set.
      * This ensures that <tt>s1.equals(s2)</tt> implies that
@@ -334,6 +318,21 @@ public interface TDoubleSet extends TDoubleCollection {
      * @see Set#equals(Object)
      */
     int hashCode();
+    
+    /**
+     * Compares the specified object with this set for equality.  Returns
+     * <tt>true</tt> if the specified object is also a set, the two sets
+     * have the same size, and every member of the specified set is
+     * contained in this set (or equivalently, every member of this set is
+     * contained in the specified set).  This definition ensures that the
+     * equals method works properly across different implementations of the
+     * set interface.
+     *
+     * @param o object to be compared for equality with this set
+     *
+     * @return <tt>true</tt> if the specified object is equal to this set
+     */
+    boolean equals(Object o);
     
     
 } // THashSet

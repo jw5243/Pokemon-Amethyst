@@ -8,19 +8,24 @@ public class BackgroundSetup implements Disposable {
     private static final float SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
     private static final int   BACKGROUND_X_POSITION             = 0;
     private static final int   BACKGROUND_Y_POSITION             = 0;
-    private static final int   ENEMY_BASE_X_POSITION             = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
-    private static final int   ENEMY_BASE_Y_POSITION             = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
-    private static final int   USER_BASE_X_POSITION              = -128;
-    private static final int   USER_BASE_Y_POSITION              = 0;
-    private static final int   TRANSITION_TIME                   = 2;
+    private static final int ENEMY_BASE_X_POSITION = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
+    private static final int ENEMY_BASE_Y_POSITION = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
+    private static final int USER_BASE_X_POSITION  = -128;
+    private static final int USER_BASE_Y_POSITION  = 0;
+    private static final int TRANSITION_TIME       = 2;
+    private static final int TRANSITION_DELAY      = 3;
     private float                 currentTransitionTime;
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
     
     public BackgroundSetup(Engine engine, BackgroundInformation backgroundInformation) {
-        setCurrentTransitionTime(0f);
+        setCurrentTransitionTime(0 - getTransitionDelay());
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
+    }
+    
+    public static int getTransitionDelay() {
+        return TRANSITION_DELAY;
     }
     
     public static float getScreenToBackgroundWidthRatio() {
@@ -79,23 +84,50 @@ public class BackgroundSetup implements Disposable {
         setCurrentTransitionTime(getCurrentTransitionTime() >= getTransitionTime() ? getTransitionTime() : getCurrentTransitionTime() + delta);
         
         getEngine().getBatch().begin();
-        
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundXPosition(), getBackgroundYPosition(),
-                                    BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundWidthRatio(),
-                                    BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundHeightRatio()
-        );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(),
-                                    getEnemyBaseXPosition() - ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getEnemyBaseYPosition(),
-                                    BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundWidthRatio(),
-                                    BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundHeightRatio()
-        );
-        getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(),
-                                    getUserBaseXPosition() + ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getUserBaseYPosition(),
-                                    BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundWidthRatio(),
-                                    BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundHeightRatio()
-        );
+    
+        drawBackground();
+        drawEnemyBase();
+        drawUserBase();
         
         getEngine().getBatch().end();
+    }
+    
+    private void drawBackground() {
+        if(getEngine().getBatch().isDrawing()) {
+            getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundXPosition(), getBackgroundYPosition(),
+                                        BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundWidthRatio(),
+                                        BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundHeightRatio()
+            );
+        } else {
+            getEngine().getBatch().begin();
+            drawBackground();
+        }
+    }
+    
+    private void drawEnemyBase() {
+        if(getEngine().getBatch().isDrawing()) {
+            getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(),
+                                        getEnemyBaseXPosition() - ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getEnemyBaseYPosition(),
+                                        BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundWidthRatio(),
+                                        BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundHeightRatio()
+            );
+        } else {
+            getEngine().getBatch().begin();
+            drawEnemyBase();
+        }
+    }
+    
+    private void drawUserBase() {
+        if(getEngine().getBatch().isDrawing()) {
+            getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(),
+                                        getUserBaseXPosition() + ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getUserBaseYPosition(),
+                                        BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundWidthRatio(),
+                                        BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundHeightRatio()
+            );
+        } else {
+            getEngine().getBatch().begin();
+            drawUserBase();
+        }
     }
     
     public float getCurrentTransitionTime() {

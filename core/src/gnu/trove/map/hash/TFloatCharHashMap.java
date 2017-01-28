@@ -1295,35 +1295,6 @@ public class TFloatCharHashMap extends TFloatCharHash implements TFloatCharMap, 
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TFloatCharMap)) {
-            return false;
-        }
-        TFloatCharMap that = (TFloatCharMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        char[] values              = _values;
-        byte[] states              = _states;
-        char   this_no_entry_value = getNoEntryValue();
-        char   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                float key        = _set[i];
-                char  that_value = that.get(key);
-                char  this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TFloatCharHashIterator extends THashPrimitiveIterator implements TFloatCharIterator {
         
         /**
@@ -1380,6 +1351,36 @@ public class TFloatCharHashMap extends TFloatCharHash implements TFloatCharMap, 
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TFloatCharMap)) {
+            return false;
+        }
+        TFloatCharMap that = (TFloatCharMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        char[] values              = _values;
+        byte[] states              = _states;
+        char   this_no_entry_value = getNoEntryValue();
+        char   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                float key        = _set[i];
+                char  that_value = that.get(key);
+                char  this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

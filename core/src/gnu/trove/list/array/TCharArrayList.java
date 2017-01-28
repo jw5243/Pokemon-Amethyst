@@ -208,6 +208,36 @@ public class TCharArrayList implements TCharList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(char value) {
+        return lastIndexOf(value) >= 0;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public char[] toArray() {
+        return toArray(0, _pos);
+    }
+    
+    
+    // modifying
+    
+    /**
+     * {@inheritDoc}
+     */
+    public char[] toArray(char[] dest) {
+        int len = dest.length;
+        if(dest.length > _pos) {
+            len = _pos;
+            dest[len] = no_entry_value;
+        }
+        toArray(dest, 0, len);
+        return dest;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(char val) {
         ensureCapacity(_pos + 1);
         _data[_pos++] = val;
@@ -217,12 +247,41 @@ public class TCharArrayList implements TCharList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean remove(char value) {
+        for(int index = 0; index < _pos; index++) {
+            if(value == _data[index]) {
+                remove(index, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        clear(DEFAULT_CAPACITY);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TCharProcedure procedure) {
+        for(int i = 0; i < _pos; i++) {
+            if(!procedure.execute(_data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void add(char[] vals) {
         add(vals, 0, vals.length);
     }
-    
-    
-    // modifying
     
     /**
      * {@inheritDoc}
@@ -328,26 +387,6 @@ public class TCharArrayList implements TCharList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        clear(DEFAULT_CAPACITY);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(char value) {
-        for(int index = 0; index < _pos; index++) {
-            if(value == _data[index]) {
-                remove(index, 1);
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public char removeAt(int offset) {
         char old = get(offset);
         remove(offset, 1);
@@ -444,30 +483,10 @@ public class TCharArrayList implements TCharList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public char[] toArray() {
-        return toArray(0, _pos);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public char[] toArray(int offset, int len) {
         char[] rv = new char[len];
         toArray(rv, offset, len);
         return rv;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public char[] toArray(char[] dest) {
-        int len = dest.length;
-        if(dest.length > _pos) {
-            len = _pos;
-            dest[len] = no_entry_value;
-        }
-        toArray(dest, 0, len);
-        return dest;
     }
     
     /**
@@ -496,18 +515,6 @@ public class TCharArrayList implements TCharList, Externalizable {
         }
         System.arraycopy(_data, source_pos, dest, dest_pos, len);
         return dest;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TCharProcedure procedure) {
-        for(int i = 0; i < _pos; i++) {
-            if(!procedure.execute(_data[i])) {
-                return false;
-            }
-        }
-        return true;
     }
     
     /**
@@ -626,13 +633,6 @@ public class TCharArrayList implements TCharList, Externalizable {
             }
         }
         return -1;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(char value) {
-        return lastIndexOf(value) >= 0;
     }
     
     /**

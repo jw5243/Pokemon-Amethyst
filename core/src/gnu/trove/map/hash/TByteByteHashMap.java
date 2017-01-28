@@ -1292,35 +1292,6 @@ public class TByteByteHashMap extends TByteByteHash implements TByteByteMap, Ext
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TByteByteMap)) {
-            return false;
-        }
-        TByteByteMap that = (TByteByteMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        byte[] values              = _values;
-        byte[] states              = _states;
-        byte   this_no_entry_value = getNoEntryValue();
-        byte   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                byte key        = _set[i];
-                byte that_value = that.get(key);
-                byte this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TByteByteHashIterator extends THashPrimitiveIterator implements TByteByteIterator {
         
         /**
@@ -1377,6 +1348,36 @@ public class TByteByteHashMap extends TByteByteHash implements TByteByteMap, Ext
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TByteByteMap)) {
+            return false;
+        }
+        TByteByteMap that = (TByteByteMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        byte[] values              = _values;
+        byte[] states              = _states;
+        byte   this_no_entry_value = getNoEntryValue();
+        byte   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                byte key        = _set[i];
+                byte that_value = that.get(key);
+                byte this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

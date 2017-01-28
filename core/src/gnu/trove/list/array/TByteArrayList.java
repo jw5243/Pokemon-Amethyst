@@ -208,6 +208,36 @@ public class TByteArrayList implements TByteList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(byte value) {
+        return lastIndexOf(value) >= 0;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public byte[] toArray() {
+        return toArray(0, _pos);
+    }
+    
+    
+    // modifying
+    
+    /**
+     * {@inheritDoc}
+     */
+    public byte[] toArray(byte[] dest) {
+        int len = dest.length;
+        if(dest.length > _pos) {
+            len = _pos;
+            dest[len] = no_entry_value;
+        }
+        toArray(dest, 0, len);
+        return dest;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(byte val) {
         ensureCapacity(_pos + 1);
         _data[_pos++] = val;
@@ -217,12 +247,41 @@ public class TByteArrayList implements TByteList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean remove(byte value) {
+        for(int index = 0; index < _pos; index++) {
+            if(value == _data[index]) {
+                remove(index, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        clear(DEFAULT_CAPACITY);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TByteProcedure procedure) {
+        for(int i = 0; i < _pos; i++) {
+            if(!procedure.execute(_data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void add(byte[] vals) {
         add(vals, 0, vals.length);
     }
-    
-    
-    // modifying
     
     /**
      * {@inheritDoc}
@@ -328,26 +387,6 @@ public class TByteArrayList implements TByteList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        clear(DEFAULT_CAPACITY);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(byte value) {
-        for(int index = 0; index < _pos; index++) {
-            if(value == _data[index]) {
-                remove(index, 1);
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public byte removeAt(int offset) {
         byte old = get(offset);
         remove(offset, 1);
@@ -444,30 +483,10 @@ public class TByteArrayList implements TByteList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public byte[] toArray() {
-        return toArray(0, _pos);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public byte[] toArray(int offset, int len) {
         byte[] rv = new byte[len];
         toArray(rv, offset, len);
         return rv;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public byte[] toArray(byte[] dest) {
-        int len = dest.length;
-        if(dest.length > _pos) {
-            len = _pos;
-            dest[len] = no_entry_value;
-        }
-        toArray(dest, 0, len);
-        return dest;
     }
     
     /**
@@ -496,18 +515,6 @@ public class TByteArrayList implements TByteList, Externalizable {
         }
         System.arraycopy(_data, source_pos, dest, dest_pos, len);
         return dest;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TByteProcedure procedure) {
-        for(int i = 0; i < _pos; i++) {
-            if(!procedure.execute(_data[i])) {
-                return false;
-            }
-        }
-        return true;
     }
     
     /**
@@ -626,13 +633,6 @@ public class TByteArrayList implements TByteList, Externalizable {
             }
         }
         return -1;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(byte value) {
-        return lastIndexOf(value) >= 0;
     }
     
     /**

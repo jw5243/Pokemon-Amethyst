@@ -161,6 +161,20 @@ public class TCharDoubleHashMap extends TCharDoubleHash implements TCharDoubleMa
         putAll(map);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    protected void removeAt(int index) {
+        _values[index] = no_entry_value;
+        super.removeAt(index);  // clear key, state; adjust size
+    }
+    
+    
+    /**
+     * rehashes the map to the new capacity.
+     *
+     * @param newCapacity an <code>int</code> value
+     */
     
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -176,21 +190,6 @@ public class TCharDoubleHashMap extends TCharDoubleHash implements TCharDoubleMa
         capacity = super.setUp(initialCapacity);
         _values = new double[capacity];
         return capacity;
-    }
-    
-    
-    /**
-     * rehashes the map to the new capacity.
-     *
-     * @param newCapacity an <code>int</code> value
-     */
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected void removeAt(int index) {
-        _values[index] = no_entry_value;
-        super.removeAt(index);  // clear key, state; adjust size
     }
     
     /**
@@ -1296,35 +1295,6 @@ public class TCharDoubleHashMap extends TCharDoubleHash implements TCharDoubleMa
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TCharDoubleMap)) {
-            return false;
-        }
-        TCharDoubleMap that = (TCharDoubleMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        double[] values              = _values;
-        byte[]   states              = _states;
-        double   this_no_entry_value = getNoEntryValue();
-        double   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                char   key        = _set[i];
-                double that_value = that.get(key);
-                double this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TCharDoubleHashIterator extends THashPrimitiveIterator implements TCharDoubleIterator {
         
         /**
@@ -1381,6 +1351,36 @@ public class TCharDoubleHashMap extends TCharDoubleHash implements TCharDoubleMa
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TCharDoubleMap)) {
+            return false;
+        }
+        TCharDoubleMap that = (TCharDoubleMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        double[] values              = _values;
+        byte[]   states              = _states;
+        double   this_no_entry_value = getNoEntryValue();
+        double   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                char   key        = _set[i];
+                double that_value = that.get(key);
+                double this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

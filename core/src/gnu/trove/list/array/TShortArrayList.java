@@ -208,6 +208,36 @@ public class TShortArrayList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(short value) {
+        return lastIndexOf(value) >= 0;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short[] toArray() {
+        return toArray(0, _pos);
+    }
+    
+    
+    // modifying
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short[] toArray(short[] dest) {
+        int len = dest.length;
+        if(dest.length > _pos) {
+            len = _pos;
+            dest[len] = no_entry_value;
+        }
+        toArray(dest, 0, len);
+        return dest;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(short val) {
         ensureCapacity(_pos + 1);
         _data[_pos++] = val;
@@ -217,12 +247,41 @@ public class TShortArrayList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean remove(short value) {
+        for(int index = 0; index < _pos; index++) {
+            if(value == _data[index]) {
+                remove(index, 1);
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        clear(DEFAULT_CAPACITY);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TShortProcedure procedure) {
+        for(int i = 0; i < _pos; i++) {
+            if(!procedure.execute(_data[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public void add(short[] vals) {
         add(vals, 0, vals.length);
     }
-    
-    
-    // modifying
     
     /**
      * {@inheritDoc}
@@ -328,26 +387,6 @@ public class TShortArrayList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        clear(DEFAULT_CAPACITY);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(short value) {
-        for(int index = 0; index < _pos; index++) {
-            if(value == _data[index]) {
-                remove(index, 1);
-                return true;
-            }
-        }
-        return false;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public short removeAt(int offset) {
         short old = get(offset);
         remove(offset, 1);
@@ -444,30 +483,10 @@ public class TShortArrayList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public short[] toArray() {
-        return toArray(0, _pos);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public short[] toArray(int offset, int len) {
         short[] rv = new short[len];
         toArray(rv, offset, len);
         return rv;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public short[] toArray(short[] dest) {
-        int len = dest.length;
-        if(dest.length > _pos) {
-            len = _pos;
-            dest[len] = no_entry_value;
-        }
-        toArray(dest, 0, len);
-        return dest;
     }
     
     /**
@@ -496,18 +515,6 @@ public class TShortArrayList implements TShortList, Externalizable {
         }
         System.arraycopy(_data, source_pos, dest, dest_pos, len);
         return dest;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TShortProcedure procedure) {
-        for(int i = 0; i < _pos; i++) {
-            if(!procedure.execute(_data[i])) {
-                return false;
-            }
-        }
-        return true;
     }
     
     /**
@@ -626,13 +633,6 @@ public class TShortArrayList implements TShortList, Externalizable {
             }
         }
         return -1;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(short value) {
-        return lastIndexOf(value) >= 0;
     }
     
     /**

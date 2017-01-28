@@ -151,6 +151,37 @@ public class TShortLinkedList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(short value) {
+        if(isEmpty()) {
+            return false;
+        }
+    
+        for(TShortLink l = head; got(l); l = l.getNext()) {
+            if(l.getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short[] toArray() {
+        return toArray(new short[size], 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public short[] toArray(short[] dest) {
+        return toArray(dest, 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(short val) {
         TShortLink l = new TShortLink(val);
         if(no(head)) {
@@ -162,8 +193,47 @@ public class TShortLinkedList implements TShortList, Externalizable {
             //
             tail = l;
         }
-        
+
         size++;
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean remove(short value) {
+        boolean changed = false;
+        for(TShortLink l = head; got(l); l = l.getNext()) {
+            //
+            if(l.getValue() == value) {
+                changed = true;
+                //
+                removeLink(l);
+            }
+        }
+    
+        return changed;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        size = 0;
+        //
+        head = null;
+        tail = null;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TShortProcedure procedure) {
+        for(TShortLink l = head; got(l); l = l.getNext()) {
+            if(!procedure.execute(l.getValue())) {
+                return false;
+            }
+        }
         return true;
     }
     
@@ -216,13 +286,13 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+
         TShortLink l = getLinkAt(offset);
         //
         if(no(l)) {
             return no_entry_value;
         }
-        
+    
         return l.getValue();
     }
     
@@ -233,13 +303,13 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+    
         TShortLink l = getLinkAt(offset);
         //
         if(no(l)) {
             throw new IndexOutOfBoundsException("at offset " + offset);
         }
-        
+    
         short prev = l.getValue();
         l.setValue(val);
         return prev;
@@ -272,39 +342,12 @@ public class TShortLinkedList implements TShortList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        size = 0;
-        //
-        head = null;
-        tail = null;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(short value) {
-        boolean changed = false;
-        for(TShortLink l = head; got(l); l = l.getNext()) {
-            //
-            if(l.getValue() == value) {
-                changed = true;
-                //
-                removeLink(l);
-            }
-        }
-        
-        return changed;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public short removeAt(int offset) {
         TShortLink l = getLinkAt(offset);
         if(no(l)) {
             throw new ArrayIndexOutOfBoundsException("no elemenet at " + offset);
         }
-        
+    
         short prev = l.getValue();
         removeLink(l);
         return prev;
@@ -338,7 +381,7 @@ public class TShortLinkedList implements TShortList, Externalizable {
         TShortLink h = head;
         TShortLink t = tail;
         TShortLink prev, next, tmp;
-        
+    
         //
         TShortLink l = head;
         while(got(l)) {
@@ -351,7 +394,7 @@ public class TShortLinkedList implements TShortList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         //
         head = t;
         tail = h;
@@ -364,14 +407,14 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(from > to) {
             throw new IllegalArgumentException("from > to : " + from + ">" + to);
         }
-        
+    
         TShortLink start = getLinkAt(from);
         TShortLink stop  = getLinkAt(to);
         TShortLink prev, next;
         TShortLink tmp   = null;
-        
+    
         TShortLink tmpHead = start.getPrevious();
-        
+    
         //
         TShortLink l = start;
         while(l != stop) {
@@ -384,7 +427,7 @@ public class TShortLinkedList implements TShortList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         // At this point l == stop and tmp is the but last element {
         if(got(tmp)) {
             tmpHead.setNext(tmp);
@@ -421,22 +464,15 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(end > size) {
             throw new IndexOutOfBoundsException("end index < " + size);
         }
-        
+    
         TShortLinkedList ret = new TShortLinkedList();
         TShortLink       tmp = getLinkAt(begin);
         for(int i = begin; i < end; i++) {
             ret.add(tmp.getValue()); // copy
             tmp = tmp.getNext();
         }
-        
-        return ret;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public short[] toArray() {
-        return toArray(new short[size], 0, size);
+        return ret;
     }
     
     /**
@@ -444,13 +480,6 @@ public class TShortLinkedList implements TShortList, Externalizable {
      */
     public short[] toArray(int offset, int len) {
         return toArray(new short[len], offset, 0, len);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public short[] toArray(short[] dest) {
-        return toArray(dest, 0, size);
     }
     
     /**
@@ -470,26 +499,14 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(source_pos < 0 || source_pos >= size()) {
             throw new ArrayIndexOutOfBoundsException(source_pos);
         }
-        
+    
         TShortLink tmp = getLinkAt(source_pos);
         for(int i = 0; i < len; i++) {
             dest[dest_pos + i] = tmp.getValue(); // copy
             tmp = tmp.getNext();
         }
-        
-        return dest;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TShortProcedure procedure) {
-        for(TShortLink l = head; got(l); l = l.getNext()) {
-            if(!procedure.execute(l.getValue())) {
-                return false;
-            }
-        }
-        return true;
+        return dest;
     }
     
     /**
@@ -535,8 +552,8 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
-        
+    
+    
         TShortLink l = getLinkAt(fromIndex);
         if(toIndex > size) {
             for(int i = fromIndex; i < size; i++) {
@@ -552,7 +569,7 @@ public class TShortLinkedList implements TShortList, Externalizable {
                 l = l.getNext();
             }
         }
-        
+    
     }
     
     /**
@@ -569,29 +586,29 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
+    
         if(toIndex > size) {
             throw new IndexOutOfBoundsException("end index > size: " + toIndex + " > " + size);
         }
-        
-        
+    
+    
         if(toIndex < fromIndex) {
             return -(fromIndex + 1);
         }
-        
+    
         TShortLink middle;
         int        mid;
         int        from     = fromIndex;
         TShortLink fromLink = getLinkAt(fromIndex);
         int        to       = toIndex;
-        
+    
         while(from < to) {
             mid = (from + to) >>> 1;
             middle = getLink(fromLink, from, mid);
             if(middle.getValue() == value) {
                 return mid;
             }
-            
+        
             if(middle.getValue() < value) {
                 from = mid + 1;
                 fromLink = middle.next;
@@ -599,7 +616,7 @@ public class TShortLinkedList implements TShortList, Externalizable {
                 to = mid - 1;
             }
         }
-        
+    
         return -(from + 1);
     }
     
@@ -615,20 +632,20 @@ public class TShortLinkedList implements TShortList, Externalizable {
      */
     public int indexOf(int offset, short value) {
         int count = offset;
-        
+    
         TShortLink l;
         for(l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 return count;
             }
-            
+    
             count++;
         }
     
         if(l != null && l.getValue() == value) {
             return count;
         }
-        
+    
         return -1;
     }
     
@@ -646,35 +663,18 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(isEmpty()) {
             return -1;
         }
-        
+    
         int last  = -1;
         int count = offset;
         for(TShortLink l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 last = count;
             }
-            
+    
             count++;
         }
-        
-        return last;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(short value) {
-        if(isEmpty()) {
-            return false;
-        }
-        
-        for(TShortLink l = head; got(l); l = l.getNext()) {
-            if(l.getValue() == value) {
-                return true;
-            }
-        }
-        return false;
-        
+        return last;
     }
     
     /**

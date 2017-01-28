@@ -151,6 +151,37 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(double value) {
+        if(isEmpty()) {
+            return false;
+        }
+    
+        for(TDoubleLink l = head; got(l); l = l.getNext()) {
+            if(l.getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public double[] toArray() {
+        return toArray(new double[size], 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public double[] toArray(double[] dest) {
+        return toArray(dest, 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(double val) {
         TDoubleLink l = new TDoubleLink(val);
         if(no(head)) {
@@ -162,8 +193,47 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
             //
             tail = l;
         }
-        
+
         size++;
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean remove(double value) {
+        boolean changed = false;
+        for(TDoubleLink l = head; got(l); l = l.getNext()) {
+            //
+            if(l.getValue() == value) {
+                changed = true;
+                //
+                removeLink(l);
+            }
+        }
+    
+        return changed;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        size = 0;
+        //
+        head = null;
+        tail = null;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TDoubleProcedure procedure) {
+        for(TDoubleLink l = head; got(l); l = l.getNext()) {
+            if(!procedure.execute(l.getValue())) {
+                return false;
+            }
+        }
         return true;
     }
     
@@ -216,13 +286,13 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+
         TDoubleLink l = getLinkAt(offset);
         //
         if(no(l)) {
             return no_entry_value;
         }
-        
+    
         return l.getValue();
     }
     
@@ -233,13 +303,13 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+    
         TDoubleLink l = getLinkAt(offset);
         //
         if(no(l)) {
             throw new IndexOutOfBoundsException("at offset " + offset);
         }
-        
+    
         double prev = l.getValue();
         l.setValue(val);
         return prev;
@@ -272,39 +342,12 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        size = 0;
-        //
-        head = null;
-        tail = null;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(double value) {
-        boolean changed = false;
-        for(TDoubleLink l = head; got(l); l = l.getNext()) {
-            //
-            if(l.getValue() == value) {
-                changed = true;
-                //
-                removeLink(l);
-            }
-        }
-        
-        return changed;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public double removeAt(int offset) {
         TDoubleLink l = getLinkAt(offset);
         if(no(l)) {
             throw new ArrayIndexOutOfBoundsException("no elemenet at " + offset);
         }
-        
+    
         double prev = l.getValue();
         removeLink(l);
         return prev;
@@ -338,7 +381,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         TDoubleLink h = head;
         TDoubleLink t = tail;
         TDoubleLink prev, next, tmp;
-        
+    
         //
         TDoubleLink l = head;
         while(got(l)) {
@@ -351,7 +394,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         //
         head = t;
         tail = h;
@@ -364,14 +407,14 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(from > to) {
             throw new IllegalArgumentException("from > to : " + from + ">" + to);
         }
-        
+    
         TDoubleLink start = getLinkAt(from);
         TDoubleLink stop  = getLinkAt(to);
         TDoubleLink prev, next;
         TDoubleLink tmp   = null;
-        
+    
         TDoubleLink tmpHead = start.getPrevious();
-        
+    
         //
         TDoubleLink l = start;
         while(l != stop) {
@@ -384,7 +427,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         // At this point l == stop and tmp is the but last element {
         if(got(tmp)) {
             tmpHead.setNext(tmp);
@@ -421,22 +464,15 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(end > size) {
             throw new IndexOutOfBoundsException("end index < " + size);
         }
-        
+    
         TDoubleLinkedList ret = new TDoubleLinkedList();
         TDoubleLink       tmp = getLinkAt(begin);
         for(int i = begin; i < end; i++) {
             ret.add(tmp.getValue()); // copy
             tmp = tmp.getNext();
         }
-        
-        return ret;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public double[] toArray() {
-        return toArray(new double[size], 0, size);
+        return ret;
     }
     
     /**
@@ -444,13 +480,6 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
      */
     public double[] toArray(int offset, int len) {
         return toArray(new double[len], offset, 0, len);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public double[] toArray(double[] dest) {
-        return toArray(dest, 0, size);
     }
     
     /**
@@ -470,26 +499,14 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(source_pos < 0 || source_pos >= size()) {
             throw new ArrayIndexOutOfBoundsException(source_pos);
         }
-        
+    
         TDoubleLink tmp = getLinkAt(source_pos);
         for(int i = 0; i < len; i++) {
             dest[dest_pos + i] = tmp.getValue(); // copy
             tmp = tmp.getNext();
         }
-        
-        return dest;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TDoubleProcedure procedure) {
-        for(TDoubleLink l = head; got(l); l = l.getNext()) {
-            if(!procedure.execute(l.getValue())) {
-                return false;
-            }
-        }
-        return true;
+        return dest;
     }
     
     /**
@@ -535,8 +552,8 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
-        
+    
+    
         TDoubleLink l = getLinkAt(fromIndex);
         if(toIndex > size) {
             for(int i = fromIndex; i < size; i++) {
@@ -552,7 +569,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
                 l = l.getNext();
             }
         }
-        
+    
     }
     
     /**
@@ -569,29 +586,29 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
+    
         if(toIndex > size) {
             throw new IndexOutOfBoundsException("end index > size: " + toIndex + " > " + size);
         }
-        
-        
+    
+    
         if(toIndex < fromIndex) {
             return -(fromIndex + 1);
         }
-        
+    
         TDoubleLink middle;
         int         mid;
         int         from     = fromIndex;
         TDoubleLink fromLink = getLinkAt(fromIndex);
         int         to       = toIndex;
-        
+    
         while(from < to) {
             mid = (from + to) >>> 1;
             middle = getLink(fromLink, from, mid);
             if(middle.getValue() == value) {
                 return mid;
             }
-            
+        
             if(middle.getValue() < value) {
                 from = mid + 1;
                 fromLink = middle.next;
@@ -599,7 +616,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
                 to = mid - 1;
             }
         }
-        
+    
         return -(from + 1);
     }
     
@@ -615,20 +632,20 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
      */
     public int indexOf(int offset, double value) {
         int count = offset;
-        
+    
         TDoubleLink l;
         for(l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 return count;
             }
-            
+    
             count++;
         }
     
         if(l != null && l.getValue() == value) {
             return count;
         }
-        
+    
         return -1;
     }
     
@@ -646,35 +663,18 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(isEmpty()) {
             return -1;
         }
-        
+    
         int last  = -1;
         int count = offset;
         for(TDoubleLink l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 last = count;
             }
-            
+    
             count++;
         }
-        
-        return last;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(double value) {
-        if(isEmpty()) {
-            return false;
-        }
-        
-        for(TDoubleLink l = head; got(l); l = l.getNext()) {
-            if(l.getValue() == value) {
-                return true;
-            }
-        }
-        return false;
-        
+        return last;
     }
     
     /**

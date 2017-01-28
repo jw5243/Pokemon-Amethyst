@@ -518,6 +518,44 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
         }
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        
+        // VERSION
+        in.readByte();
+        
+        // SUPER
+        super.readExternal(in);
+        
+        // NO_ENTRY_KEY
+        no_entry_key = in.readFloat();
+        
+        // NUMBER OF ENTRIES
+        int size = in.readInt();
+        setUp(size);
+        
+        // ENTRIES
+        while(size-- > 0) {
+            float key = in.readFloat();
+            V     val = (V)in.readObject();
+            put(key, val);
+        }
+    }
+    /**
+     * {@inheritDoc}
+     */
+    public int hashCode() {
+        int    hashcode = 0;
+        V[]    values   = _values;
+        byte[] states   = _states;
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
+            }
+        }
+        return hashcode;
+    }
+    
     /**
      * {@inheritDoc}
      */
@@ -549,45 +587,6 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
             // unused.
         }
         return true;
-    }
-    
-    @SuppressWarnings({"unchecked"})
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        
-        // VERSION
-        in.readByte();
-        
-        // SUPER
-        super.readExternal(in);
-        
-        // NO_ENTRY_KEY
-        no_entry_key = in.readFloat();
-        
-        // NUMBER OF ENTRIES
-        int size = in.readInt();
-        setUp(size);
-        
-        // ENTRIES
-        while(size-- > 0) {
-            float key = in.readFloat();
-            V     val = (V)in.readObject();
-            put(key, val);
-        }
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public int hashCode() {
-        int    hashcode = 0;
-        V[]    values   = _values;
-        byte[] states   = _states;
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
-            }
-        }
-        return hashcode;
     }
     
     class KeyView implements TFloatSet {

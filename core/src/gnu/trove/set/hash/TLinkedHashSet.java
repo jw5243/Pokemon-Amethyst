@@ -64,27 +64,32 @@ public class TLinkedHashSet<E> extends THashSet<E> {
         super(es);
     }
     
-    /**
-     * Inserts a value into the set.
-     *
-     * @param obj an <code>Object</code> value
-     *
-     * @return true if the set was modified by the add operation
-     */
     @Override
-    public boolean add(E obj) {
-        int index = insertKey(obj);
+    public String toString() {
+        final StringBuilder buf   = new StringBuilder("{");
+        boolean             first = true;
+    
+        for(Iterator<E> it = iterator(); it.hasNext(); ) {
+            if(first) {
+                first = false;
+            } else {
+                buf.append(", ");
+            }
         
-        if(index < 0) {
-            return false;       // already present in set, nothing to add
+            buf.append(it.next());
         }
     
-        if(!order.add(index)) {
-            throw new IllegalStateException("Order not changed after insert");
-        }
-        
-        postInsertHook(consumeFreeSlot);
-        return true;            // yes, we added something
+        buf.append("}");
+        return buf.toString();
+    }
+    
+    /**
+     * Empties the set.
+     */
+    @Override
+    public void clear() {
+        super.clear();
+        order.clear();
     }
     
     /**
@@ -96,41 +101,32 @@ public class TLinkedHashSet<E> extends THashSet<E> {
     protected void rehash(int newCapacity) {
         TIntLinkedList oldOrder = new TIntLinkedList(order);
         int            oldSize  = size();
-        
+
         Object oldSet[] = _set;
-        
+
         order.clear();
         _set = new Object[newCapacity];
         Arrays.fill(_set, FREE);
-        
+
         for(TIntIterator iterator = oldOrder.iterator(); iterator.hasNext(); ) {
             int i = iterator.next();
             E   o = (E)oldSet[i];
             if(o == FREE || o == REMOVED) {
                 throw new IllegalStateException("Iterating over empty location while rehashing");
             }
-            
+    
             if(o != FREE && o != REMOVED) {
                 int index = insertKey(o);
                 if(index < 0) { // everyone pays for this because some people can't RTFM
                     throwObjectContractViolation(_set[(-index - 1)], o, size(), oldSize, oldSet);
                 }
-    
+        
                 if(!order.add(index)) {
                     throw new IllegalStateException("Order not changed after insert");
                 }
             }
         }
-        
-    }
     
-    /**
-     * Empties the set.
-     */
-    @Override
-    public void clear() {
-        super.clear();
-        order.clear();
     }
     
     /**
@@ -195,23 +191,27 @@ public class TLinkedHashSet<E> extends THashSet<E> {
         };    //To change body of overridden methods use File | Settings | File Templates.
     }
     
+    /**
+     * Inserts a value into the set.
+     *
+     * @param obj an <code>Object</code> value
+     *
+     * @return true if the set was modified by the add operation
+     */
     @Override
-    public String toString() {
-        final StringBuilder buf   = new StringBuilder("{");
-        boolean             first = true;
-        
-        for(Iterator<E> it = iterator(); it.hasNext(); ) {
-            if(first) {
-                first = false;
-            } else {
-                buf.append(", ");
-            }
-            
-            buf.append(it.next());
+    public boolean add(E obj) {
+        int index = insertKey(obj);
+    
+        if(index < 0) {
+            return false;       // already present in set, nothing to add
         }
-        
-        buf.append("}");
-        return buf.toString();
+    
+        if(!order.add(index)) {
+            throw new IllegalStateException("Order not changed after insert");
+        }
+    
+        postInsertHook(consumeFreeSlot);
+        return true;            // yes, we added something
     }
     
     @Override

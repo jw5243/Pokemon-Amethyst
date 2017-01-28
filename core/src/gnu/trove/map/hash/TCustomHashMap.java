@@ -224,26 +224,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
     }
     
     /**
-     * Compares this map with another map for equality of their stored
-     * entries.
-     *
-     * @param other an <code>Object</code> value
-     *
-     * @return a <code>boolean</code> value
-     */
-    @SuppressWarnings({"unchecked", "SimplifiableIfStatement"})
-    public boolean equals(Object other) {
-        if(!(other instanceof Map)) {
-            return false;
-        }
-        Map<K, V> that = (Map<K, V>)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        return forEachEntry(new EqProcedure<K, V>(that));
-    }
-    
-    /**
      * Transform the values in this map using <tt>function</tt>.
      *
      * @param function a <code>TObjectFunction</code> value
@@ -257,7 +237,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
             }
         }
     }
-    
     private V doPut(V value, int index) {
         V       previous     = null;
         boolean isNewMapping = true;
@@ -276,27 +255,24 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
         return previous;
     }
     
-    public String toString() {
-        final StringBuilder buf = new StringBuilder("{");
-        forEachEntry(new TObjectObjectProcedure<K, V>() {
-            private boolean first = true;
-            
-            
-            public boolean execute(K key, V value) {
-                if(first) {
-                    first = false;
-                } else {
-                    buf.append(", ");
-                }
-                
-                buf.append(key);
-                buf.append("=");
-                buf.append(value);
-                return true;
-            }
-        });
-        buf.append("}");
-        return buf.toString();
+    /**
+     * Compares this map with another map for equality of their stored
+     * entries.
+     *
+     * @param other an <code>Object</code> value
+     *
+     * @return a <code>boolean</code> value
+     */
+    @SuppressWarnings({"unchecked", "SimplifiableIfStatement"})
+    public boolean equals(Object other) {
+        if(!(other instanceof Map)) {
+            return false;
+        }
+        Map<K, V> that = (Map<K, V>)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        return forEachEntry(new EqProcedure<K, V>(that));
     }
     
     public int hashCode() {
@@ -350,7 +326,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
             _values[index] = oldVals[i];
         }
     }
-    
     /**
      * removes the mapping at <tt>index</tt> from the map.
      *
@@ -359,6 +334,29 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
     public void removeAt(int index) {
         _values[index] = null;
         super.removeAt(index);  // clear key, state; adjust size
+    }
+    
+    public String toString() {
+        final StringBuilder buf = new StringBuilder("{");
+        forEachEntry(new TObjectObjectProcedure<K, V>() {
+            private boolean first = true;
+            
+            
+            public boolean execute(K key, V value) {
+                if(first) {
+                    first = false;
+                } else {
+                    buf.append(", ");
+                }
+                
+                buf.append(key);
+                buf.append("=");
+                buf.append(value);
+                return true;
+            }
+        });
+        buf.append("}");
+        return buf.toString();
     }
     
     /**
@@ -632,11 +630,6 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
             return entry.getKey();
         }
         
-        @SuppressWarnings({"unchecked"})
-        public Iterator<Map.Entry<K, V>> iterator() {
-            return new EntryIterator(TCustomHashMap.this);
-        }
-        
         private final class EntryIterator extends TObjectHashIterator {
             
             EntryIterator(TCustomHashMap<K, V> map) {
@@ -649,7 +642,13 @@ public class TCustomHashMap<K, V> extends TCustomObjectHash<K> implements TMap<K
                 return new Entry((K)_set[index], _values[index], index);
             }
         }
-        
+    
+        @SuppressWarnings({"unchecked"})
+        public Iterator<Map.Entry<K, V>> iterator() {
+            return new EntryIterator(TCustomHashMap.this);
+        }
+    
+    
         public boolean removeElement(Map.Entry<K, V> entry) {
             // have to effectively reimplement Map.remove here
             // because we need to return true/false depending on

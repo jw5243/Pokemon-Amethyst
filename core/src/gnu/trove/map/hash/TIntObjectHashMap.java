@@ -443,6 +443,41 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
         }
     }
     
+    @SuppressWarnings({"unchecked"})
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        
+        // VERSION
+        in.readByte();
+        
+        // SUPER
+        super.readExternal(in);
+        
+        // NO_ENTRY_KEY
+        no_entry_key = in.readInt();
+        
+        // NUMBER OF ENTRIES
+        int size = in.readInt();
+        setUp(size);
+        
+        // ENTRIES
+        while(size-- > 0) {
+            int key = in.readInt();
+            V   val = (V)in.readObject();
+            put(key, val);
+        }
+    }
+    public int hashCode() {
+        int    hashcode = 0;
+        V[]    values   = _values;
+        byte[] states   = _states;
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
+            }
+        }
+        return hashcode;
+    }
+    
     public boolean equals(Object other) {
         if(!(other instanceof TIntObjectMap)) {
             return false;
@@ -471,42 +506,6 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
             // unused.
         }
         return true;
-    }
-    
-    @SuppressWarnings({"unchecked"})
-    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
-        
-        // VERSION
-        in.readByte();
-        
-        // SUPER
-        super.readExternal(in);
-        
-        // NO_ENTRY_KEY
-        no_entry_key = in.readInt();
-        
-        // NUMBER OF ENTRIES
-        int size = in.readInt();
-        setUp(size);
-        
-        // ENTRIES
-        while(size-- > 0) {
-            int key = in.readInt();
-            V   val = (V)in.readObject();
-            put(key, val);
-        }
-    }
-    
-    public int hashCode() {
-        int    hashcode = 0;
-        V[]    values   = _values;
-        byte[] states   = _states;
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                hashcode += HashFunctions.hash(_set[i]) ^ (values[i] == null ? 0 : values[i].hashCode());
-            }
-        }
-        return hashcode;
     }
     
     class KeyView implements TIntSet {

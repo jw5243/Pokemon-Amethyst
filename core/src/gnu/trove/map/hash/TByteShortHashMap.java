@@ -161,6 +161,20 @@ public class TByteShortHashMap extends TByteShortHash implements TByteShortMap, 
         putAll(map);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    protected void removeAt(int index) {
+        _values[index] = no_entry_value;
+        super.removeAt(index);  // clear key, state; adjust size
+    }
+    
+    
+    /**
+     * rehashes the map to the new capacity.
+     *
+     * @param newCapacity an <code>int</code> value
+     */
     
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -176,21 +190,6 @@ public class TByteShortHashMap extends TByteShortHash implements TByteShortMap, 
         capacity = super.setUp(initialCapacity);
         _values = new short[capacity];
         return capacity;
-    }
-    
-    
-    /**
-     * rehashes the map to the new capacity.
-     *
-     * @param newCapacity an <code>int</code> value
-     */
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected void removeAt(int index) {
-        _values[index] = no_entry_value;
-        super.removeAt(index);  // clear key, state; adjust size
     }
     
     /**
@@ -1296,35 +1295,6 @@ public class TByteShortHashMap extends TByteShortHash implements TByteShortMap, 
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TByteShortMap)) {
-            return false;
-        }
-        TByteShortMap that = (TByteShortMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        short[] values              = _values;
-        byte[]  states              = _states;
-        short   this_no_entry_value = getNoEntryValue();
-        short   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                byte  key        = _set[i];
-                short that_value = that.get(key);
-                short this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TByteShortHashIterator extends THashPrimitiveIterator implements TByteShortIterator {
         
         /**
@@ -1381,6 +1351,36 @@ public class TByteShortHashMap extends TByteShortHash implements TByteShortMap, 
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TByteShortMap)) {
+            return false;
+        }
+        TByteShortMap that = (TByteShortMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        short[] values              = _values;
+        byte[]  states              = _states;
+        short   this_no_entry_value = getNoEntryValue();
+        short   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                byte  key        = _set[i];
+                short that_value = that.get(key);
+                short this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

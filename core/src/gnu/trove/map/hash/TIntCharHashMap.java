@@ -161,6 +161,20 @@ public class TIntCharHashMap extends TIntCharHash implements TIntCharMap, Extern
         putAll(map);
     }
     
+    /**
+     * {@inheritDoc}
+     */
+    protected void removeAt(int index) {
+        _values[index] = no_entry_value;
+        super.removeAt(index);  // clear key, state; adjust size
+    }
+    
+    
+    /**
+     * rehashes the map to the new capacity.
+     *
+     * @param newCapacity an <code>int</code> value
+     */
     
     /**
      * initializes the hashtable to a prime capacity which is at least
@@ -176,21 +190,6 @@ public class TIntCharHashMap extends TIntCharHash implements TIntCharMap, Extern
         capacity = super.setUp(initialCapacity);
         _values = new char[capacity];
         return capacity;
-    }
-    
-    
-    /**
-     * rehashes the map to the new capacity.
-     *
-     * @param newCapacity an <code>int</code> value
-     */
-    
-    /**
-     * {@inheritDoc}
-     */
-    protected void removeAt(int index) {
-        _values[index] = no_entry_value;
-        super.removeAt(index);  // clear key, state; adjust size
     }
     
     /**
@@ -1296,35 +1295,6 @@ public class TIntCharHashMap extends TIntCharHash implements TIntCharMap, Extern
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TIntCharMap)) {
-            return false;
-        }
-        TIntCharMap that = (TIntCharMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        char[] values              = _values;
-        byte[] states              = _states;
-        char   this_no_entry_value = getNoEntryValue();
-        char   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                int  key        = _set[i];
-                char that_value = that.get(key);
-                char this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TIntCharHashIterator extends THashPrimitiveIterator implements TIntCharIterator {
         
         /**
@@ -1381,6 +1351,36 @@ public class TIntCharHashMap extends TIntCharHash implements TIntCharMap, Extern
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TIntCharMap)) {
+            return false;
+        }
+        TIntCharMap that = (TIntCharMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        char[] values              = _values;
+        byte[] states              = _states;
+        char   this_no_entry_value = getNoEntryValue();
+        char   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                int  key        = _set[i];
+                char that_value = that.get(key);
+                char this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

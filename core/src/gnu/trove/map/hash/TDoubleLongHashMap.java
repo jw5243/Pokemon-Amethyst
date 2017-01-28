@@ -1295,35 +1295,6 @@ public class TDoubleLongHashMap extends TDoubleLongHash implements TDoubleLongMa
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TDoubleLongMap)) {
-            return false;
-        }
-        TDoubleLongMap that = (TDoubleLongMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        long[] values              = _values;
-        byte[] states              = _states;
-        long   this_no_entry_value = getNoEntryValue();
-        long   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                double key        = _set[i];
-                long   that_value = that.get(key);
-                long   this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TDoubleLongHashIterator extends THashPrimitiveIterator implements TDoubleLongIterator {
         
         /**
@@ -1380,6 +1351,36 @@ public class TDoubleLongHashMap extends TDoubleLongHash implements TDoubleLongMa
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TDoubleLongMap)) {
+            return false;
+        }
+        TDoubleLongMap that = (TDoubleLongMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        long[] values              = _values;
+        byte[] states              = _states;
+        long   this_no_entry_value = getNoEntryValue();
+        long   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                double key        = _set[i];
+                long   that_value = that.get(key);
+                long   this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

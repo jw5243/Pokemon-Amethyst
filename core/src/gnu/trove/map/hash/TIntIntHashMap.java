@@ -1292,35 +1292,6 @@ public class TIntIntHashMap extends TIntIntHash implements TIntIntMap, Externali
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TIntIntMap)) {
-            return false;
-        }
-        TIntIntMap that = (TIntIntMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        int[]  values              = _values;
-        byte[] states              = _states;
-        int    this_no_entry_value = getNoEntryValue();
-        int    that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                int key        = _set[i];
-                int that_value = that.get(key);
-                int this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TIntIntHashIterator extends THashPrimitiveIterator implements TIntIntIterator {
         
         /**
@@ -1377,6 +1348,36 @@ public class TIntIntHashMap extends TIntIntHash implements TIntIntMap, Externali
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TIntIntMap)) {
+            return false;
+        }
+        TIntIntMap that = (TIntIntMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        int[]  values              = _values;
+        byte[] states              = _states;
+        int    this_no_entry_value = getNoEntryValue();
+        int    that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                int key        = _set[i];
+                int that_value = that.get(key);
+                int this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

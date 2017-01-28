@@ -1295,35 +1295,6 @@ public class TDoubleShortHashMap extends TDoubleShortHash implements TDoubleShor
         }
     }
     
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean equals(Object other) {
-        if(!(other instanceof TDoubleShortMap)) {
-            return false;
-        }
-        TDoubleShortMap that = (TDoubleShortMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        short[] values              = _values;
-        byte[]  states              = _states;
-        short   this_no_entry_value = getNoEntryValue();
-        short   that_no_entry_value = that.getNoEntryValue();
-        for(int i = values.length; i-- > 0; ) {
-            if(states[i] == FULL) {
-                double key        = _set[i];
-                short  that_value = that.get(key);
-                short  this_value = values[i];
-                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-    
     class TDoubleShortHashIterator extends THashPrimitiveIterator implements TDoubleShortIterator {
         
         /**
@@ -1380,6 +1351,36 @@ public class TDoubleShortHashMap extends TDoubleShortHash implements TDoubleShor
             _expectedSize--;
         }
     }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(Object other) {
+        if(!(other instanceof TDoubleShortMap)) {
+            return false;
+        }
+        TDoubleShortMap that = (TDoubleShortMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        short[] values              = _values;
+        byte[]  states              = _states;
+        short   this_no_entry_value = getNoEntryValue();
+        short   that_no_entry_value = that.getNoEntryValue();
+        for(int i = values.length; i-- > 0; ) {
+            if(states[i] == FULL) {
+                double key        = _set[i];
+                short  that_value = that.get(key);
+                short  this_value = values[i];
+                if((this_value != that_value) && (this_value != this_no_entry_value) && (that_value != that_no_entry_value)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
     
     /**
      * {@inheritDoc}

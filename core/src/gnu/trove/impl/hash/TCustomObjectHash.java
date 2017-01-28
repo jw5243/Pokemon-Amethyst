@@ -90,18 +90,6 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
     }
     
     @Override
-    protected boolean equals(Object one, Object two) {
-        //noinspection unchecked
-        return two != REMOVED && strategy.equals((T)one, (T)two);
-    }
-    
-    @Override
-    protected int hash(Object obj) {
-        //noinspection unchecked
-        return strategy.computeHashCode((T)obj);
-    }
-    
-    @Override
     public void writeExternal(ObjectOutput out) throws IOException {
         
         // VERSION
@@ -113,7 +101,6 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
         // STRATEGY
         out.writeObject(strategy);
     }
-    
     
     @Override
     public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
@@ -127,5 +114,17 @@ abstract public class TCustomObjectHash<T> extends TObjectHash<T> {
         // STRATEGY
         //noinspection unchecked
         strategy = (HashingStrategy<T>)in.readObject();
+    }
+    
+    @Override
+    protected boolean equals(Object one, Object two) {
+        //noinspection unchecked
+        return two != REMOVED && strategy.equals((T)one, (T)two);
+    }
+    
+    @Override
+    protected int hash(Object obj) {
+        //noinspection unchecked
+        return strategy.computeHashCode((T)obj);
     }
 } // TCustomObjectHash

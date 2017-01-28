@@ -151,6 +151,37 @@ public class TLongLinkedList implements TLongList, Externalizable {
     /**
      * {@inheritDoc}
      */
+    public boolean contains(long value) {
+        if(isEmpty()) {
+            return false;
+        }
+    
+        for(TLongLink l = head; got(l); l = l.getNext()) {
+            if(l.getValue() == value) {
+                return true;
+            }
+        }
+        return false;
+    
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public long[] toArray() {
+        return toArray(new long[size], 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public long[] toArray(long[] dest) {
+        return toArray(dest, 0, size);
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
     public boolean add(long val) {
         TLongLink l = new TLongLink(val);
         if(no(head)) {
@@ -162,8 +193,47 @@ public class TLongLinkedList implements TLongList, Externalizable {
             //
             tail = l;
         }
-        
+
         size++;
+        return true;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean remove(long value) {
+        boolean changed = false;
+        for(TLongLink l = head; got(l); l = l.getNext()) {
+            //
+            if(l.getValue() == value) {
+                changed = true;
+                //
+                removeLink(l);
+            }
+        }
+    
+        return changed;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public void clear() {
+        size = 0;
+        //
+        head = null;
+        tail = null;
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean forEach(TLongProcedure procedure) {
+        for(TLongLink l = head; got(l); l = l.getNext()) {
+            if(!procedure.execute(l.getValue())) {
+                return false;
+            }
+        }
         return true;
     }
     
@@ -216,13 +286,13 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+
         TLongLink l = getLinkAt(offset);
         //
         if(no(l)) {
             return no_entry_value;
         }
-        
+    
         return l.getValue();
     }
     
@@ -233,13 +303,13 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-        
+    
         TLongLink l = getLinkAt(offset);
         //
         if(no(l)) {
             throw new IndexOutOfBoundsException("at offset " + offset);
         }
-        
+    
         long prev = l.getValue();
         l.setValue(val);
         return prev;
@@ -272,39 +342,12 @@ public class TLongLinkedList implements TLongList, Externalizable {
     /**
      * {@inheritDoc}
      */
-    public void clear() {
-        size = 0;
-        //
-        head = null;
-        tail = null;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean remove(long value) {
-        boolean changed = false;
-        for(TLongLink l = head; got(l); l = l.getNext()) {
-            //
-            if(l.getValue() == value) {
-                changed = true;
-                //
-                removeLink(l);
-            }
-        }
-        
-        return changed;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
     public long removeAt(int offset) {
         TLongLink l = getLinkAt(offset);
         if(no(l)) {
             throw new ArrayIndexOutOfBoundsException("no elemenet at " + offset);
         }
-        
+    
         long prev = l.getValue();
         removeLink(l);
         return prev;
@@ -338,7 +381,7 @@ public class TLongLinkedList implements TLongList, Externalizable {
         TLongLink h = head;
         TLongLink t = tail;
         TLongLink prev, next, tmp;
-        
+    
         //
         TLongLink l = head;
         while(got(l)) {
@@ -351,7 +394,7 @@ public class TLongLinkedList implements TLongList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         //
         head = t;
         tail = h;
@@ -364,14 +407,14 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(from > to) {
             throw new IllegalArgumentException("from > to : " + from + ">" + to);
         }
-        
+    
         TLongLink start = getLinkAt(from);
         TLongLink stop  = getLinkAt(to);
         TLongLink prev, next;
         TLongLink tmp   = null;
-        
+    
         TLongLink tmpHead = start.getPrevious();
-        
+    
         //
         TLongLink l = start;
         while(l != stop) {
@@ -384,7 +427,7 @@ public class TLongLinkedList implements TLongList, Externalizable {
             tmp.setNext(prev);
             tmp.setPrevious(next);
         }
-        
+    
         // At this point l == stop and tmp is the but last element {
         if(got(tmp)) {
             tmpHead.setNext(tmp);
@@ -421,22 +464,15 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(end > size) {
             throw new IndexOutOfBoundsException("end index < " + size);
         }
-        
+    
         TLongLinkedList ret = new TLongLinkedList();
         TLongLink       tmp = getLinkAt(begin);
         for(int i = begin; i < end; i++) {
             ret.add(tmp.getValue()); // copy
             tmp = tmp.getNext();
         }
-        
-        return ret;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public long[] toArray() {
-        return toArray(new long[size], 0, size);
+        return ret;
     }
     
     /**
@@ -444,13 +480,6 @@ public class TLongLinkedList implements TLongList, Externalizable {
      */
     public long[] toArray(int offset, int len) {
         return toArray(new long[len], offset, 0, len);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public long[] toArray(long[] dest) {
-        return toArray(dest, 0, size);
     }
     
     /**
@@ -470,26 +499,14 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(source_pos < 0 || source_pos >= size()) {
             throw new ArrayIndexOutOfBoundsException(source_pos);
         }
-        
+    
         TLongLink tmp = getLinkAt(source_pos);
         for(int i = 0; i < len; i++) {
             dest[dest_pos + i] = tmp.getValue(); // copy
             tmp = tmp.getNext();
         }
-        
-        return dest;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean forEach(TLongProcedure procedure) {
-        for(TLongLink l = head; got(l); l = l.getNext()) {
-            if(!procedure.execute(l.getValue())) {
-                return false;
-            }
-        }
-        return true;
+        return dest;
     }
     
     /**
@@ -535,8 +552,8 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
-        
+    
+    
         TLongLink l = getLinkAt(fromIndex);
         if(toIndex > size) {
             for(int i = fromIndex; i < size; i++) {
@@ -552,7 +569,7 @@ public class TLongLinkedList implements TLongList, Externalizable {
                 l = l.getNext();
             }
         }
-        
+    
     }
     
     /**
@@ -569,29 +586,29 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(fromIndex < 0) {
             throw new IndexOutOfBoundsException("begin index can not be < 0");
         }
-        
+    
         if(toIndex > size) {
             throw new IndexOutOfBoundsException("end index > size: " + toIndex + " > " + size);
         }
-        
-        
+    
+    
         if(toIndex < fromIndex) {
             return -(fromIndex + 1);
         }
-        
+    
         TLongLink middle;
         int       mid;
         int       from     = fromIndex;
         TLongLink fromLink = getLinkAt(fromIndex);
         int       to       = toIndex;
-        
+    
         while(from < to) {
             mid = (from + to) >>> 1;
             middle = getLink(fromLink, from, mid);
             if(middle.getValue() == value) {
                 return mid;
             }
-            
+        
             if(middle.getValue() < value) {
                 from = mid + 1;
                 fromLink = middle.next;
@@ -599,7 +616,7 @@ public class TLongLinkedList implements TLongList, Externalizable {
                 to = mid - 1;
             }
         }
-        
+    
         return -(from + 1);
     }
     
@@ -615,20 +632,20 @@ public class TLongLinkedList implements TLongList, Externalizable {
      */
     public int indexOf(int offset, long value) {
         int count = offset;
-        
+    
         TLongLink l;
         for(l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 return count;
             }
-            
+    
             count++;
         }
     
         if(l != null && l.getValue() == value) {
             return count;
         }
-        
+    
         return -1;
     }
     
@@ -646,35 +663,18 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(isEmpty()) {
             return -1;
         }
-        
+    
         int last  = -1;
         int count = offset;
         for(TLongLink l = getLinkAt(offset); got(l.getNext()); l = l.getNext()) {
             if(l.getValue() == value) {
                 last = count;
             }
-            
+    
             count++;
         }
-        
-        return last;
-    }
     
-    /**
-     * {@inheritDoc}
-     */
-    public boolean contains(long value) {
-        if(isEmpty()) {
-            return false;
-        }
-        
-        for(TLongLink l = head; got(l); l = l.getNext()) {
-            if(l.getValue() == value) {
-                return true;
-            }
-        }
-        return false;
-        
+        return last;
     }
     
     /**

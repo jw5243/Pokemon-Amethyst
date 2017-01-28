@@ -14,6 +14,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.horse.libgdx.PokemonScreen;
 import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
@@ -33,7 +34,7 @@ import java.util.ArrayList;
  * Class containing all the graphical pieces for when the {@link User} is on the screen state.  This is the {@link Screen} that is used the most as the major actions happen on this
  * screen.
  */
-public class MainGameScreen implements Screen {
+public class MainGameScreen extends PokemonScreen {
     /**
      * The {@code int} representing the amount of iterations over {@link #render(float)} before the {@link Door} starts animating.
      */
