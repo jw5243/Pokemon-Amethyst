@@ -17,8 +17,20 @@ public class PokemonExperience {
      */
     private static final int DEFAULT_EXPERIENCE = 0;
     
-    private static final TIntArrayList FLUCTUATING_TOTAL_EXPERIENCE_PER_LEVEL =
-            new TIntArrayList(new int[] {0, 4, 13, 32, 65, 112, 178, 276, 393, 540, 745, 967, 1230, 1591, 1957, 2457, 3046, 3732, 4526, 5440, 6482, 7666, 9003, 10506, 12187});
+    private static final TIntArrayList TOTAL_EXPERIENCE_PER_LEVEL = new TIntArrayList(new int[] {
+            0, 4, 13, 32, 65, 112, 178, 276, 393, 540, 745, 967, 1230, 1591, 1957, 2457, 3046, 3732, 4526, 5440, 6482, 7666, 9003, 10506, 12187, 14060, 16140, 18439, 20974, 23760, 26811,
+            30146, 33780, 37731, 42017, 46656, 50653, 55969, 60505, 66560, 71677, 78533, 84277, 91998, 98415, 107069, 114205, 123863, 131766, 142500, 151222, 163105, 172697, 185807, 196322,
+            210739, 222231, 238036, 250562, 267840, 281456, 300293, 315059, 335544, 251520, 373744, 390991, 415050, 433631, 459620, 479600, 507617, 529063, 559209, 582187, 614566, 639146,
+            673863, 700115, 737280, 765275, 804997, 834809, 877201, 908905, 954084, 987754, 1035837, 1071552, 1122660, 1160499, 1214753, 1254796, 1312322, 1354652, 1415577, 1460276, 1524731,
+            1571884, 1640000,
+            
+            0, 10, 33, 80, 156, 270, 428, 640, 911, 1250, 1663, 2160, 2746, 3430, 4218, 5120, 6141, 7290, 8573, 10000, 11576, 13310, 15208, 17280, 19531, 17280, 19531, 21970, 24603, 27440,
+            30486, 33750, 37238, 40960, 44921, 49130, 53593, 58320, 63316, 68590, 74148, 80000, 86151, 92610, 99383, 106480, 113906, 121670, 129778, 138240, 147061, 156250, 165813, 175760,
+            186096, 196830, 207968, 219520, 231491, 243890, 256723, 270000, 283726, 297910, 312558, 327680, 343281, 359370, 375953, 393040, 410636, 428750, 447388, 466560, 486271, 506530,
+            527343, 548720, 570666, 593190, 616298, 640000, 664301, 689210, 714733, 740880, 767656, 795070, 823128, 851840, 881211, 911250, 941953, 973360, 1005446, 1038230, 1071718,
+            1105920, 1140841, 1176490, 1212873, 1250000
+    });
+    
     /**
      * Experience value that is altered each time a PokemonData gains experience.
      */
@@ -40,8 +52,8 @@ public class PokemonExperience {
         setExperienceType(experienceType);
     }
     
-    public static TIntArrayList getFluctuatingTotalExperiencePerLevel() {
-        return FLUCTUATING_TOTAL_EXPERIENCE_PER_LEVEL;
+    public static TIntArrayList getTotalExperiencePerLevel() {
+        return TOTAL_EXPERIENCE_PER_LEVEL;
     }
     
     public static int getDefaultExperience() {
@@ -53,14 +65,20 @@ public class PokemonExperience {
         long              start             = System.nanoTime();
         System.out.println(pokemonExperience.getLevel());
         System.out.println(System.nanoTime() - start);
+    
+        pokemonExperience.setExperienceType(ExperienceTypes.SLOW);
+        for(int index = 0; index < 100; index++) {
+            pokemonExperience.setCurrentExperience(getTotalExperiencePerLevel().get(index + 100));
+            System.out.println(pokemonExperience.getLevel());
+        }
     }
     
     public int getCurrentExperience(boolean basedOnLevel) {
         if(basedOnLevel) {
             if(experienceType == ExperienceTypes.FLUCTUATING) {
-                return getFluctuatingTotalExperiencePerLevel().get(getLevel() - 1);
+                return getTotalExperiencePerLevel().get(getLevel() > 100 ? 99 : getLevel() - 1);
             } else if(experienceType == ExperienceTypes.SLOW) {
-                return (5 * getLevel() * getLevel() * getLevel() / 4);
+                return getTotalExperiencePerLevel().get(getLevel() > 100 ? 199 : getLevel() + 99);
             } else if(experienceType == ExperienceTypes.MEDIUM_SLOW) {
                 return (int)((1.2 * getLevel() * getLevel() * getLevel() - (15 * getLevel() * getLevel() + (100 * getLevel()) - 140)));
             } else if(experienceType == ExperienceTypes.MEDIUM_FAST) {
@@ -70,10 +88,10 @@ public class PokemonExperience {
             } else if(experienceType == ExperienceTypes.ERRATIC) {
                 return 0;
             } else {
-                return currentExperience;
+                return getCurrentExperience();
             }
         } else {
-            return currentExperience;
+            return getCurrentExperience();
         }
     }
     
@@ -90,10 +108,11 @@ public class PokemonExperience {
      * @see Math Package that helped with all the formulas.
      */
     public int getLevel() {
-        if(experienceType == ExperienceTypes.FLUCTUATING) {
-            return 1;
+        int[] experienceValues;
+        if(getExperienceType() == ExperienceTypes.FLUCTUATING) {
+            experienceValues = getTotalExperiencePerLevel().toArray(0, 100);
         } else if(experienceType == ExperienceTypes.SLOW) {
-            return (int)(Math.cbrt(0.8 * currentExperience));
+            experienceValues = getTotalExperiencePerLevel().toArray(100, 100);
         } else if(experienceType == ExperienceTypes.MEDIUM_SLOW) {
             if(getCurrentExperience() < 5) {
                 return 1;
@@ -114,6 +133,12 @@ public class PokemonExperience {
         } else {
             return 1;
         }
+        for(int index = 0; index < experienceValues.length; index++) {
+            if(getCurrentExperience() < experienceValues[index]) {
+                return index;
+            }
+        }
+        return 100;
     }
     
     @Override
