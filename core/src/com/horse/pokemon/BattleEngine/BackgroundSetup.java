@@ -8,12 +8,12 @@ public class BackgroundSetup implements Disposable {
     private static final float SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
     private static final int   BACKGROUND_X_POSITION             = 0;
     private static final int   BACKGROUND_Y_POSITION             = 0;
-    private static final int ENEMY_BASE_X_POSITION = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
-    private static final int ENEMY_BASE_Y_POSITION = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
-    private static final int USER_BASE_X_POSITION  = -128;
-    private static final int USER_BASE_Y_POSITION  = 0;
-    private static final int TRANSITION_TIME       = 2;
-    private static final int TRANSITION_DELAY      = 3;
+    private static final int   ENEMY_BASE_X_POSITION             = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
+    private static final int   ENEMY_BASE_Y_POSITION             = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
+    private static final int   USER_BASE_X_POSITION              = -128;
+    private static final int   USER_BASE_Y_POSITION              = 0;
+    private static final int   TRANSITION_TIME                   = 2;
+    private static final int   TRANSITION_DELAY                  = 3;
     private float                 currentTransitionTime;
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
