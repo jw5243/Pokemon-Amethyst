@@ -541,6 +541,7 @@ public class TCharObjectHashMap<V> extends TCharHash implements TCharObjectMap<V
             put(key, val);
         }
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -554,39 +555,6 @@ public class TCharObjectHashMap<V> extends TCharHash implements TCharObjectMap<V
             }
         }
         return hashcode;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(Object other) {
-        if(!(other instanceof TCharObjectMap)) {
-            return false;
-        }
-        TCharObjectMap that = (TCharObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TCharObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                char   key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TCharSet {
@@ -909,7 +877,6 @@ public class TCharObjectHashMap<V> extends TCharHash implements TCharObjectMap<V
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -971,6 +938,39 @@ public class TCharObjectHashMap<V> extends TCharHash implements TCharObjectMap<V
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object other) {
+        if(!(other instanceof TCharObjectMap)) {
+            return false;
+        }
+        TCharObjectMap that = (TCharObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TCharObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                char   key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

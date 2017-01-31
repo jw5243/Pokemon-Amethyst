@@ -90,6 +90,14 @@ public class BackgroundSetup implements Disposable {
         drawUserBase();
         
         getEngine().getBatch().end();
+    
+        if(isTransitionFinished()) {
+            BattleMain.render(delta);
+        }
+    }
+    
+    public boolean isTransitionFinished() {
+        return getCurrentTransitionTime() >= getTransitionTime();
     }
     
     private void drawBackground() {

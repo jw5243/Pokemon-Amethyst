@@ -2,7 +2,7 @@ package com.horse.pokemon.ObjectData.PokemonData;
 
 import com.horse.pokemon.DataReaders.MoveDataReader;
 import com.horse.pokemon.DataReaders.PokemonDataReader;
-import com.horse.pokemon.RandomNumberGenerator;
+import com.horse.utility.Utility;
 
 /**
  * Class for calculating the amount of hitpoints to deduct off a {@link Pokemon} when a {@link Pokemon} uses one of its {@link Moves}.
@@ -19,7 +19,7 @@ public class CalculateDamage {
     }
     
     public static int getDamage(Pokemon userPokemon, Pokemon enemyPokemon, Moves moveUsed) {
-        return (int)((((2 * userPokemon.getInformation().getCurrentLevel() / 5 + 2) * userPokemon.getInformation().getCurrentAttack() * moveUsed.getBasePower() /
-                       enemyPokemon.getInformation().getCurrentDefense()) / 50 + 2) * 1.0f * 1.0f * RandomNumberGenerator.generateNumber(85, 100) / 100);
+        return (int)(((((userPokemon.getInformation().getCurrentLevel() << 1) / 5 + 2) * userPokemon.getInformation().getCurrentAttack() * moveUsed.getBasePower() /
+                       enemyPokemon.getInformation().getCurrentDefense()) / 50 + 2) * 1.0f * 1.0f * Utility.generateNumber(85, 100) / 100);
     }
 }

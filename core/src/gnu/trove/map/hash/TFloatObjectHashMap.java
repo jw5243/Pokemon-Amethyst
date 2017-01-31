@@ -541,6 +541,7 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
             put(key, val);
         }
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -554,39 +555,6 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
             }
         }
         return hashcode;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(Object other) {
-        if(!(other instanceof TFloatObjectMap)) {
-            return false;
-        }
-        TFloatObjectMap that = (TFloatObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TFloatObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                float  key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TFloatSet {
@@ -909,7 +877,6 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -971,6 +938,39 @@ public class TFloatObjectHashMap<V> extends TFloatHash implements TFloatObjectMa
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object other) {
+        if(!(other instanceof TFloatObjectMap)) {
+            return false;
+        }
+        TFloatObjectMap that = (TFloatObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TFloatObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                float  key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

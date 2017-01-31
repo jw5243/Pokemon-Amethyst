@@ -155,14 +155,14 @@ public class TShortLinkedList implements TShortList, Externalizable {
         if(isEmpty()) {
             return false;
         }
-    
+
         for(TShortLink l = head; got(l); l = l.getNext()) {
             if(l.getValue() == value) {
                 return true;
             }
         }
         return false;
-    
+
     }
     
     /**

@@ -541,6 +541,7 @@ public class TByteObjectHashMap<V> extends TByteHash implements TByteObjectMap<V
             put(key, val);
         }
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -554,39 +555,6 @@ public class TByteObjectHashMap<V> extends TByteHash implements TByteObjectMap<V
             }
         }
         return hashcode;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(Object other) {
-        if(!(other instanceof TByteObjectMap)) {
-            return false;
-        }
-        TByteObjectMap that = (TByteObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TByteObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                byte   key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TByteSet {
@@ -909,7 +877,6 @@ public class TByteObjectHashMap<V> extends TByteHash implements TByteObjectMap<V
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -971,6 +938,39 @@ public class TByteObjectHashMap<V> extends TByteHash implements TByteObjectMap<V
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object other) {
+        if(!(other instanceof TByteObjectMap)) {
+            return false;
+        }
+        TByteObjectMap that = (TByteObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TByteObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                byte   key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

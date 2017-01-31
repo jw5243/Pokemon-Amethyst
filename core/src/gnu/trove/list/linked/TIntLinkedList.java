@@ -155,14 +155,14 @@ public class TIntLinkedList implements TIntList, Externalizable {
         if(isEmpty()) {
             return false;
         }
-    
+
         for(TIntLink l = head; got(l); l = l.getNext()) {
             if(l.getValue() == value) {
                 return true;
             }
         }
         return false;
-    
+
     }
     
     /**

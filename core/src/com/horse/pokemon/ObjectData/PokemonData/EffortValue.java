@@ -196,4 +196,8 @@ public class EffortValue {
         this.speedEV = totalEV() + speedEV <= getMaxEffortValueTotal() ? getSpeedEV() + speedEV : getSpeedEV() + (getMaxEffortValueTotal() - totalEV());
         this.speedEV = getSpeedEV() > getMaxEffortValuePerStat() ? getMaxEffortValuePerStat() : getSpeedEV();
     }
+    
+    public int[] getEVs() {
+        return new int[] {getHealthEV(), getAttackEV(), getDefenseEV(), getSpecialAttackEV(), getSpecialDefenseEV(), getSpeedEV()};
+    }
 }

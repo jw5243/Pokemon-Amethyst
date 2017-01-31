@@ -155,14 +155,14 @@ public class TLongLinkedList implements TLongList, Externalizable {
         if(isEmpty()) {
             return false;
         }
-    
+
         for(TLongLink l = head; got(l); l = l.getNext()) {
             if(l.getValue() == value) {
                 return true;
             }
         }
         return false;
-    
+
     }
     
     /**

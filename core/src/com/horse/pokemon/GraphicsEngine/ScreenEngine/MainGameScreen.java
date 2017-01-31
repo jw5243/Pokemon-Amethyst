@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.horse.libgdx.PokemonScreen;
 import com.horse.pokemon.Audio.AudioData;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
@@ -26,6 +25,7 @@ import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTiledMap;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTmxMapLoader;
 import com.horse.pokemon.ObjectData.Players.User;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
+import com.horse.utility.Graphics.PokemonScreen;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.ArrayList;
@@ -249,6 +249,7 @@ public class MainGameScreen extends PokemonScreen {
             getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
             getSound().getAudio().dispose();
         }
+    
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -332,10 +333,8 @@ public class MainGameScreen extends PokemonScreen {
     private void renderBackground() {
         for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
-                if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions")) {
-                    if(mapLayer instanceof TiledMapTileLayer) {
-                        getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                    }
+                if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions") && mapLayer instanceof TiledMapTileLayer) {
+                    getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
                 }
             }
         }
@@ -344,10 +343,8 @@ public class MainGameScreen extends PokemonScreen {
     private void renderObjects() {
         for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
-                if(mapLayer.getName().equalsIgnoreCase("Objects")) {
-                    if(mapLayer instanceof TiledMapTileLayer) {
-                        getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
-                    }
+                if(mapLayer.getName().equalsIgnoreCase("Objects") && mapLayer instanceof TiledMapTileLayer) {
+                    getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
                 }
             }
         }

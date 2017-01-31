@@ -193,7 +193,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
             //
             tail = l;
         }
-
+    
         size++;
         return true;
     }
@@ -286,7 +286,7 @@ public class TDoubleLinkedList implements TDoubleList, Externalizable {
         if(offset > size) {
             throw new IndexOutOfBoundsException("index " + offset + " exceeds size " + size);
         }
-
+    
         TDoubleLink l = getLinkAt(offset);
         //
         if(no(l)) {

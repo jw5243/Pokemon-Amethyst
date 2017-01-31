@@ -1,7 +1,6 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
 import com.horse.pokemon.DataReaders.PokemonDataReader;
-import com.horse.pokemon.ObjectData.PokemonData.CalculateStats.CalculateStats;
 
 /**
  * The class for all PokemonData, containing all information that can be easily

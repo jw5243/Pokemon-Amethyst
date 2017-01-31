@@ -471,6 +471,7 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
             put(key, val);
         }
     }
+    
     public int hashCode() {
         int    hashcode = 0;
         V[]    values   = _values;
@@ -481,36 +482,6 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
             }
         }
         return hashcode;
-    }
-    
-    public boolean equals(Object other) {
-        if(!(other instanceof TLongObjectMap)) {
-            return false;
-        }
-        TLongObjectMap that = (TLongObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TLongObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                long   key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TLongSet {
@@ -776,7 +747,6 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -836,6 +806,36 @@ public class TLongObjectHashMap<V> extends TLongHash implements TLongObjectMap<V
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    public boolean equals(Object other) {
+        if(!(other instanceof TLongObjectMap)) {
+            return false;
+        }
+        TLongObjectMap that = (TLongObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TLongObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                long   key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

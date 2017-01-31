@@ -466,6 +466,7 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
             put(key, val);
         }
     }
+    
     public int hashCode() {
         int    hashcode = 0;
         V[]    values   = _values;
@@ -476,36 +477,6 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
             }
         }
         return hashcode;
-    }
-    
-    public boolean equals(Object other) {
-        if(!(other instanceof TIntObjectMap)) {
-            return false;
-        }
-        TIntObjectMap that = (TIntObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TIntObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                int    key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TIntSet {
@@ -771,7 +742,6 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -831,6 +801,36 @@ public class TIntObjectHashMap<V> extends TIntHash implements TIntObjectMap<V>, 
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    public boolean equals(Object other) {
+        if(!(other instanceof TIntObjectMap)) {
+            return false;
+        }
+        TIntObjectMap that = (TIntObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TIntObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                int    key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

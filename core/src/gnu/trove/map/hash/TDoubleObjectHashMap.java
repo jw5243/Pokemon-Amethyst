@@ -541,6 +541,7 @@ public class TDoubleObjectHashMap<V> extends TDoubleHash implements TDoubleObjec
             put(key, val);
         }
     }
+    
     /**
      * {@inheritDoc}
      */
@@ -554,39 +555,6 @@ public class TDoubleObjectHashMap<V> extends TDoubleHash implements TDoubleObjec
             }
         }
         return hashcode;
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    public boolean equals(Object other) {
-        if(!(other instanceof TDoubleObjectMap)) {
-            return false;
-        }
-        TDoubleObjectMap that = (TDoubleObjectMap)other;
-        if(that.size() != this.size()) {
-            return false;
-        }
-        try {
-            TDoubleObjectIterator iter = this.iterator();
-            while(iter.hasNext()) {
-                iter.advance();
-                double key   = iter.key();
-                Object value = iter.value();
-                if(value == null) {
-                    if(!(that.get(key) == null && that.containsKey(key))) {
-                        return false;
-                    }
-                } else {
-                    if(!value.equals(that.get(key))) {
-                        return false;
-                    }
-                }
-            }
-        } catch(ClassCastException ex) {
-            // unused.
-        }
-        return true;
     }
     
     class KeyView implements TDoubleSet {
@@ -909,7 +877,6 @@ public class TDoubleObjectHashMap<V> extends TDoubleHash implements TDoubleObjec
         
         
     }
-    
     /**
      * a view onto the values of the map.
      */
@@ -971,6 +938,39 @@ public class TDoubleObjectHashMap<V> extends TDoubleHash implements TDoubleObjec
                 return (V)_map._values[_index];
             }
         }
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    public boolean equals(Object other) {
+        if(!(other instanceof TDoubleObjectMap)) {
+            return false;
+        }
+        TDoubleObjectMap that = (TDoubleObjectMap)other;
+        if(that.size() != this.size()) {
+            return false;
+        }
+        try {
+            TDoubleObjectIterator iter = this.iterator();
+            while(iter.hasNext()) {
+                iter.advance();
+                double key   = iter.key();
+                Object value = iter.value();
+                if(value == null) {
+                    if(!(that.get(key) == null && that.containsKey(key))) {
+                        return false;
+                    }
+                } else {
+                    if(!value.equals(that.get(key))) {
+                        return false;
+                    }
+                }
+            }
+        } catch(ClassCastException ex) {
+            // unused.
+        }
+        return true;
     }
     
     private abstract class MapBackedView<E> extends AbstractSet<E> implements Set<E>, Iterable<E> {

@@ -77,6 +77,8 @@ public class MapCreator {
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Mailbox")) {
                         getCollidableTileObjects().add(new Mailbox(rectangle));
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Grass")) {
+    
+                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Edging")) {
                         
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Bed")) {
                         

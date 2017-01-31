@@ -585,10 +585,6 @@ public class User extends AbstractPlayer {
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
                   !isRestrictedMovement()) { //If the User is not currently trying to move to a new location, check if the User is allowed to move when the X key is pressed.
-    
-            //Create a lambda for moving the User a single tile in the direction the User is pointing to.
-            AlterPlayerPosition alterPlayerPosition =
-                    (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod.accept(getPositionMethod.get() + alterValue);
             
             Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                                         (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
@@ -597,6 +593,10 @@ public class User extends AbstractPlayer {
                                         ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
     
             if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
+                //Create a lambda for moving the User a single tile in the direction the User is pointing to.
+                AlterPlayerPosition alterPlayerPosition =
+                        (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod.accept(getPositionMethod.get() + alterValue);
+                
                 Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
                                        (getDirection() == getDOWN()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
                                        (getDirection() == getRIGHT()) ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
@@ -785,16 +785,18 @@ public class User extends AbstractPlayer {
      * @return Action the {@code User} is performing at the current frame.
      */
     private PlayerActions getCurrentState() {
-        if(isMoving() && !isRestrictedMovement()) {
-            if(isSwimming()) {
-                return PlayerActions.SWIMMING;
-            } else if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-                return PlayerActions.RUNNING;
-            } else {
-                return PlayerActions.WALKING;
-            }
-        } else {
+        if(!isMoving() || isRestrictedMovement()) {
             return PlayerActions.IDLE;
+        } else {
+            if(!isSwimming()) {
+                if(!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                    return PlayerActions.WALKING;
+                } else {
+                    return PlayerActions.RUNNING;
+                }
+            } else {
+                return PlayerActions.SWIMMING;
+            }
         }
     }
 }

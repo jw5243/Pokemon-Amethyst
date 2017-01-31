@@ -235,6 +235,7 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
             }
         }
     }
+    
     private V doPut(V value, int index) {
         V       previous     = null;
         boolean isNewMapping = true;
@@ -249,6 +250,25 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
         }
         
         return previous;
+    }
+    
+    public int hashCode() {
+        HashProcedure p = new HashProcedure();
+        forEachEntry(p);
+        return p.getHashCode();
+    }
+    /**
+     * Empties the map.
+     */
+    public void clear() {
+        if(size() == 0) {
+            return; // optimization
+        }
+    
+        super.clear();
+    
+        Arrays.fill(_set, 0, _set.length, FREE);
+        Arrays.fill(_values, 0, _values.length, null);
     }
     
     /**
@@ -269,26 +289,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
             return false;
         }
         return forEachEntry(new EqProcedure<K, V>(that));
-    }
-    
-    public int hashCode() {
-        HashProcedure p = new HashProcedure();
-        forEachEntry(p);
-        return p.getHashCode();
-    }
-    
-    /**
-     * Empties the map.
-     */
-    public void clear() {
-        if(size() == 0) {
-            return; // optimization
-        }
-        
-        super.clear();
-        
-        Arrays.fill(_set, 0, _set.length, FREE);
-        Arrays.fill(_values, 0, _values.length, null);
     }
     
     /**
@@ -329,6 +329,7 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
         // Last check: size before and after should be the same
         reportPotentialConcurrentMod(size(), oldSize);
     }
+    
     /**
      * removes the mapping at <tt>index</tt> from the map.
      *
@@ -337,29 +338,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
     public void removeAt(int index) {
         _values[index] = null;
         super.removeAt(index);  // clear key, state; adjust size
-    }
-    
-    public String toString() {
-        final StringBuilder buf = new StringBuilder("{");
-        forEachEntry(new TObjectObjectProcedure<K, V>() {
-            private boolean first = true;
-            
-            
-            public boolean execute(K key, V value) {
-                if(first) {
-                    first = false;
-                } else {
-                    buf.append(", ");
-                }
-                
-                buf.append(key);
-                buf.append("=");
-                buf.append(value);
-                return true;
-            }
-        });
-        buf.append("}");
-        return buf.toString();
     }
     
     /**
@@ -420,7 +398,6 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
             put(key, val);
         }
     }
-    
     /**
      * checks for the present of <tt>key</tt> in the keys of the map.
      *
@@ -431,6 +408,29 @@ public class THashMap<K, V> extends TObjectHash<K> implements TMap<K, V>, Extern
     public boolean containsKey(Object key) {
         //noinspection unchecked
         return contains(key);
+    }
+    
+    public String toString() {
+        final StringBuilder buf = new StringBuilder("{");
+        forEachEntry(new TObjectObjectProcedure<K, V>() {
+            private boolean first = true;
+            
+            
+            public boolean execute(K key, V value) {
+                if(first) {
+                    first = false;
+                } else {
+                    buf.append(", ");
+                }
+                
+                buf.append(key);
+                buf.append("=");
+                buf.append(value);
+                return true;
+            }
+        });
+        buf.append("}");
+        return buf.toString();
     }
     
     /**

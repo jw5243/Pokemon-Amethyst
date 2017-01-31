@@ -62,7 +62,7 @@ public class PokemonExperience {
     /**
      * Experience value that is altered each time a PokemonData gains experience.
      */
-    private int currentExperience;
+    private int             currentExperience;
     /**
      * PokemonData's experience type based on {@link Pokemon}.
      */
@@ -92,10 +92,11 @@ public class PokemonExperience {
         PokemonExperience pokemonExperience = new PokemonExperience(ExperienceTypes.FLUCTUATING);
         long              start             = System.nanoTime();
         pokemonExperience.getLevel();
-        System.out.println(System.nanoTime() - start);
-    
+        long end = System.nanoTime();
+        System.out.println(end - start);
+        
         for(ExperienceTypes experienceType : ExperienceTypes.values()) {
-            System.out.println(String.format("~~~~~~~~~~~~~~~~~~~~~~~~ %s ~~~~~~~~~~~~~~~~~~~~~~~~", experienceType.name()));
+            System.out.println(String.format("\n~~~~~~~~~~~~~~~~~~~~~~~~ %s ~~~~~~~~~~~~~~~~~~~~~~~~\n", experienceType.name()));
             for(int index = 1; index <= 100; index++) {
                 System.out.println(
                         String.format("Experience for Level %s%s = %s", index, (index < 10) ? "  " : (index < 100) ? " " : "", getExperienceBasedOnLevelAndType(experienceType, index)));
