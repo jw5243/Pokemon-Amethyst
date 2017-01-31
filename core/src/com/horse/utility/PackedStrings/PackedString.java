@@ -1,11 +1,11 @@
-package com.horse.packed.strings;
+package com.horse.utility.PackedStrings;
 
-import com.horse.packed.strings.Immutable.Packed12;
-import com.horse.packed.strings.Immutable.Packed20;
-import com.horse.packed.strings.Immutable.Packed28;
-import com.horse.packed.strings.Immutable.Packed36;
-import com.horse.packed.strings.Immutable.Packed44;
-import com.horse.packed.strings.Immutable.Packed52;
+import com.horse.utility.PackedStrings.Immutable.Packed12;
+import com.horse.utility.PackedStrings.Immutable.Packed20;
+import com.horse.utility.PackedStrings.Immutable.Packed28;
+import com.horse.utility.PackedStrings.Immutable.Packed36;
+import com.horse.utility.PackedStrings.Immutable.Packed44;
+import com.horse.utility.PackedStrings.Immutable.Packed52;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

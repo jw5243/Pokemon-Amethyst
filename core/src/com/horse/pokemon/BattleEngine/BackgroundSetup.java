@@ -92,7 +92,7 @@ public class BackgroundSetup implements Disposable {
         getEngine().getBatch().end();
     
         if(isTransitionFinished()) {
-            BattleMain.render(delta);
+            BattleMain.render(delta, null, null);
         }
     }
     

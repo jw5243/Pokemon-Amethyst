@@ -1,6 +1,6 @@
-package com.horse.packed.strings.Immutable;
+package com.horse.utility.PackedStrings.Immutable;
 
-import com.horse.packed.strings.PackedBase;
+import com.horse.utility.PackedStrings.PackedBase;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package com.horse.packed.strings;
+package com.horse.utility.PackedStrings;
 
 import java.nio.ByteBuffer;
 

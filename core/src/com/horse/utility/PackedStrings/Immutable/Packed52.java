@@ -1,11 +1,11 @@
-package com.horse.packed.strings.Immutable;
+package com.horse.utility.PackedStrings.Immutable;
 
-import com.horse.packed.strings.PackedBase;
+import com.horse.utility.PackedStrings.PackedBase;
 
 import java.nio.ByteBuffer;
 import java.util.Objects;
 
-public class Packed44 extends PackedBase {
+public class Packed52 extends PackedBase {
     private final int f1;
     private final int f2;
     private final int f3;
@@ -17,8 +17,10 @@ public class Packed44 extends PackedBase {
     private final int f9;
     private final int f10;
     private final int f11;
+    private final int f12;
+    private final int f13;
     
-    public Packed44(final byte[] ar) {
+    public Packed52(final byte[] ar) {
         f1 = get(ar, 3) | get(ar, 2) << 8 | get(ar, 1) << 16 | get(ar, 0) << 24;
         f2 = get(ar, 7) | get(ar, 6) << 8 | get(ar, 5) << 16 | get(ar, 4) << 24;
         f3 = get(ar, 11) | get(ar, 10) << 8 | get(ar, 9) << 16 | get(ar, 8) << 24;
@@ -30,10 +32,12 @@ public class Packed44 extends PackedBase {
         f9 = get(ar, 35) | get(ar, 34) << 8 | get(ar, 33) << 16 | get(ar, 32) << 24;
         f10 = get(ar, 39) | get(ar, 38) << 8 | get(ar, 37) << 16 | get(ar, 36) << 24;
         f11 = get(ar, 43) | get(ar, 42) << 8 | get(ar, 41) << 16 | get(ar, 40) << 24;
+        f12 = get(ar, 47) | get(ar, 46) << 8 | get(ar, 45) << 16 | get(ar, 44) << 24;
+        f13 = get(ar, 51) | get(ar, 50) << 8 | get(ar, 49) << 16 | get(ar, 48) << 24;
     }
     
     protected ByteBuffer toByteBuffer() {
-        final ByteBuffer bbuf = ByteBuffer.allocate(44);
+        final ByteBuffer bbuf = ByteBuffer.allocate(52);
         bbuf.putInt(f1);
         bbuf.putInt(f2);
         bbuf.putInt(f3);
@@ -45,12 +49,14 @@ public class Packed44 extends PackedBase {
         bbuf.putInt(f9);
         bbuf.putInt(f10);
         bbuf.putInt(f11);
+        bbuf.putInt(f12);
+        bbuf.putInt(f13);
         return bbuf;
     }
     
     @Override
     public int hashCode() {
-        return Objects.hash(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11);
+        return Objects.hash(f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13);
     }
     
     @Override
@@ -61,8 +67,8 @@ public class Packed44 extends PackedBase {
         if(o == null || getClass() != o.getClass()) {
             return false;
         }
-        Packed44 packed44 = (Packed44)(o);
-        return f1 == packed44.f1 && f2 == packed44.f2 && f3 == packed44.f3 && f4 == packed44.f4 && f5 == packed44.f5 && f6 == packed44.f6 && f7 == packed44.f7 && f8 == packed44.f8 &&
-               f9 == packed44.f9 && f10 == packed44.f10 && f11 == packed44.f11;
+        Packed52 packed52 = (Packed52)(o);
+        return f1 == packed52.f1 && f2 == packed52.f2 && f3 == packed52.f3 && f4 == packed52.f4 && f5 == packed52.f5 && f6 == packed52.f6 && f7 == packed52.f7 && f8 == packed52.f8 &&
+               f9 == packed52.f9 && f10 == packed52.f10 && f11 == packed52.f11 && f12 == packed52.f12 && f13 == packed52.f13;
     }
 }
