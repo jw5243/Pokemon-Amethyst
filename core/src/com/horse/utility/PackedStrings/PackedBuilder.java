@@ -1,5 +1,8 @@
 package com.horse.utility.PackedStrings;
 
+import com.horse.utility.MemoryFinder;
+import com.horse.utility.PackedStrings.Immutable.Packed20;
+
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.CharacterCodingException;
@@ -55,6 +58,17 @@ public class PackedBuilder {
         PackedBuilder packedBuilder = new PackedBuilder();
         packedBuilder.append("Test").append("SecondTester");
         System.out.println(packedBuilder.toString());
+        System.out.println(MemoryFinder.sizeOf(packedBuilder.getMutablePacked()));
+    
+        String stringValue = "TestSecondTest";
+        System.out.println(MemoryFinder.sizeOf(stringValue));
+    
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("Test").append("SecondTest");
+        System.out.println(MemoryFinder.sizeOf(stringBuilder));
+    
+        PackedBase packedBase = new Packed20(convertToEncodedBytes("TestSecondTester"));
+        System.out.println(MemoryFinder.sizeOf(packedBase));
     }
     
     public MutablePacked getMutablePacked() {

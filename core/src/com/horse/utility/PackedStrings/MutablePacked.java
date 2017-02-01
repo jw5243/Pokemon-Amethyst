@@ -21,6 +21,8 @@ public class MutablePacked extends PackedBase {
     
     public void setupValues(final byte[] ar) {
         if(ar == null) {
+            setStringStorage(new int[] {});
+            setMaxLength(0);
             return;
         }
         final float quarterArLength     = ar.length / 4f;
