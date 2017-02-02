@@ -22,7 +22,7 @@ public class MemoryFinder {
         try {
             return sizeOf(o, new HashSet<>());
         } catch(IllegalAccessException e) {
-            return -1;
+            return 0;
         }
     }
     
@@ -130,13 +130,7 @@ public class MemoryFinder {
         
         @Override
         public boolean equals(Object obj) {
-            if(obj == this) {
-                return true;
-            }
-            if(obj == null || obj.getClass() != ObjectWrapper.class) {
-                return false;
-            }
-            return object == ((ObjectWrapper)obj).object;
+            return obj == this || !(obj == null || obj.getClass() != ObjectWrapper.class) && object == ((ObjectWrapper)obj).object;
         }
     }
 }

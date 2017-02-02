@@ -1,7 +1,7 @@
 package com.horse.utility.PackedStrings;
 
 import com.horse.utility.MemoryFinder;
-import com.horse.utility.PackedStrings.Immutable.Packed20;
+import com.horse.utility.PackedStrings.Immutable.Packed28;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -60,15 +60,20 @@ public class PackedBuilder {
         System.out.println(packedBuilder.toString());
         System.out.println(MemoryFinder.sizeOf(packedBuilder.getMutablePacked()));
     
-        String stringValue = "TestSecondTest";
+        String stringValue = "TestSecondTestTestSecondTest";
         System.out.println(MemoryFinder.sizeOf(stringValue));
     
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Test").append("SecondTest");
         System.out.println(MemoryFinder.sizeOf(stringBuilder));
     
-        PackedBase packedBase = new Packed20(convertToEncodedBytes("TestSecondTester"));
+        PackedBase packedBase = new Packed28(convertToEncodedBytes("TestSecondTesterTestSecondTest"));
         System.out.println(MemoryFinder.sizeOf(packedBase));
+    
+        PackedBuilder packedBuilder1 = new PackedBuilder();
+        packedBuilder1.append(new MutablePacked(convertToEncodedBytes("Test"))).append("Test").append(new char[] {'a', 'b', 'c'}).append(1).append(1f);
+        System.out.println(packedBuilder1.toString());
+        System.out.println(MemoryFinder.sizeOf(packedBuilder1));
     }
     
     public MutablePacked getMutablePacked() {
@@ -79,14 +84,48 @@ public class PackedBuilder {
         this.mutablePacked = mutablePacked;
     }
     
+    public PackedBuilder append(MutablePacked value) {
+        getMutablePacked().appendToStorage(value.getStringStorage());
+        return this;
+    }
+    
     public PackedBuilder append(String value) {
         getMutablePacked().setupValues(convertToEncodedBytes(value));
         return this;
     }
     
+    public PackedBuilder append(char[] value) {
+        return append(new String(value));
+    }
+    
+    public PackedBuilder append(byte value) {
+        return append(String.valueOf(value));
+    }
+    
+    public PackedBuilder append(short value) {
+        return append(String.valueOf(value));
+    }
+    
     public PackedBuilder append(int value) {
-        getMutablePacked().setupValues(convertToEncodedBytes(String.valueOf(value)));
-        return this;
+        /*if (value == Integer.MIN_VALUE)
+            return "-2147483648";
+        int size = (value < 0) ? Integer.stringSize(-value) + 1 : stringSize(value);
+        char[] buf = new char[size];
+        getChars(value, size, buf);
+        return new String(buf, true);*/
+        return append(String.valueOf(value));
+    }
+    
+    public PackedBuilder append(float value) {
+        return append(String.valueOf(value));
+    }
+    
+    public PackedBuilder append(long value) {
+        return append(String.valueOf(value));
+    }
+    
+    public PackedBuilder append(double value) {
+        return append(String.valueOf(value));
     }
     
     @Override

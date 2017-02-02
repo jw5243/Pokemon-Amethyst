@@ -44,6 +44,14 @@ public class MutablePacked extends PackedBase {
         setMaxLength(getStringStorage().length);
     }
     
+    public void appendToStorage(int[] value) {
+        int[] stringStorage = new int[value.length + getStringStorage().length];
+        for(int index = 0; index < stringStorage.length; index++) {
+            stringStorage[index] = index < getStringStorage().length ? getStringStorage()[index] : value[index];
+        }
+        setStringStorage(stringStorage);
+    }
+    
     protected ByteBuffer toByteBuffer() {
         final ByteBuffer bbuf = ByteBuffer.allocate(getMaxLength() << 2);
         for(int storageValue : getStringStorage()) {
