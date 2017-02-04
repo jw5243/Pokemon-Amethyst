@@ -30,6 +30,7 @@ public final class PokemonDataReader {
     private static HashMap<String, Pokemon> pokemonData;
     
     static {
+        long start = System.nanoTime();
         pokemonData = new HashMap<>();
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
             String pokemon = bufferedReader.readLine();
@@ -41,24 +42,24 @@ public final class PokemonDataReader {
         } catch(IOException e) {
             e.printStackTrace();
         }
+        long end = System.nanoTime();
+        System.out.println(end - start);
     }
     
     private static Pokemon getPokemon(String[] data) {
         Pokemon pokemon = new Pokemon();
         
         pokemon.getInformation().setName(data[0]);
-        pokemon.getInformation().setClassification(data[1].replaceAll("^\\s+|\\s+$", ""));
-        pokemon.getInformation().setPokedexNumber(Integer.parseInt(data[2].replaceAll("^\\s+|\\s+$", "")));
-        pokemon.getInformation().setEvolutionNumber(Integer.parseInt(data[3].replaceAll("^\\s+|\\s+$", "")));
-        pokemon.getInformation().setGenderRatio(Double.parseDouble(data[4].replaceAll("^\\s+|\\s+$", "")));
-        
-        for(int index = 0; index < data.length; index++) {
-            data[index] = data[index].trim();
-        }
+        pokemon.getInformation().setClassification(data[1]);
+        pokemon.getInformation().setPokedexNumber(Integer.parseInt(data[2]));
+        pokemon.getInformation().setEvolutionNumber(Integer.parseInt(data[3]));
+        pokemon.getInformation().setGenderRatio(Double.parseDouble(data[4]));
+    
+        System.arraycopy(data, 0, data, 0, data.length);
         String[] pokemonTypes = data[5].split(",");
     
-        pokemon.getInformation().setPokemonTypes(pokemonTypes.length == 1 ? new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0].trim())} : new PokemonTypes[] {
-                PokemonTypes.valueOf(pokemonTypes[0].trim()), PokemonTypes.valueOf(pokemonTypes[1].trim())
+        pokemon.getInformation().setPokemonTypes(pokemonTypes.length == 1 ? new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0])} : new PokemonTypes[] {
+                PokemonTypes.valueOf(pokemonTypes[0]), PokemonTypes.valueOf(pokemonTypes[1])
         });
         
         pokemon.getInformation().setHeight(data[6]);
@@ -72,12 +73,12 @@ public final class PokemonDataReader {
         TIntObjectHashMap<Moves> moveList   = new TIntObjectHashMap<>();
         String[]                 moves      = data[13].split(",");
         ArrayList<String>        moveValues = new ArrayList<>(moves.length * 2);
-        for(int moveIndex = 0; moveIndex < moves.length; moveIndex++) {
+        for(String move : moves) {
             for(String value : moves) {
                 Collections.addAll(moveValues, value.split(":"));
             }
             for(int moveValueIndex = 0; moveValueIndex < moveValues.size(); moveValueIndex += 2) {
-                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex).trim()), MoveDataReader.getMove(moveValues.get(moveValueIndex + 1).trim()));
+                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex)), MoveDataReader.getMove(moveValues.get(moveValueIndex + 1)));
             }
         }
         pokemon.getInformation().setMoveList(moveList);
@@ -85,21 +86,26 @@ public final class PokemonDataReader {
         EffortValue pokemonEffortValues = new EffortValue();
         
         String[]          effortSections = data[14].split(",");
-        ArrayList<String> effortValue    = new ArrayList<>(effortSections.length * 2);
+        ArrayList<String> effortValues   = new ArrayList<>(effortSections.length * 2);
         for(String value : effortSections) {
-            Collections.addAll(effortValue, value.split(":"));
+            Collections.addAll(effortValues, value.split(":"));
         }
-        for(int index = 0; index < effortValue.size(); index += 2) {
-            EffortValueMethod effortValueMethod;
-            StatTypes         statType = StatTypes.valueOf(effortValue.get(index).trim());
-            effortValueMethod = (statType == StatTypes.HEALTH) ? pokemonEffortValues::setImmutableHealthEV : (statType == StatTypes.ATTACK) ? pokemonEffortValues::setImmutableAttackEV :
-                                                                                                             (statType == StatTypes.DEFENSE) ? pokemonEffortValues::setImmutableDefenseEV :
-                                                                                                             (statType == StatTypes.SPECIAL_ATTACK) ?
-                                                                                                             pokemonEffortValues::setImmutableSpecialAttackEV :
-                                                                                                             (statType == StatTypes.SPECIAL_DEFENSE) ?
-                                                                                                             pokemonEffortValues::setImmutableSpecialDefenseEV :
-                                                                                                             pokemonEffortValues::setImmutableSpeedEV;
-            effortValueMethod.setEffortValue(Integer.parseInt(effortValue.get(index + 1)));
+        for(int index = 0; index < effortValues.size(); index += 2) {
+            StatTypes statType    = StatTypes.valueOf(effortValues.get(index));
+            int       effortValue = Integer.parseInt(effortValues.get(index + 1));
+            if(statType == StatTypes.HEALTH) {
+                pokemonEffortValues.setImmutableHealthEV(effortValue);
+            } else if(statType == StatTypes.ATTACK) {
+                pokemonEffortValues.setImmutableAttackEV(effortValue);
+            } else if(statType == StatTypes.DEFENSE) {
+                pokemonEffortValues.setImmutableDefenseEV(effortValue);
+            } else if(statType == StatTypes.SPECIAL_ATTACK) {
+                pokemonEffortValues.setImmutableSpecialAttackEV(effortValue);
+            } else if(statType == StatTypes.SPECIAL_DEFENSE) {
+                pokemonEffortValues.setImmutableSpecialDefenseEV(effortValue);
+            } else if(statType == StatTypes.SPEED) {
+                pokemonEffortValues.setImmutableSpeedEV(effortValue);
+            }
         }
         
         pokemon.getInformation().setEffortValue(pokemonEffortValues);
@@ -107,17 +113,14 @@ public final class PokemonDataReader {
         String[] baseStats      = data[15].split(",");
         int[]    baseStatValues = new int[baseStats.length];
         for(int i = 0; i < baseStats.length; i++) {
-            baseStatValues[i] = Integer.parseInt(baseStats[i].trim());
+            baseStatValues[i] = Integer.parseInt(baseStats[i]);
         }
+    
+        pokemon.getInformation().setBaseExperience(Integer.parseInt(data[16]));
         
         pokemon.getInformation().setBaseStats(baseStatValues);
-        pokemon.getInformation().setCurrentLevel(PokemonInformation.DEFAULT_LEVEL);
-        pokemon.getInformation().setCurrentHealth(pokemon.getInformation().getBaseStats()[0]);
-        pokemon.getInformation().setCurrentAttack(pokemon.getInformation().getBaseStats()[1]);
-        pokemon.getInformation().setCurrentDefense(pokemon.getInformation().getBaseStats()[2]);
-        pokemon.getInformation().setCurrentSpecialAttack(pokemon.getInformation().getBaseStats()[3]);
-        pokemon.getInformation().setCurrentSpecialDefense(pokemon.getInformation().getBaseStats()[4]);
-        pokemon.getInformation().setCurrentSpeed(pokemon.getInformation().getBaseStats()[5]);
+        pokemon.getInformation().setCurrentLevel(PokemonInformation.getDefaultLevel());
+        pokemon.updateStats();
         pokemon.getInformation().setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
         
         return pokemon;
@@ -126,8 +129,8 @@ public final class PokemonDataReader {
     public static void main(String[] args) {
         Pokemon pokemon  = PokemonDataReader.getPokemon("Bulbasaur");
         Pokemon pokemon2 = PokemonDataReader.getPokemon("Ivysaur");
-        System.out.println(pokemon);
-        System.out.println(pokemon2);
+        //System.out.println(pokemon);
+        //System.out.println(pokemon2);
         int    repeatCount = 10000;
         long[] time        = new long[repeatCount];
         for(int i = 0; i < repeatCount; i++) {

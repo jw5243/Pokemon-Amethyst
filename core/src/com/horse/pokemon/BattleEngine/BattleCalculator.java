@@ -15,10 +15,9 @@ public class BattleCalculator {
         return CalculateStats.getStats(pokemon);
     }
     
-    @SuppressWarnings("Not Finished, need to apply formula of winning a battle.")
-    public static boolean nextLevel(final Pokemon pokemonGainingExperience, final Pokemon pokemonGivingExperience) {
+    public static boolean isNextLevel(final Pokemon pokemonGainingExperience, final Pokemon pokemonGivingExperience) {
         return pokemonGainingExperience.getInformation().getCurrentExperience().getCurrentExperience() +
-               pokemonGivingExperience.getInformation().getCurrentExperience().getCurrentExperience() >=
+               PokemonExperience.calculateExperienceWon(pokemonGainingExperience, pokemonGivingExperience) >=
                PokemonExperience.getExperienceBasedOnLevelAndType(pokemonGainingExperience.getInformation().getExperienceRate(), pokemonGainingExperience.getInformation().getCurrentLevel());
     }
 }

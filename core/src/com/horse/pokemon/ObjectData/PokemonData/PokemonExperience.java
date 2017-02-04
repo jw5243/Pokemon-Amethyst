@@ -62,7 +62,8 @@ public class PokemonExperience {
     /**
      * Experience value that is altered each time a PokemonData gains experience.
      */
-    private int             currentExperience;
+    private int currentExperience;
+    
     /**
      * PokemonData's experience type based on {@link Pokemon}.
      */
@@ -120,6 +121,18 @@ public class PokemonExperience {
         } else {
             return -1;
         }
+    }
+    
+    public static int calculateExperienceWon(Pokemon winningPokemon, Pokemon losingPokemon) {
+        final int winningPokemonLevel         = winningPokemon.getInformation().getCurrentLevel();
+        final int losingPokemonLevel          = losingPokemon.getInformation().getCurrentLevel();
+        final int losingPokemonBaseExperience = losingPokemon.getInformation().getBaseExperience();
+        
+        final int a = (losingPokemonLevel << 1) + 10;
+        final int b = losingPokemonBaseExperience * losingPokemonLevel / 5;
+        final int c = winningPokemonLevel + losingPokemonLevel + 10;
+        
+        return (int)(Math.sqrt(a) * (a * a)) * b / (int)(Math.sqrt(c) * (c * c)) + 1;
     }
     
     /**

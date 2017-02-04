@@ -28,18 +28,18 @@ public class MoveDataReader {
     
     private static Moves getMove(String[] data) {
         Moves moves = new Moves();
-        
-        moves.setName(data[0].trim());
-        moves.setCategory(data[1].trim());
-        moves.setMoveType(PokemonTypes.valueOf(data[2].trim()));
-        moves.setPowerPoints(Integer.parseInt(data[3].trim()));
-        moves.setBasePower(Integer.parseInt(data[4].trim()));
-        moves.setAccuracy(Integer.parseInt(data[5].trim()));
-        moves.setEffect(Integer.parseInt(data[6].trim()));
-        moves.setTechnicalMachine(Integer.parseInt(data[7].trim()));
-        moves.setSpeedPriority(Integer.parseInt(data[8].trim()));
-        moves.setBattleEffect(data[9].trim());
-        moves.setSecondaryEffect(data[10].trim());
+    
+        moves.setName(data[0]);
+        moves.setCategory(data[1]);
+        moves.setMoveType(PokemonTypes.valueOf(data[2]));
+        moves.setPowerPoints(Integer.parseInt(data[3]));
+        moves.setBasePower(Integer.parseInt(data[4]));
+        moves.setAccuracy(Integer.parseInt(data[5]));
+        moves.setEffect(Integer.parseInt(data[6]));
+        moves.setTechnicalMachine(Integer.parseInt(data[7]));
+        moves.setSpeedPriority(Integer.parseInt(data[8]));
+        moves.setBattleEffect(data[9]);
+        moves.setSecondaryEffect(data[10]);
         
         moves.setCurrentPowerPoints(moves.getPowerPoints());
         
