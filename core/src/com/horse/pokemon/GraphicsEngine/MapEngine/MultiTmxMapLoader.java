@@ -97,7 +97,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
                     
                     TiledMapTile tile = tilesets.getTile(id & ~MASK_CLEAR);
                     if(tile != null) {
-                        TiledMapTileLayer.Cell cell = createTileLayerCell(flipHorizontally, flipVertically, flipDiagonally);
+                        TiledMapTileLayer.Cell cell =
+                            createTileLayerCell(flipHorizontally, flipVertically, flipDiagonally);
                         cell.setTile(tile);
                         layer.setCell(x + getOffsetX(), (flipY ? height - 1 - y : y) + getOffsetY(), cell);
                     }
@@ -271,7 +272,7 @@ public class MultiTmxMapLoader extends TmxMapLoader {
             }
             
             ImageResolver.DirectImageResolver imageResolver = new ImageResolver.DirectImageResolver(textures);
-            MultiTiledMap                     map           = loadTilemap(root, tmxFile, imageResolver, widths, heights);
+            MultiTiledMap map = loadTilemap(root, tmxFile, imageResolver, widths, heights);
             map.setOwnedResources(textures.values().toArray());
             return map;
         } catch(IOException e) {
@@ -290,7 +291,8 @@ public class MultiTmxMapLoader extends TmxMapLoader {
      *
      * @return the {@link TiledMap}
      */
-    protected MultiTiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver, int[] widths, int[] heights) {
+    protected MultiTiledMap loadTilemap(XmlReader.Element root, FileHandle tmxFile, ImageResolver imageResolver,
+                                        int[] widths, int[] heights) {
         MultiTiledMap map = new MultiTiledMap(getOffsetX(), getOffsetY());
         
         String mapOrientation     = root.getAttribute("orientation", null);

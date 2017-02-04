@@ -50,6 +50,7 @@ public class Packed28 extends PackedBase {
             return false;
         }
         Packed28 packed28 = (Packed28)(o);
-        return f1 == packed28.f1 && f2 == packed28.f2 && f3 == packed28.f3 && f4 == packed28.f4 && f5 == packed28.f5 && f6 == packed28.f6 && f7 == packed28.f7;
+        return f1 == packed28.f1 && f2 == packed28.f2 && f3 == packed28.f3 && f4 == packed28.f4 && f5 == packed28.f5 &&
+               f6 == packed28.f6 && f7 == packed28.f7;
     }
 }

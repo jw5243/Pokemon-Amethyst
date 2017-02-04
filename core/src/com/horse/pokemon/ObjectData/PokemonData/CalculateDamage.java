@@ -19,7 +19,9 @@ public class CalculateDamage {
     }
     
     public static int getDamage(Pokemon userPokemon, Pokemon enemyPokemon, Moves moveUsed) {
-        return (int)(((((userPokemon.getInformation().getCurrentLevel() << 1) / 5 + 2) * userPokemon.getInformation().getCurrentAttack() * moveUsed.getBasePower() /
-                       enemyPokemon.getInformation().getCurrentDefense()) / 50 + 2) * 1.0f * 1.0f * Utility.generateNumber(85, 100) / 100);
+        return (int)(((((userPokemon.getInformation().getCurrentLevel() << 1) / 5 + 2) *
+                       userPokemon.getInformation().getCurrentAttack() * moveUsed.getBasePower() /
+                       enemyPokemon.getInformation().getCurrentDefense()) / 50 + 2) * 1.0f * 1.0f *
+                     Utility.generateNumber(85, 100) / 100);
     }
 }

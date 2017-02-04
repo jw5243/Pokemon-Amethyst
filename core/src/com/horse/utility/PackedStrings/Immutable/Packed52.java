@@ -68,7 +68,8 @@ public class Packed52 extends PackedBase {
             return false;
         }
         Packed52 packed52 = (Packed52)(o);
-        return f1 == packed52.f1 && f2 == packed52.f2 && f3 == packed52.f3 && f4 == packed52.f4 && f5 == packed52.f5 && f6 == packed52.f6 && f7 == packed52.f7 && f8 == packed52.f8 &&
-               f9 == packed52.f9 && f10 == packed52.f10 && f11 == packed52.f11 && f12 == packed52.f12 && f13 == packed52.f13;
+        return f1 == packed52.f1 && f2 == packed52.f2 && f3 == packed52.f3 && f4 == packed52.f4 && f5 == packed52.f5 &&
+               f6 == packed52.f6 && f7 == packed52.f7 && f8 == packed52.f8 && f9 == packed52.f9 &&
+               f10 == packed52.f10 && f11 == packed52.f11 && f12 == packed52.f12 && f13 == packed52.f13;
     }
 }

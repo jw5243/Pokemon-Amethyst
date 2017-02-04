@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MemoryFinder {
+public class MemoryCalculator {
     private static final int LONG_SIZE    = 8;
     private static final int INT_SIZE     = 4;
     private static final int BYTE_SIZE    = 1;
@@ -130,7 +130,8 @@ public class MemoryFinder {
         
         @Override
         public boolean equals(Object obj) {
-            return obj == this || !(obj == null || obj.getClass() != ObjectWrapper.class) && object == ((ObjectWrapper)obj).object;
+            return obj == this ||
+                   !(obj == null || obj.getClass() != ObjectWrapper.class) && object == ((ObjectWrapper)obj).object;
         }
     }
 }

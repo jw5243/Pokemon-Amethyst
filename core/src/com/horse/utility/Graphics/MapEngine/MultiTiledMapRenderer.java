@@ -129,7 +129,8 @@ public class MultiTiledMapRenderer implements Disposable {
         getBatch().begin();
         
         final Color batchColor = batch.getColor();
-        final float color      = Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
+        final float color =
+            Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
         
         final int layerWidth  = layer.getWidth();
         final int layerHeight = layer.getHeight();
@@ -138,10 +139,12 @@ public class MultiTiledMapRenderer implements Disposable {
         final float layerTileHeight = layer.getTileHeight() * unitScale;
         
         final int col1 = Math.max(0, (int)(viewBounds.x / layerTileWidth));
-        final int col2 = Math.min(layerWidth, (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
+        final int col2 =
+            Math.min(layerWidth, (int)((viewBounds.x + viewBounds.width + layerTileWidth) / layerTileWidth));
         
         final int row1 = Math.max(0, (int)(viewBounds.y / layerTileHeight));
-        final int row2 = Math.min(layerHeight, (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
+        final int row2 =
+            Math.min(layerHeight, (int)((viewBounds.y + viewBounds.height + layerTileHeight) / layerTileHeight));
         
         float         y        = row2 * layerTileHeight;
         float         xStart   = col1 * layerTileWidth;

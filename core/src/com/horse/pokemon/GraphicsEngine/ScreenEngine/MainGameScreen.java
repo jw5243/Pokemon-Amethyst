@@ -190,7 +190,9 @@ public class MainGameScreen extends PokemonScreen {
     @Override
     public void show() {
         setCamera(new OrthographicCamera());
-        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(), Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()));
+        setViewport(new FitViewport(Engine.getvWidth() / Engine.getCameraZoomScale(),
+                                    Engine.getvHeight() / Engine.getCameraZoomScale(), getCamera()
+        ));
         setHud(new Hud(getEngine()));
         setMapLoader(new MultiTmxMapLoader());
     
@@ -201,8 +203,10 @@ public class MainGameScreen extends PokemonScreen {
         setMapCreator(new MapCreator(this, getMaps()));
     
         setUser(new User(this));
-        
-        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(), getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0);
+    
+        getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
+                                 getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
+        );
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
@@ -333,7 +337,8 @@ public class MainGameScreen extends PokemonScreen {
     private void renderBackground() {
         for(MultiTiledMap tiledMap : getMaps()) {
             for(MapLayer mapLayer : tiledMap.getLayers()) {
-                if(!mapLayer.getName().equalsIgnoreCase("Objects") && !mapLayer.getName().equalsIgnoreCase("Collisions") && mapLayer instanceof TiledMapTileLayer) {
+                if(!mapLayer.getName().equalsIgnoreCase("Objects") &&
+                   !mapLayer.getName().equalsIgnoreCase("Collisions") && mapLayer instanceof TiledMapTileLayer) {
                     getRenderer().renderTileLayer((TiledMapTileLayer)(mapLayer));
                 }
             }

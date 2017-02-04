@@ -69,25 +69,37 @@ public class IndividualValue {
      * Class constructor that sets all the {@code IndividualValue}s for a new {@link Pokemon}.
      */
     public IndividualValue() {
-        statTypesArrayList = new ArrayList<>(Arrays.asList(HEALTH, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED)); //Initializes the array list to have all the stat types.
-    
+        statTypesArrayList = new ArrayList<>(Arrays.asList(HEALTH, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE,
+                                                           SPEED
+        )); //Initializes the array list to have all the stat types.
+        
         while(statTypesArrayList.toArray().length > 3) { //Ensure three stats have perfect individual values.
-            int randomStatIndex =
-                    Utility.generateNumber(0, statTypesArrayList.toArray().length - 1); //Generate and store a random number from zero to the amount of remaining stats minus one.
-            if(statTypesArrayList.toArray()[randomStatIndex] == HEALTH) { //Check if the random number generated is the health stat.
+            int randomStatIndex = Utility.generateNumber(0,
+                                                         statTypesArrayList.toArray().length - 1
+            ); //Generate and store a random number from zero to the amount of remaining stats minus one.
+            if(statTypesArrayList.toArray()[randomStatIndex] ==
+               HEALTH) { //Check if the random number generated is the health stat.
                 setHealth(getMaximumIndividualValuePerStat()); //Sets the health to a perfect individual value.
-            } else if(statTypesArrayList.toArray()[randomStatIndex] == ATTACK) { //Check if the random number generated is the attack stat.
+            } else if(statTypesArrayList.toArray()[randomStatIndex] ==
+                      ATTACK) { //Check if the random number generated is the attack stat.
                 setAttack(getMaximumIndividualValuePerStat()); //Sets the attack to a perfect individual value.
-            } else if(statTypesArrayList.toArray()[randomStatIndex] == DEFENSE) { //Check if the random number generated is the defense stat.
+            } else if(statTypesArrayList.toArray()[randomStatIndex] ==
+                      DEFENSE) { //Check if the random number generated is the defense stat.
                 setDefense(getMaximumIndividualValuePerStat()); //Sets the defense to a perfect individual value.
-            } else if(statTypesArrayList.toArray()[randomStatIndex] == SPECIAL_ATTACK) { //Check if the random number generated is the special attack stat.
-                setSpecialAttack(getMaximumIndividualValuePerStat()); //Sets the special attack to a perfect individual value.
-            } else if(statTypesArrayList.toArray()[randomStatIndex] == SPECIAL_DEFENSE) { //Check if the random number generated is the special defense stat.
-                setSpecialDefense(getMaximumIndividualValuePerStat()); //Sets the special defense to a perfect individual value.
-            } else if(statTypesArrayList.toArray()[randomStatIndex] == SPEED) { //Check if the random number generated is the speed stat.
+            } else if(statTypesArrayList.toArray()[randomStatIndex] ==
+                      SPECIAL_ATTACK) { //Check if the random number generated is the special attack stat.
+                setSpecialAttack(
+                        getMaximumIndividualValuePerStat()); //Sets the special attack to a perfect individual value.
+            } else if(statTypesArrayList.toArray()[randomStatIndex] ==
+                      SPECIAL_DEFENSE) { //Check if the random number generated is the special defense stat.
+                setSpecialDefense(
+                        getMaximumIndividualValuePerStat()); //Sets the special defense to a perfect individual value.
+            } else if(statTypesArrayList.toArray()[randomStatIndex] ==
+                      SPEED) { //Check if the random number generated is the speed stat.
                 setSpeed(getMaximumIndividualValuePerStat()); //Sets the speed to a perfect individual value.
             }
-            statTypesArrayList.remove(randomStatIndex); //Removes the stat that was given the perfect individual value to prevent resetting the value.
+            statTypesArrayList
+                    .remove(randomStatIndex); //Removes the stat that was given the perfect individual value to prevent resetting the value.
         }
     
         if(statTypesArrayList.contains(HEALTH)) { //Check if health has not been set to a perfect individual value.
@@ -102,12 +114,16 @@ public class IndividualValue {
             setDefense(Utility.generateNumber(getMinimumIndividualValuePerStat(), getMaximumIndividualValuePerStat()
             )); //Generate a random number between the minimum and maximum individual value and set the defense individual value to it.
         }
-        if(statTypesArrayList.contains(SPECIAL_ATTACK)) { //Check if special attack has not been set to a perfect individual value.
-            setSpecialAttack(Utility.generateNumber(getMinimumIndividualValuePerStat(), getMaximumIndividualValuePerStat()
+        if(statTypesArrayList.contains(
+                SPECIAL_ATTACK)) { //Check if special attack has not been set to a perfect individual value.
+            setSpecialAttack(
+                    Utility.generateNumber(getMinimumIndividualValuePerStat(), getMaximumIndividualValuePerStat()
             )); //Generate a random number between the minimum and maximum individual value and set the special attack individual value to it.
         }
-        if(statTypesArrayList.contains(SPECIAL_DEFENSE)) { //Check if special defense has not been set to a perfect individual value.
-            setSpecialDefense(Utility.generateNumber(getMinimumIndividualValuePerStat(), getMaximumIndividualValuePerStat()
+        if(statTypesArrayList.contains(
+                SPECIAL_DEFENSE)) { //Check if special defense has not been set to a perfect individual value.
+            setSpecialDefense(
+                    Utility.generateNumber(getMinimumIndividualValuePerStat(), getMaximumIndividualValuePerStat()
             )); //Generate a random number between the minimum and maximum individual value and set the special defense individual value to it.
         }
         if(statTypesArrayList.contains(SPEED)) { //Check if speed has not been set to a perfect individual value.
@@ -169,7 +185,8 @@ public class IndividualValue {
      * @return Clamped version of {@code statValue}.
      */
     public int trimStat(int statValue) {
-        statValue = statValue < getMinimumIndividualValuePerStat() ? getMinimumIndividualValuePerStat() : statValue; //Ensure the new value is not below the minimum individual value.
+        statValue = statValue < getMinimumIndividualValuePerStat() ? getMinimumIndividualValuePerStat() :
+                    statValue; //Ensure the new value is not below the minimum individual value.
         return statValue > getMaximumIndividualValuePerStat() ? getMaximumIndividualValuePerStat() :
                statValue; //Ensure the new value is not above the maximum individual value and return the value.
     }
@@ -271,7 +288,8 @@ public class IndividualValue {
      */
     @Override
     public String toString() {
-        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " + "Special Attack IV = %s, Speed IV = %s}", health, attack, defense, specialAttack,
+        return String.format("{Health IV = %s, Attack IV = %s, Defense IV = %s, Special Attack IV = %s, " +
+                             "Special Attack IV = %s, Speed IV = %s}", health, attack, defense, specialAttack,
                              specialDefense, speed
         );
     }

@@ -4,9 +4,13 @@ import com.badlogic.gdx.utils.Disposable;
 
 public enum BackgroundInformation implements Disposable {
     CAVE("Battlebacks\\battlebgCave.png", "Battlebacks\\enemybaseCave.png", "Battlebacks\\playerbaseCave.png"),
-    CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png", "Battlebacks\\playerbaseCaveDark.png"),
-    CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png", "Battlebacks\\playerbaseCaveDarker.png"),
-    CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png", "Battlebacks\\playerbaseChampion.png");
+    CAVE_DARK("Battlebacks\\battlebgCaveDark.png", "Battlebacks\\enemybaseCaveDark.png",
+              "Battlebacks\\playerbaseCaveDark.png"
+    ), CAVE_DARKER("Battlebacks\\battlebgCaveDarker.png", "Battlebacks\\enemybaseCaveDarker.png",
+                   "Battlebacks\\playerbaseCaveDarker.png"
+    ), CHAMPION("Battlebacks\\battlebgChampion.png", "Battlebacks\\enemybaseChampion.png",
+                "Battlebacks\\playerbaseChampion.png"
+    );
     
     private BackgroundData backgroundData;
     

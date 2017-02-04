@@ -17,10 +17,11 @@ public class CalculateStats {
             
             long end = System.nanoTime();
             sum += end - start;
-            
-            stringBuilder.append("{Level = ").append(pokemon.getInformation().getCurrentLevel()).append(", Health = ").append(stats[0]).append(", Attack = ").append(stats[1])
-                         .append(", Defense = ").append(stats[2]).append(", Special Attack = ").append(stats[3]).append(", Special Defense = ").append(stats[4]).append(", Speed = ")
-                         .append(stats[5]).append("}");
+    
+            stringBuilder.append("{Level = ").append(pokemon.getInformation().getCurrentLevel()).append(", Health = ")
+                         .append(stats[0]).append(", Attack = ").append(stats[1]).append(", Defense = ")
+                         .append(stats[2]).append(", Special Attack = ").append(stats[3]).append(", Special Defense = ")
+                         .append(stats[4]).append(", Speed = ").append(stats[5]).append("}");
             
             System.out.println(stringBuilder.toString());
             
@@ -38,7 +39,9 @@ public class CalculateStats {
         final int   level            = pokemon.getInformation().getCurrentLevel();
         final float levelAsPercent   = (float)(level) / 100f;
         for(int index = 0; index < stats.length; index++) {
-            final int baseValue = (int)(((baseStats[index] << 1) + individualValues[index] + (effortValues[index] >> 2)) * levelAsPercent);
+            final int baseValue =
+                (int)(((baseStats[index] << 1) + individualValues[index] + (effortValues[index] >> 2)) *
+                      levelAsPercent);
             if(index != 0) {
                 stats[index] = (baseValue + 5);// * natureValue;
             } else {

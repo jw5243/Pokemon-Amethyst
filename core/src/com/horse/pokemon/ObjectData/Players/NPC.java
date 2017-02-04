@@ -66,10 +66,22 @@ public class NPC extends AbstractPlayer {
     }
     
     private void initializeAnimation() {
-        movingFrames[0] = AnimationManager.getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 0, getDefaultWidth(), getDefaultHeight());
-        movingFrames[1] = AnimationManager.getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 48, getDefaultWidth(), getDefaultHeight());
-        movingFrames[2] = AnimationManager.getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 96, getDefaultWidth(), getDefaultHeight());
-        movingFrames[3] = AnimationManager.getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 144, getDefaultWidth(), getDefaultHeight());
+        movingFrames[0] = AnimationManager
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 0,
+                                            getDefaultWidth(), getDefaultHeight()
+                              );
+        movingFrames[1] = AnimationManager
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 48,
+                                            getDefaultWidth(), getDefaultHeight()
+                              );
+        movingFrames[2] = AnimationManager
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 96,
+                                            getDefaultWidth(), getDefaultHeight()
+                              );
+        movingFrames[3] = AnimationManager
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 144,
+                                            getDefaultWidth(), getDefaultHeight()
+                              );
         
         idleFrames[0] = new TextureRegion(getNpcSprite().getTexture(), 0, 0, getDefaultWidth(), getDefaultHeight());
         idleFrames[1] = new TextureRegion(getNpcSprite().getTexture(), 0, 48, getDefaultWidth(), getDefaultHeight());
@@ -94,13 +106,14 @@ public class NPC extends AbstractPlayer {
         
         setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
         setPreviousState(getCurrentState());
-        return (getCurrentState() == PlayerActions.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getMovingFrames()[0].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getDOWN()) ? (TextureRegion)(getMovingFrames()[1].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getRIGHT()) ? (TextureRegion)(getMovingFrames()[2].getKeyFrame(stateTime, true)) :
-                                                              (TextureRegion)(getMovingFrames()[3].getKeyFrame(stateTime, true)) : (getDirection() == getUP()) ? getIdleFrames()[0] :
-                                                                                                                                   (getDirection() == getDOWN()) ? getIdleFrames()[1] :
-                                                                                                                                   (getDirection() == getRIGHT()) ? getIdleFrames()[2] :
-                                                                                                                                   getIdleFrames()[3];
+        return (getCurrentState() == PlayerActions.WALKING) ?
+               (getDirection() == getUP()) ? (TextureRegion)(getMovingFrames()[0].getKeyFrame(stateTime, true)) :
+               (getDirection() == getDOWN()) ? (TextureRegion)(getMovingFrames()[1].getKeyFrame(stateTime, true)) :
+               (getDirection() == getRIGHT()) ? (TextureRegion)(getMovingFrames()[2].getKeyFrame(stateTime, true)) :
+               (TextureRegion)(getMovingFrames()[3].getKeyFrame(stateTime, true)) :
+               (getDirection() == getUP()) ? getIdleFrames()[0] : (getDirection() == getDOWN()) ? getIdleFrames()[1] :
+                                                                  (getDirection() == getRIGHT()) ? getIdleFrames()[2] :
+                                                                  getIdleFrames()[3];
     }
     
     private PlayerActions getCurrentState() {
@@ -112,7 +125,8 @@ public class NPC extends AbstractPlayer {
     }
     
     private void updateAlignment() {
-        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 && (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
+        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
+                   (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
     }
     
     private void updateAnimation(float deltaTime) {
@@ -133,6 +147,8 @@ public class NPC extends AbstractPlayer {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        batch.draw(getNpcSprite(), getPositionX() - getInGameWidth() / 2, getPositionY() - getInGameHeight() / 2, getInGameWidth(), getInGameHeight());
+        batch.draw(getNpcSprite(), getPositionX() - getInGameWidth() / 2, getPositionY() - getInGameHeight() / 2,
+                   getInGameWidth(), getInGameHeight()
+        );
     }
 }

@@ -4,12 +4,16 @@ import com.badlogic.gdx.utils.Disposable;
 import com.horse.pokemon.Engine;
 
 public class BackgroundSetup implements Disposable {
-    private static final float SCREEN_TO_BACKGROUND_WIDTH_RATIO  = Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth();
-    private static final float SCREEN_TO_BACKGROUND_HEIGHT_RATIO = Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
+    private static final float SCREEN_TO_BACKGROUND_WIDTH_RATIO  =
+        Engine.getvWidth() / BackgroundData.getStandardBackgroundWidth();
+    private static final float SCREEN_TO_BACKGROUND_HEIGHT_RATIO =
+        Engine.getvHeight() / BackgroundData.getStandardBackgroundHeight();
     private static final int   BACKGROUND_X_POSITION             = 0;
     private static final int   BACKGROUND_Y_POSITION             = 0;
-    private static final int   ENEMY_BASE_X_POSITION             = (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
-    private static final int   ENEMY_BASE_Y_POSITION             = (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
+    private static final int   ENEMY_BASE_X_POSITION             =
+        (int)((Engine.getvWidth() - BackgroundData.getStandardEnemyBaseWidth()) / getScreenToBackgroundWidthRatio());
+    private static final int   ENEMY_BASE_Y_POSITION             =
+        (int)((Engine.getvHeight() - BackgroundData.getStandardEnemyBaseHeight()) / getScreenToBackgroundHeightRatio());
     private static final int   USER_BASE_X_POSITION              = -128;
     private static final int   USER_BASE_Y_POSITION              = 0;
     private static final int   TRANSITION_TIME                   = 2;
@@ -81,7 +85,8 @@ public class BackgroundSetup implements Disposable {
     }
     
     public void render(float delta) {
-        setCurrentTransitionTime(getCurrentTransitionTime() >= getTransitionTime() ? getTransitionTime() : getCurrentTransitionTime() + delta);
+        setCurrentTransitionTime(getCurrentTransitionTime() >= getTransitionTime() ? getTransitionTime() :
+                                 getCurrentTransitionTime() + delta);
         
         getEngine().getBatch().begin();
     
@@ -102,9 +107,11 @@ public class BackgroundSetup implements Disposable {
     
     private void drawBackground() {
         if(getEngine().getBatch().isDrawing()) {
-            getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(), getBackgroundXPosition(), getBackgroundYPosition(),
+            getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getBackgroundTexture(),
+                                        getBackgroundXPosition(), getBackgroundYPosition(),
                                         BackgroundData.getStandardBackgroundWidth() * getScreenToBackgroundWidthRatio(),
-                                        BackgroundData.getStandardBackgroundHeight() * getScreenToBackgroundHeightRatio()
+                                        BackgroundData.getStandardBackgroundHeight() *
+                                        getScreenToBackgroundHeightRatio()
             );
         } else {
             getEngine().getBatch().begin();
@@ -115,7 +122,9 @@ public class BackgroundSetup implements Disposable {
     private void drawEnemyBase() {
         if(getEngine().getBatch().isDrawing()) {
             getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getEnemyBaseTexture(),
-                                        getEnemyBaseXPosition() - ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getEnemyBaseYPosition(),
+                                        getEnemyBaseXPosition() -
+                                        ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()),
+                                        getEnemyBaseYPosition(),
                                         BackgroundData.getStandardEnemyBaseWidth() * getScreenToBackgroundWidthRatio(),
                                         BackgroundData.getStandardEnemyBaseHeight() * getScreenToBackgroundHeightRatio()
             );
@@ -128,7 +137,9 @@ public class BackgroundSetup implements Disposable {
     private void drawUserBase() {
         if(getEngine().getBatch().isDrawing()) {
             getEngine().getBatch().draw(getBackgroundInformation().getBackgroundData().getUserBaseTexture(),
-                                        getUserBaseXPosition() + ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()), getUserBaseYPosition(),
+                                        getUserBaseXPosition() +
+                                        ((getTransitionTime() - getCurrentTransitionTime()) * Engine.getvWidth()),
+                                        getUserBaseYPosition(),
                                         BackgroundData.getStandardUserBaseWidth() * getScreenToBackgroundWidthRatio(),
                                         BackgroundData.getStandardUserBaseHeight() * getScreenToBackgroundHeightRatio()
             );

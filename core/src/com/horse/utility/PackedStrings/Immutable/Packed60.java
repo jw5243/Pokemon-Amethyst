@@ -74,7 +74,9 @@ public class Packed60 extends PackedBase {
             return false;
         }
         Packed60 packed60 = (Packed60)(o);
-        return f1 == packed60.f1 && f2 == packed60.f2 && f3 == packed60.f3 && f4 == packed60.f4 && f5 == packed60.f5 && f6 == packed60.f6 && f7 == packed60.f7 && f8 == packed60.f8 &&
-               f9 == packed60.f9 && f10 == packed60.f10 && f11 == packed60.f11 && f12 == packed60.f12 && f13 == packed60.f13 && f14 == packed60.f14 && f15 == packed60.f15;
+        return f1 == packed60.f1 && f2 == packed60.f2 && f3 == packed60.f3 && f4 == packed60.f4 && f5 == packed60.f5 &&
+               f6 == packed60.f6 && f7 == packed60.f7 && f8 == packed60.f8 && f9 == packed60.f9 &&
+               f10 == packed60.f10 && f11 == packed60.f11 && f12 == packed60.f12 && f13 == packed60.f13 &&
+               f14 == packed60.f14 && f15 == packed60.f15;
     }
 }

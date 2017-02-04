@@ -44,6 +44,8 @@ public abstract class CollidableTileObject {
     
     @Override
     public String toString() {
-        return String.format("{X Position = %s, Y Position = %s, Width = %s, Height = %s}", getBounds().getX(), getBounds().getY(), getBounds().getWidth(), getBounds().getHeight());
+        return String.format("{X Position = %s, Y Position = %s, Width = %s, Height = %s}", getBounds().getX(),
+                             getBounds().getY(), getBounds().getWidth(), getBounds().getHeight()
+        );
     }
 }

@@ -54,9 +54,10 @@ public class MapCreator {
     public void addTiledObjects(MainGameScreen screen, MultiTiledMap... maps) {
         setScreen(screen);
         for(int index = 0; index < maps.length; index++) {
-            for(MapObject object : maps[index].getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
+            for(MapObject object : maps[index].getLayers().get("Collisions").getObjects()
+                                              .getByType(RectangleMapObject.class)) {
                 Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
-    
+        
                 rectangle.setX(rectangle.getX() + screen.getMaps()[index].getOffsetX() * Engine.getTileSize());
                 rectangle.setY(rectangle.getY() + screen.getMaps()[index].getOffsetY() * Engine.getTileSize());
                 
@@ -87,9 +88,12 @@ public class MapCreator {
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(object.getProperties().get("type").toString().contains("NPC")) {
-                        getNpcStartPositions().put(object.getProperties().get("type").toString(), new Vector2(rectangle.getX(), rectangle.getY()));
+                        getNpcStartPositions().put(object.getProperties().get("type").toString(),
+                                                   new Vector2(rectangle.getX(), rectangle.getY())
+                        );
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
-                        getConnections().add(new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString()));
+                        getConnections().add(
+                            new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString()));
                     }
                 }
             }
@@ -134,7 +138,8 @@ public class MapCreator {
             return false;
         }
         MapCreator that = (MapCreator)o;
-        return Objects.equals(getCollidableTileObjects(), that.getCollidableTileObjects()) && Objects.equals(getStartPosition(), that.getStartPosition()) &&
+        return Objects.equals(getCollidableTileObjects(), that.getCollidableTileObjects()) &&
+               Objects.equals(getStartPosition(), that.getStartPosition()) &&
                Objects.equals(getConnections(), that.getConnections());
     }
 }

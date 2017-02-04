@@ -114,15 +114,15 @@ public class PokemonInformation {
     /**
      * The {@link Integer} instance representing a PokemonData's current special attack.
      */
-    private int currentSpecialAttack;
+    private int               currentSpecialAttack;
     /**
      * The {@link Integer} instance representing a PokemonData's current special defense.
      */
-    private int currentSpecialDefense;
+    private int               currentSpecialDefense;
     /**
      * The {@link Integer} instance representing a PokemonData's current speed.
      */
-    private int currentSpeed;
+    private int               currentSpeed;
     /**
      * The {@link PokemonExperience} instance representing a PokemonData's experience value.
      */
@@ -166,18 +166,29 @@ public class PokemonInformation {
     
     @Override
     public String toString() {
-        String value =
-                new StringBuilder().append("{Name = ").append(getName()).append(", Classification = ").append(getClassification()).append(", Pokedex Number = ").append(getPokedexNumber())
-                                   .append(", Evolution Number = ").append(getEvolutionNumber()).append(", Gender Ratio = ").append(getGenderRatio()).append(", Types = ")
-                                   .append(Arrays.toString(getPokemonTypes())).append(", Height = ").append(getHeight()).append(", Weight = ").append(getWeight()).append(", Capture Rate = ")
-                                   .append(getCaptureRate()).append(", Base Egg Steps = ").append(getBaseEggSteps()).append(", Ability = ").append(getAbility())
-                                   .append(", Experience Rate = ").append(getExperienceRate()).append(", Base Happiness = ").append(getBaseHappiness()).append(", Move List = ")
-                                   .append(getMoveList()).append(", Effort Value = ").append(getEffortValue()).append(", Base Stats = ").append(", Base Experience = ")
-                                   .append(getBaseExperience()).append(Arrays.toString(getBaseStats())).append(", Level = ").append(getCurrentLevel()).append(", Health = ")
-                                   .append(getCurrentHealth()).append(", Attack = ").append(getCurrentAttack()).append(", Defense = ").append(getCurrentDefense())
-                                   .append(", Special Attack = ").append(getCurrentSpecialAttack()).append(", Special Defense = ").append(getCurrentSpecialDefense()).append(", Speed = ")
-                                   .append(getCurrentSpeed()).append(", Experience = ").append(getCurrentExperience()).append(", Individual Values = ").append(getIndividualValue())
-                                   .toString();
+        String value = new StringBuilder().append("{Name = ").append(getName()).append(", Classification = ")
+                                          .append(getClassification()).append(", Pokedex Number = ")
+                                          .append(getPokedexNumber()).append(", Evolution Number = ")
+                                          .append(getEvolutionNumber()).append(", Gender Ratio = ")
+                                          .append(getGenderRatio()).append(", Types = ")
+                                          .append(Arrays.toString(getPokemonTypes())).append(", Height = ")
+                                          .append(getHeight()).append(", Weight = ").append(getWeight())
+                                          .append(", Capture Rate = ").append(getCaptureRate())
+                                          .append(", Base Egg Steps = ").append(getBaseEggSteps())
+                                          .append(", Ability = ").append(getAbility()).append(", Experience Rate = ")
+                                          .append(getExperienceRate()).append(", Base Happiness = ")
+                                          .append(getBaseHappiness()).append(", Move List = ").append(getMoveList())
+                                          .append(", Effort Value = ").append(getEffortValue())
+                                          .append(", Base Stats = ").append(", Base Experience = ")
+                                          .append(getBaseExperience()).append(Arrays.toString(getBaseStats()))
+                                          .append(", Level = ").append(getCurrentLevel()).append(", Health = ")
+                                          .append(getCurrentHealth()).append(", Attack = ").append(getCurrentAttack())
+                                          .append(", Defense = ").append(getCurrentDefense())
+                                          .append(", Special Attack = ").append(getCurrentSpecialAttack())
+                                          .append(", Special Defense = ").append(getCurrentSpecialDefense())
+                                          .append(", Speed = ").append(getCurrentSpeed()).append(", Experience = ")
+                                          .append(getCurrentExperience()).append(", Individual Values = ")
+                                          .append(getIndividualValue()).toString();
         StringBuilder formatString = new StringBuilder();
         int           tabs         = 0;
         boolean       newLine      = false;

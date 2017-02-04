@@ -26,7 +26,7 @@ public class MutablePacked extends PackedBase {
             return;
         }
         final float quarterArLength     = ar.length / 4f;
-        final int   arraySizeAllocation = quarterArLength % 1f != 0 ? (int)(quarterArLength) + 1 : (int)(quarterArLength);
+        final int arraySizeAllocation = quarterArLength % 1f != 0 ? (int)(quarterArLength) + 1 : (int)(quarterArLength);
         final int   originalSize        = getStringStorage() != null ? getStringStorage().length : 0;
         int[]       stringStorage       = new int[arraySizeAllocation + originalSize];
         for(int index = 0; index < stringStorage.length; index++) {
@@ -35,9 +35,10 @@ public class MutablePacked extends PackedBase {
             } else {
                 final int quadrupleIndex      = index << 2;
                 final int stringStorageLength = getStringStorage() != null ? getStringStorage().length << 2 : 0;
-                stringStorage[index] =
-                        get(ar, quadrupleIndex + 3 - stringStorageLength) | get(ar, quadrupleIndex + 2 - stringStorageLength) << 8 | get(ar, quadrupleIndex + 1 - stringStorageLength) << 16 |
-                        get(ar, quadrupleIndex - stringStorageLength) << 24;
+                stringStorage[index] = get(ar, quadrupleIndex + 3 - stringStorageLength) |
+                                       get(ar, quadrupleIndex + 2 - stringStorageLength) << 8 |
+                                       get(ar, quadrupleIndex + 1 - stringStorageLength) << 16 |
+                                       get(ar, quadrupleIndex - stringStorageLength) << 24;
             }
         }
         setStringStorage(stringStorage);

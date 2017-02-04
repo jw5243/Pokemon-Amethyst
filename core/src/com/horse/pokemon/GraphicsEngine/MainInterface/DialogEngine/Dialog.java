@@ -32,7 +32,8 @@ public class Dialog extends Actor implements Disposable {
     private float                      timer;
     private boolean                    visible;
     
-    public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds, String text) {
+    public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds,
+                  String text) {
         setViewport(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()));
         setStage(new Stage(getViewport(), engine.getBatch()));
         setBatch(engine.getBatch());
@@ -80,24 +81,31 @@ public class Dialog extends Actor implements Disposable {
     
     private void setupCharactersToWrite() {
         setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() - CharacterWriter.getDefaultCharacterStartYPositionBuffer());
+        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() -
+                                     CharacterWriter.getDefaultCharacterStartYPositionBuffer());
         for(char character : getText().toCharArray()) {
             if(character == '\n') {
-                setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                setCurrentCharacterXPosition(
+                    getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                 setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
             } else if(character == ' ') {
                 setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.SPACE.getWidth());
-                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
-                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
+                   CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
+                    setCurrentCharacterXPosition(
+                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                     setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
                 }
             } else {
-                CharacterWriter characterWriter = new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
+                CharacterWriter characterWriter =
+                    new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
                 getCharacterWriterArrayList().add(characterWriter);
     
                 setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
-                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() + CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getxPosition() + getxSize()) {
-                    setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
+                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
+                   CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getxPosition() + getxSize()) {
+                    setCurrentCharacterXPosition(
+                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
                     setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
                 }
             }

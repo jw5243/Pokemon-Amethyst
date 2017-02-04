@@ -30,7 +30,7 @@ public final class PokemonDataReader {
     private static HashMap<String, Pokemon> pokemonData;
     
     static {
-        long start = System.nanoTime();
+        //long start = System.nanoTime();
         pokemonData = new HashMap<>();
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
             String pokemon = bufferedReader.readLine();
@@ -42,8 +42,8 @@ public final class PokemonDataReader {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        long end = System.nanoTime();
-        System.out.println(end - start);
+        //long end = System.nanoTime();
+        //System.out.println(end - start);
     }
     
     private static Pokemon getPokemon(String[] data) {
@@ -58,9 +58,10 @@ public final class PokemonDataReader {
         System.arraycopy(data, 0, data, 0, data.length);
         String[] pokemonTypes = data[5].split(",");
     
-        pokemon.getInformation().setPokemonTypes(pokemonTypes.length == 1 ? new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0])} : new PokemonTypes[] {
+        pokemon.getInformation().setPokemonTypes(
+            pokemonTypes.length == 1 ? new PokemonTypes[] {PokemonTypes.valueOf(pokemonTypes[0])} : new PokemonTypes[] {
                 PokemonTypes.valueOf(pokemonTypes[0]), PokemonTypes.valueOf(pokemonTypes[1])
-        });
+            });
         
         pokemon.getInformation().setHeight(data[6]);
         pokemon.getInformation().setWeight(data[7]);
@@ -78,7 +79,9 @@ public final class PokemonDataReader {
                 Collections.addAll(moveValues, value.split(":"));
             }
             for(int moveValueIndex = 0; moveValueIndex < moveValues.size(); moveValueIndex += 2) {
-                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex)), MoveDataReader.getMove(moveValues.get(moveValueIndex + 1)));
+                moveList.put(Integer.parseInt(moveValues.get(moveValueIndex)),
+                             MoveDataReader.getMove(moveValues.get(moveValueIndex + 1))
+                );
             }
         }
         pokemon.getInformation().setMoveList(moveList);
@@ -121,7 +124,8 @@ public final class PokemonDataReader {
         pokemon.getInformation().setBaseStats(baseStatValues);
         pokemon.getInformation().setCurrentLevel(PokemonInformation.getDefaultLevel());
         pokemon.updateStats();
-        pokemon.getInformation().setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
+        pokemon.getInformation()
+               .setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
         
         return pokemon;
     }

@@ -7,7 +7,8 @@ import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonExperience;
 
 public class BattleCalculator {
-    public static int calculateDamage(final Pokemon attackingPokemon, final Pokemon defendingPokemon, final Moves attackingPokemonMove) {
+    public static int calculateDamage(final Pokemon attackingPokemon, final Pokemon defendingPokemon,
+                                      final Moves attackingPokemonMove) {
         return CalculateDamage.getDamage(attackingPokemon, defendingPokemon, attackingPokemonMove);
     }
     
@@ -18,6 +19,9 @@ public class BattleCalculator {
     public static boolean isNextLevel(final Pokemon pokemonGainingExperience, final Pokemon pokemonGivingExperience) {
         return pokemonGainingExperience.getInformation().getCurrentExperience().getCurrentExperience() +
                PokemonExperience.calculateExperienceWon(pokemonGainingExperience, pokemonGivingExperience) >=
-               PokemonExperience.getExperienceBasedOnLevelAndType(pokemonGainingExperience.getInformation().getExperienceRate(), pokemonGainingExperience.getInformation().getCurrentLevel());
+               PokemonExperience
+                   .getExperienceBasedOnLevelAndType(pokemonGainingExperience.getInformation().getExperienceRate(),
+                                                     pokemonGainingExperience.getInformation().getCurrentLevel()
+                   );
     }
 }

@@ -58,7 +58,8 @@ public class MultiTiledMap extends TiledMap {
         int[] offset = new int[2];
         for(MapObject object : getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
-            rectangle = new Rectangle(rectangle.getX() / Engine.getTileSize(), rectangle.getY() / Engine.getTileSize(), rectangle.getWidth() / Engine.getTileSize(),
+            rectangle = new Rectangle(rectangle.getX() / Engine.getTileSize(), rectangle.getY() / Engine.getTileSize(),
+                                      rectangle.getWidth() / Engine.getTileSize(),
                                       rectangle.getHeight() / Engine.getTileSize()
             );
             if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {

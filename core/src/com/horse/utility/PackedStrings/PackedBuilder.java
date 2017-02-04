@@ -1,6 +1,6 @@
 package com.horse.utility.PackedStrings;
 
-import com.horse.utility.MemoryFinder;
+import com.horse.utility.MemoryCalculator;
 import com.horse.utility.PackedStrings.Immutable.Packed28;
 
 import java.nio.ByteBuffer;
@@ -58,22 +58,23 @@ public class PackedBuilder {
         PackedBuilder packedBuilder = new PackedBuilder();
         packedBuilder.append("Test").append("SecondTester");
         System.out.println(packedBuilder.toString());
-        System.out.println(MemoryFinder.sizeOf(packedBuilder.getMutablePacked()));
-    
+        System.out.println(MemoryCalculator.sizeOf(packedBuilder.getMutablePacked()));
+        
         String stringValue = "TestSecondTestTestSecondTest";
-        System.out.println(MemoryFinder.sizeOf(stringValue));
-    
+        System.out.println(MemoryCalculator.sizeOf(stringValue));
+        
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Test").append("SecondTest");
-        System.out.println(MemoryFinder.sizeOf(stringBuilder));
-    
+        System.out.println(MemoryCalculator.sizeOf(stringBuilder));
+        
         PackedBase packedBase = new Packed28(convertToEncodedBytes("TestSecondTesterTestSecondTest"));
-        System.out.println(MemoryFinder.sizeOf(packedBase));
-    
+        System.out.println(MemoryCalculator.sizeOf(packedBase));
+        
         PackedBuilder packedBuilder1 = new PackedBuilder();
-        packedBuilder1.append(new MutablePacked(convertToEncodedBytes("Test"))).append("Test").append(new char[] {'a', 'b', 'c'}).append(1).append(1f);
+        packedBuilder1.append(new MutablePacked(convertToEncodedBytes("Test"))).append("Test")
+                      .append(new char[] {'a', 'b', 'c'}).append(1).append(1f);
         System.out.println(packedBuilder1.toString());
-        System.out.println(MemoryFinder.sizeOf(packedBuilder1));
+        System.out.println(MemoryCalculator.sizeOf(packedBuilder1));
     }
     
     public MutablePacked getMutablePacked() {

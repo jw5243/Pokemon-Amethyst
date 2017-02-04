@@ -56,7 +56,7 @@ public class Packed36 extends PackedBase {
             return false;
         }
         Packed36 packed36 = (Packed36)(o);
-        return f1 == packed36.f1 && f2 == packed36.f2 && f3 == packed36.f3 && f4 == packed36.f4 && f5 == packed36.f5 && f6 == packed36.f6 && f7 == packed36.f7 && f8 == packed36.f8 &&
-               f9 == packed36.f9;
+        return f1 == packed36.f1 && f2 == packed36.f2 && f3 == packed36.f3 && f4 == packed36.f4 && f5 == packed36.f5 &&
+               f6 == packed36.f6 && f7 == packed36.f7 && f8 == packed36.f8 && f9 == packed36.f9;
     }
 }

@@ -84,7 +84,10 @@ public class BackgroundData implements Disposable {
     
     @Override
     public String toString() {
-        return new StringBuilder("{Background Texture = ").append(getBackgroundTexture()).append(", Enemy Base Texture = ").append(getEnemyBaseTexture()).append(", User Base Texture = ")
-                                                          .append(getUserBaseTexture()).toString();
+        return new StringBuilder("{Background Texture = ").append(getBackgroundTexture())
+                                                          .append(", Enemy Base Texture = ")
+                                                          .append(getEnemyBaseTexture())
+                                                          .append(", User Base Texture = ").append(getUserBaseTexture())
+                                                          .toString();
     }
 }

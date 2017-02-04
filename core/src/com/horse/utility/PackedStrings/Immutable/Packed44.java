@@ -62,7 +62,8 @@ public class Packed44 extends PackedBase {
             return false;
         }
         Packed44 packed44 = (Packed44)(o);
-        return f1 == packed44.f1 && f2 == packed44.f2 && f3 == packed44.f3 && f4 == packed44.f4 && f5 == packed44.f5 && f6 == packed44.f6 && f7 == packed44.f7 && f8 == packed44.f8 &&
-               f9 == packed44.f9 && f10 == packed44.f10 && f11 == packed44.f11;
+        return f1 == packed44.f1 && f2 == packed44.f2 && f3 == packed44.f3 && f4 == packed44.f4 && f5 == packed44.f5 &&
+               f6 == packed44.f6 && f7 == packed44.f7 && f8 == packed44.f8 && f9 == packed44.f9 &&
+               f10 == packed44.f10 && f11 == packed44.f11;
     }
 }

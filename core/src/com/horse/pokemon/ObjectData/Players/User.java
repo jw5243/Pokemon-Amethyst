@@ -203,51 +203,67 @@ public class User extends AbstractPlayer {
      * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
-    private static final Sprite          userSprite             = new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
+    private static final Sprite          userSprite             =
+        new Sprite(new TextureAtlas(User.getUserInformation()).findRegion(getUserAtlasRegionName()));
     /**
      * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on land.
      */
     private static final TextureRegion[] userIdleOnLand         = new TextureRegion[] {
-            new TextureRegion(getUserSprite().getTexture(), 135, 6, getUserWalkWidth(), getUserWalkHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 62, 49, getUserWalkWidth(), getUserWalkHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 274, 27, getUserWalkWidth(), getUserWalkHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 52, 27, getUserWalkWidth(), getUserWalkHeight())
+        new TextureRegion(getUserSprite().getTexture(), 135, 6, getUserWalkWidth(), getUserWalkHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 62, 49, getUserWalkWidth(), getUserWalkHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 274, 27, getUserWalkWidth(), getUserWalkHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 52, 27, getUserWalkWidth(), getUserWalkHeight())
     };
     /**
      * The {@link TextureRegion} array representing all of the idle positions when the {@code User} is on water.
      */
     private static final TextureRegion[] userIdleOnWater        = new TextureRegion[] {
-            new TextureRegion(getUserSprite().getTexture(), 170, 97, getUserSwimWidth(), getUserSwimHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 125, 97, getUserSwimWidth(), getUserSwimHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 240, 97, getUserSwimWidth(), getUserSwimHeight()),
-            new TextureRegion(getUserSprite().getTexture(), 77, 97, getUserSwimWidth(), getUserSwimHeight())
+        new TextureRegion(getUserSprite().getTexture(), 170, 97, getUserSwimWidth(), getUserSwimHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 125, 97, getUserSwimWidth(), getUserSwimHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 240, 97, getUserSwimWidth(), getUserSwimHeight()),
+        new TextureRegion(getUserSprite().getTexture(), 77, 97, getUserSwimWidth(), getUserSwimHeight())
     };
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is moving at a steady pace.
      */
     private static final Animation[]     userWalk               = new Animation[] {
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {189, 135, 206, 135}, 6, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {80, 62, 97, 62}, 49, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {291, 274, 204, 274}, 27, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {35, 52, 122, 52}, 27, getUserWalkWidth(), getUserWalkHeight())
+        AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {189, 135, 206, 135}, 6,
+                                      getUserWalkWidth(), getUserWalkHeight()
+        ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {80, 62, 97, 62}, 49,
+                                         getUserWalkWidth(), getUserWalkHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {291, 274, 204, 274}, 27,
+                                     getUserWalkWidth(), getUserWalkHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {35, 52, 122, 52}, 27,
+                                     getUserWalkWidth(), getUserWalkHeight()
+    )
     };
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is quickly moving.
      */
     private static final Animation[]     userRun                = new Animation[] {
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {153, 135, 172, 135}, 6, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {27, 62, 45, 62}, 49, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {205, 274, 221, 274}, 27, getUserWalkWidth(), getUserWalkHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {122, 52, 105, 52}, 27, getUserWalkWidth(), getUserWalkHeight())
+        AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {153, 135, 172, 135}, 6,
+                                      getUserWalkWidth(), getUserWalkHeight()
+        ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {27, 62, 45, 62}, 49,
+                                         getUserWalkWidth(), getUserWalkHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {205, 274, 221, 274}, 27,
+                                     getUserWalkWidth(), getUserWalkHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {122, 52, 105, 52}, 27,
+                                     getUserWalkWidth(), getUserWalkHeight()
+    )
     };
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
     private static final Animation[]     userSwim               = new Animation[] {
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {192, 170}, 97, getUserSwimWidth(), getUserSwimHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {147, 125}, 97, getUserSwimWidth(), getUserSwimHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {217, 240}, 97, getUserSwimWidth(), getUserSwimHeight()),
-            AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {102, 77}, 97, getUserSwimWidth(), getUserSwimHeight())
+        AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {192, 170}, 97,
+                                      getUserSwimWidth(), getUserSwimHeight()
+        ), AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {147, 125}, 97,
+                                         getUserSwimWidth(), getUserSwimHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {217, 240}, 97,
+                                     getUserSwimWidth(), getUserSwimHeight()
+    ), AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {102, 77}, 97, getUserSwimWidth(),
+                                     getUserSwimHeight()
+    )
     };
     /**
      * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
@@ -278,18 +294,28 @@ public class User extends AbstractPlayer {
      * @see MapCreator
      */
     public User(final MainGameScreen mainGameScreen) {
-        setPreviousState(getCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
-        setStateTimer(0);                    //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
-        setDirection(getDOWN());             //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
-        setMoving(false);                    //Initializes moving to false because the User is in an IDLE state, meaning that the character should not be moving in that state.
-        setAligned(true);                    //Initializes aligned to true because the User should be placed correctly on the grid so that aligned should be true already.
-        setFutureCollision(false);           //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
-        setSwimming(false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
-        setRestrictedMovement(false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
-        setMovementKeyHeldDownTime(0f);      //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
+        setPreviousState(
+            getCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
+        setStateTimer(
+            0);                    //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
+        setDirection(
+            getDOWN());             //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
+        setMoving(
+            false);                    //Initializes moving to false because the User is in an IDLE state, meaning that the character should not be moving in that state.
+        setAligned(
+            true);                    //Initializes aligned to true because the User should be placed correctly on the grid so that aligned should be true already.
+        setFutureCollision(
+            false);           //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
+        setSwimming(
+            false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
+        setRestrictedMovement(
+            false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
+        setMovementKeyHeldDownTime(
+            0f);      //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
         setMainGameScreen(mainGameScreen);   //Initializes the main game screen to the parameter value.
     
-        setMapCreator(mainGameScreen.getMapCreator()); //Set the map creator to the same instance as the one in the main game screen to store the collision rectangles.
+        setMapCreator(mainGameScreen
+                          .getMapCreator()); //Set the map creator to the same instance as the one in the main game screen to store the collision rectangles.
         
         setBounds(0, 0, Engine.getHalfTileSize(), Engine.getHalfTileSize());
         getUserSprite().setRegion(getUserIdleOnLand()[1]);
@@ -533,9 +559,12 @@ public class User extends AbstractPlayer {
      * @see #mapCreator
      */
     public void resetPosition(final MapCreator mapCreator, final boolean resetMapCreator) {
-        setMapCreator(resetMapCreator ? mapCreator : getMapCreator()); //Check if the mapCreator should be replaced depending on the resetMapCreator parameter.
-        setPositionX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() / 2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
-        setPositionY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() / 2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
+        setMapCreator(resetMapCreator ? mapCreator :
+                      getMapCreator()); //Check if the mapCreator should be replaced depending on the resetMapCreator parameter.
+        setPositionX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() /
+                                                             2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
+        setPositionY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() /
+                                                             2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
     }
     
     /**
@@ -556,9 +585,12 @@ public class User extends AbstractPlayer {
      * @return {@link Rectangle} instance of the future position of the {@code User} or the position of a {@link CollidableTileObject}.
      */
     private Rectangle getFutureRectangle(final float offsetX, final float offsetY) {
-        Rectangle futureRectangle = getCurrentCollisionRectangle(); //Get the rectangle instance of the collision box of the User.
-        futureRectangle.setX(futureRectangle.getX() + offsetX); //Add the offset onto the x-position of the collision box of the User.
-        futureRectangle.setY(futureRectangle.getY() + offsetY); //Add the offset onto the y-position of the collision box of the User.
+        Rectangle futureRectangle =
+            getCurrentCollisionRectangle(); //Get the rectangle instance of the collision box of the User.
+        futureRectangle.setX(
+            futureRectangle.getX() + offsetX); //Add the offset onto the x-position of the collision box of the User.
+        futureRectangle.setY(
+            futureRectangle.getY() + offsetY); //Add the offset onto the y-position of the collision box of the User.
         return futureRectangle; //Return the new rectangle instance representing the future position.
     }
     
@@ -569,18 +601,23 @@ public class User extends AbstractPlayer {
      */
     public void handleInput(final float deltaTime) {
         getHandleInput().update(deltaTime); //Update the general movements and direction of the User.
-        if(!isAligned() && !isFutureCollision() && !isRestrictedMovement()) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
+        if(!isAligned() && !isFutureCollision() &&
+           !isRestrictedMovement()) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
             if(getDirection() == getUP()) { //Checks if the current direction of the User if upwards.
-                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionY() + getCurrentState().getSpeed() :
+                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ?
+                             getPositionY() + getCurrentState().getSpeed() :
                              getPositionY()); //Move the User upwards a little bit according to if the up key has been pressed long enough and the type of action occuring.
             } else if(getDirection() == getDOWN()) { //Checks if the current direction of the User is downwards.
-                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionY() - getCurrentState().getSpeed() :
+                setPositionY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ?
+                             getPositionY() - getCurrentState().getSpeed() :
                              getPositionY()); //Move the User downwards a little bit according to if the down key has been pressed long enough and the type of action occuring.
             } else if(getDirection() == getRIGHT()) { //Checks if the current direction of the User is to the right.
-                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionX() + getCurrentState().getSpeed() :
+                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ?
+                             getPositionX() + getCurrentState().getSpeed() :
                              getPositionX()); //Move the User to the right a little bit according to if the right key has been pressed long enough and the type of action occuring.
             } else if(getDirection() == getLEFT()) { //Checks if the current direction of the User is to the left.
-                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getPositionX() - getCurrentState().getSpeed() :
+                setPositionX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ?
+                             getPositionX() - getCurrentState().getSpeed() :
                              getPositionX()); //Move the User to the left a little bit according to if the left key has been pressed long enough and the type of action occuring.
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
@@ -588,30 +625,56 @@ public class User extends AbstractPlayer {
             
             Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                                         (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
-                                        (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) : getFutureRectangle(-Engine.getTileSize(),
-                                                                                                                                          0
+                                        (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
+                                        getFutureRectangle(-Engine.getTileSize(), 0
                                         ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
-    
-            if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
+        
+            if(isColliding(futureRectangle, false) && getCollidingTileObject(
+                futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
                 //Create a lambda for moving the User a single tile in the direction the User is pointing to.
                 AlterPlayerPosition alterPlayerPosition =
-                        (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod.accept(getPositionMethod.get() + alterValue);
+                    (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod
+                                                                                                                      .accept(
+                                                                                                                          getPositionMethod
+                                                                                                                              .get() +
+                                                                                                                          alterValue);
+            
+                Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition
+                                                                               .alterPosition(this::setPositionY,
+                                                                                              this::getPositionY,
+                                                                                              Engine.getTileSize()
+                                                                               ) : (getDirection() == getDOWN()) ?
+                                                                                   () -> alterPlayerPosition
+                                                                                             .alterPosition(
+                                                                                                 this::setPositionY,
+                                                                                                 this::getPositionY,
+                                                                                                 -Engine.getTileSize()
+                                                                                             ) :
+                                                                                   (getDirection() == getRIGHT()) ?
+                                                                                   () -> alterPlayerPosition
+                                                                                             .alterPosition(
+                                                                                                 this::setPositionX,
+                                                                                                 this::getPositionX,
+                                                                                                 Engine.getTileSize()
+                                                                                             ) :
+                                                                                   () -> alterPlayerPosition
+                                                                                             .alterPosition(
+                                                                                                 this::setPositionX,
+                                                                                                 this::getPositionX,
+                                                                                                 -Engine.getTileSize()
+                                                                                             ); //Creates an action to move the User depending on the direction of the User.
                 
-                Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, Engine.getTileSize()) :
-                                       (getDirection() == getDOWN()) ? () -> alterPlayerPosition.alterPosition(this::setPositionY, this::getPositionY, -Engine.getTileSize()) :
-                                       (getDirection() == getRIGHT()) ? () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX, Engine.getTileSize()) :
-                                       () -> alterPlayerPosition.alterPosition(this::setPositionX, this::getPositionX,
-                                                                               -Engine.getTileSize()
-                                       ); //Creates an action to move the User depending on the direction of the User.
-        
                 alterAction.run(); //Executes the action for moving the User.
-            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
+            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(
+                futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
                 getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.
                 setRestrictedMovement(true); //Stops any form of movement the User would normally be able to do.
             }
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && isRestrictedMovement()) { //Checks if X key is pressed when the User is in a non-movable position.
+        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
+                  isRestrictedMovement()) { //Checks if X key is pressed when the User is in a non-movable position.
             getMainGameScreen().getDialog().setVisible(false); //Removes the dialog from the screen.
-            getMainGameScreen().getDialog().setTimer(0f); //Resets the point at which the dialog was drawing the characters onto the screen.
+            getMainGameScreen().getDialog().setTimer(
+                0f); //Resets the point at which the dialog was drawing the characters onto the screen.
             setRestrictedMovement(false); //Allows movement of the User.
         }
     }
@@ -637,7 +700,8 @@ public class User extends AbstractPlayer {
      * @see Barrier
      */
     private boolean isColliding(final Rectangle rectangle, final boolean activateCollisionMethod) {
-        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) { //Iterate through all the objects stored in the current map.
+        for(CollidableTileObject collidableTileObject : getMapCreator()
+                                                            .getCollidableTileObjects()) { //Iterate through all the objects stored in the current map.
             if(collidableTileObject.isColliding(rectangle)) {
                 if(activateCollisionMethod) {
                     if(collidableTileObject instanceof Door) {
@@ -704,10 +768,15 @@ public class User extends AbstractPlayer {
      */
     @Override
     public void draw(final Batch batch, final float parentAlpha) {
-        if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING || getCurrentState() == PlayerActions.RUNNING) {
-            batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2, getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(), getUserWalkHeight());
+        if((getCurrentState() == PlayerActions.IDLE && !isSwimming()) || getCurrentState() == PlayerActions.WALKING ||
+           getCurrentState() == PlayerActions.RUNNING) {
+            batch.draw(getUserSprite(), getPositionX() - getUserWalkWidth() / 2,
+                       getPositionY() - getUserWalkHeight() / 2, getUserWalkWidth(), getUserWalkHeight()
+            );
         } else if(isSwimming()) {
-            batch.draw(getUserSprite(), getPositionX() - getUserSwimWidth() / 2, getPositionY() - getUserSwimHeight() / 2, getUserSwimWidth(), getUserSwimHeight());
+            batch.draw(getUserSprite(), getPositionX() - getUserSwimWidth() / 2,
+                       getPositionY() - getUserSwimHeight() / 2, getUserSwimWidth(), getUserSwimHeight()
+            );
         }
     }
     
@@ -715,7 +784,8 @@ public class User extends AbstractPlayer {
      * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if {@link #handleInput(float)} gets no feedback.
      */
     private void updateAlignment() {
-        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 && (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
+        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
+                   (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
     }
     
     /**
@@ -755,28 +825,37 @@ public class User extends AbstractPlayer {
         
         setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
         setPreviousState(getCurrentState());
-        return (getCurrentState() == PlayerActions.WALKING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
-                                                              (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-
-               (getCurrentState() == PlayerActions.RUNNING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
-                                                              (getDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
-                                                              (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
-
-               (getCurrentState() == PlayerActions.SWIMMING) ? (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
-                                                               (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
-                                                               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
-                                                               (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ?
-                                                                                                                                (getDirection() == getUP()) ? getUserIdleOnWater()[0] :
-                                                                                                                                (getDirection() == getDOWN()) ? getUserIdleOnWater()[1] :
-                                                                                                                                (getDirection() == getRIGHT()) ? getUserIdleOnWater()[2] :
-                                                                                                                                getUserIdleOnWater()[3] :
-                                                                                                                                (getDirection() == getUP()) ? getUserIdleOnLand()[0] :
-                                                                                                                                (getDirection() == getDOWN()) ? getUserIdleOnLand()[1] :
-                                                                                                                                (getDirection() == getRIGHT()) ? getUserIdleOnLand()[2] :
-                                                                                                                                getUserIdleOnLand()[3];
+        return (getCurrentState() == PlayerActions.WALKING) ?
+               (getDirection() == getUP()) ? (TextureRegion)(getUserWalk()[0].getKeyFrame(stateTime, true)) :
+               (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
+               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
+               (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
+    
+               (getCurrentState() == PlayerActions.RUNNING) ?
+               (getDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
+               (getDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
+               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
+               (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
+    
+               (getCurrentState() == PlayerActions.SWIMMING) ?
+               (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
+               (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
+               (getDirection() == getRIGHT()) ? (TextureRegion)(getUserSwim()[2].getKeyFrame(stateTime, true)) :
+               (TextureRegion)(getUserSwim()[3].getKeyFrame(stateTime, true)) : (isSwimming()) ?
+                                                                                (getDirection() == getUP()) ?
+                                                                                getUserIdleOnWater()[0] :
+                                                                                (getDirection() == getDOWN()) ?
+                                                                                getUserIdleOnWater()[1] :
+                                                                                (getDirection() == getRIGHT()) ?
+                                                                                getUserIdleOnWater()[2] :
+                                                                                getUserIdleOnWater()[3] :
+                                                                                (getDirection() == getUP()) ?
+                                                                                getUserIdleOnLand()[0] :
+                                                                                (getDirection() == getDOWN()) ?
+                                                                                getUserIdleOnLand()[1] :
+                                                                                (getDirection() == getRIGHT()) ?
+                                                                                getUserIdleOnLand()[2] :
+                                                                                getUserIdleOnLand()[3];
     }
     
     /**
