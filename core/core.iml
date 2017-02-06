@@ -105,20 +105,6 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/dependencies/all.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$MODULE_DIR$/dependencies/all.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$MODULE_DIR$/dependencies/all.jar!/" />
-          <root url="jar://$MODULE_DIR$/dependencies/all.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="library" name="com.koloboke:koloboke-api-jdk8:1.0.0" level="project" />
     <orderEntry type="library" name="com.koloboke:koloboke-compile:0.5.1" level="project" />
     <orderEntry type="library" name="com.koloboke:koloboke-impl-common-jdk8:1.0.0" level="project" />
