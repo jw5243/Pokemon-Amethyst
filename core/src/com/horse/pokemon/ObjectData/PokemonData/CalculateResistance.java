@@ -34,33 +34,6 @@ public class CalculateResistance {
     private static final int HALF_DAMAGE        = 50;
     private static final int QUARTER_DAMAGE     = 25;
     
-    /*private static final TIntObjectHashMap<TIntObjectHashMap<TIntIntHashMap>> RESISTANCE_DATA =
-        (TIntObjectHashMap<TIntObjectHashMap<TIntIntHashMap>>)(IntObjectMapBuilder.<TIntObjectHashMap<TIntIntHashMap>>unordered()
-                                                                   .put(PokemonTypes.NORMAL.ordinal(),
-                                                                        IntObjectMapBuilder.<TIntIntHashMap>unordered()
-                                                                            .put(PokemonTypes.NORMAL.ordinal(),
-                                                                                 IntIntMapBuilder.unordered().put(
-                                                                                     PokemonTypes.NORMAL.ordinal(),
-                                                                                     getDefaultResistance()
-                                                                                 ).build()
-                                                                            ).build()
-                                                                   ).put(PokemonTypes.FIRE.ordinal(),
-                                                                         IntObjectMapBuilder.<TIntIntHashMap>unordered()
-                                                                             .put(PokemonTypes.NORMAL.ordinal(),
-                                                                                  IntIntMapBuilder.unordered().put(
-                                                                                      PokemonTypes.NORMAL.ordinal(),
-                                                                                      getDefaultResistance()
-                                                                                  ).build()
-                                                                             ).build()
-            ).put(PokemonTypes.WATER.ordinal(), IntObjectMapBuilder.<TIntIntHashMap>unordered()
-                                                    .put(PokemonTypes.NORMAL.ordinal(), IntIntMapBuilder.unordered()
-                                                                                                        .put(
-                                                                                                            PokemonTypes.NORMAL
-                                                                                                                .ordinal(),
-                                                                                                            getDefaultResistance()
-                                                                                                        ).build())
-                                                    .build()).build());*/
-    
     /**
      * The {@link HashObjIntMap} storing the multiplier for when a {@link Pokemon} is attacking another {@code Pokemon}.
      * These values are stored in the order of {@link PokemonTypes}, which should always be:
