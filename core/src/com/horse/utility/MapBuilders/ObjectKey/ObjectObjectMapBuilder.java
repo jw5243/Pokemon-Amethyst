@@ -1,33 +1,17 @@
 package com.horse.utility.MapBuilders.ObjectKey;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import com.koloboke.collect.map.hash.HashObjObjMap;
+import com.koloboke.collect.map.hash.HashObjObjMaps;
 
 public class ObjectObjectMapBuilder<K, V> {
-    private Map<K, V> map;
+    private HashObjObjMap<K, V> map;
     
-    public ObjectObjectMapBuilder(Map<K, V> map) {
+    public ObjectObjectMapBuilder(HashObjObjMap<K, V> map) {
         this.map = map;
     }
     
     static <K, V> ObjectObjectMapBuilder<K, V> unordered() {
-        return new ObjectObjectMapBuilder<>(new HashMap<>());
-    }
-    
-    public static <K, V> ObjectObjectMapBuilder<K, V> ordered() {
-        return new ObjectObjectMapBuilder<>(new LinkedHashMap<>());
-    }
-    
-    public static <K extends Comparable<K>, V> ObjectObjectMapBuilder<K, V> sorted() {
-        return new ObjectObjectMapBuilder<>(new TreeMap<>());
-    }
-    
-    public static <K, V> ObjectObjectMapBuilder<K, V> sorted(Comparator<K> comparator) {
-        return new ObjectObjectMapBuilder<>(new TreeMap<>(comparator));
+        return new ObjectObjectMapBuilder<>(HashObjObjMaps.newMutableMap());
     }
     
     ObjectObjectMapBuilder<K, V> put(K key, V value) {
@@ -38,7 +22,7 @@ public class ObjectObjectMapBuilder<K, V> {
         return this;
     }
     
-    public ObjectObjectMapBuilder<K, V> put(Map<? extends K, ? extends V> other) {
+    public ObjectObjectMapBuilder<K, V> put(HashObjObjMap<? extends K, ? extends V> other) {
         if(map == null) {
             throw new IllegalStateException();
         }
@@ -46,9 +30,9 @@ public class ObjectObjectMapBuilder<K, V> {
         return this;
     }
     
-    Map<K, V> build() {
-        Map<K, V> m = map;
+    HashObjObjMap<K, V> build() {
+        HashObjObjMap<K, V> m = map;
         map = null;
-        return Collections.unmodifiableMap(m);
+        return HashObjObjMaps.newImmutableMap(m);
     }
 }

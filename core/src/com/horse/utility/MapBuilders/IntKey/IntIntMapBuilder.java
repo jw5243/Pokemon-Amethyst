@@ -1,16 +1,17 @@
 package com.horse.utility.MapBuilders.IntKey;
 
-import gnu.trove.map.hash.TIntIntHashMap;
+import com.koloboke.collect.map.hash.HashIntIntMap;
+import com.koloboke.collect.map.hash.HashIntIntMaps;
 
 public class IntIntMapBuilder {
-    private TIntIntHashMap map;
+    private HashIntIntMap map;
     
-    public IntIntMapBuilder(TIntIntHashMap map) {
+    public IntIntMapBuilder(HashIntIntMap map) {
         this.map = map;
     }
     
     public static IntIntMapBuilder unordered() {
-        return new IntIntMapBuilder(new TIntIntHashMap());
+        return new IntIntMapBuilder(HashIntIntMaps.newMutableMap());
     }
     
     public IntIntMapBuilder put(int key, int value) {
@@ -21,7 +22,7 @@ public class IntIntMapBuilder {
         return this;
     }
     
-    public IntIntMapBuilder put(TIntIntHashMap other) {
+    public IntIntMapBuilder put(HashIntIntMap other) {
         if(map == null) {
             throw new IllegalStateException();
         }
@@ -29,9 +30,9 @@ public class IntIntMapBuilder {
         return this;
     }
     
-    public TIntIntHashMap build() {
-        TIntIntHashMap m = map;
+    public HashIntIntMap build() {
+        HashIntIntMap m = map;
         map = null;
-        return new TIntIntHashMap(m);
+        return HashIntIntMaps.getDefaultFactory().newImmutableMap(m);
     }
 }

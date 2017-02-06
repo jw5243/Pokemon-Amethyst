@@ -1,6 +1,7 @@
 package com.horse.pokemon.BattleEngine;
 
 import com.horse.pokemon.ObjectData.PokemonData.CalculateDamage;
+import com.horse.pokemon.ObjectData.PokemonData.CalculateResistance;
 import com.horse.pokemon.ObjectData.PokemonData.CalculateStats;
 import com.horse.pokemon.ObjectData.PokemonData.Moves;
 import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
@@ -23,5 +24,9 @@ public class BattleCalculator {
                    .getExperienceBasedOnLevelAndType(pokemonGainingExperience.getInformation().getExperienceRate(),
                                                      pokemonGainingExperience.getInformation().getCurrentLevel()
                    );
+    }
+    
+    public static float calculateResistance(final Moves attackingMove, final Pokemon defendingPokemon) {
+        return CalculateResistance.calculate(attackingMove, defendingPokemon);
     }
 }

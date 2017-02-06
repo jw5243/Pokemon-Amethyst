@@ -1,2 +1,4 @@
+#Name; Classification; Pokedex Number; Evolution Number; Gender Ratio; Pokemon Type; Height; Weight; Capture Rate; Base Egg Steps; Ability; Experience Rate; Base Happiness; Moves; Effort Values; Base Stats; Base Experience
 Bulbasaur;Seed Pokemon;1;2;87.5;GRASS,POISON;2' 4";15.2 lbs;25;5120;When HP is below 1/3rd its maximum, power of Grass-type moves is increased by 50%.;MEDIUM_SLOW;70;1:Acid;SPECIAL_ATTACK:1;45,49,49,65,65,45;64
 Ivysaur;Seed Pokemon;2;3;87.5;GRASS,POISON;3' 3";28.7 lbs;45;5120;When HP is below 1/3rd its maximum, power of Grass-type moves is increased by 50%.;MEDIUM_SLOW;70;2:Acid,5:Absorb;SPECIAL_ATTACK:1,SPECIAL_DEFENSE:1;60,62,63,80,80,60;142
+Venusaur;Seed Pokemon;3;0;87.5;GRASS,POISON;6' 7";220.5 lbs;45;5120;When HP is below 1/3rd its maximum, power of Grass-type moves is increased by 50%.;MEDIUM_SLOW;70;1:Acid;SPECIAL_ATTACK:2,SPECIAL_DEFENSE:1;80,100,123,122,120,80;236

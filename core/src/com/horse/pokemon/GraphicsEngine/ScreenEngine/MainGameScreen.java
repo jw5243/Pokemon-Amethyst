@@ -26,7 +26,8 @@ import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTmxMapLoader;
 import com.horse.pokemon.ObjectData.Players.User;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.utility.Graphics.PokemonScreen;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.koloboke.collect.map.hash.HashIntObjMap;
+import com.koloboke.collect.map.hash.HashIntObjMaps;
 
 import java.util.ArrayList;
 
@@ -66,7 +67,7 @@ public class MainGameScreen extends PokemonScreen {
     private FPSLogger                         fpsLogger;
     private MapCreator                        mapCreator;
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
-    private TIntObjectHashMap<TiledMapTile>   doorTiles;
+    private HashIntObjMap<TiledMapTile>       doorTiles;
     private Door                              doorToOpen;
     private int                               currentDoorFrameCount;
     
@@ -131,11 +132,11 @@ public class MainGameScreen extends PokemonScreen {
         this.doorsInMap = doorsInMap;
     }
     
-    public TIntObjectHashMap<TiledMapTile> getDoorTiles() {
+    public HashIntObjMap<TiledMapTile> getDoorTiles() {
         return doorTiles;
     }
     
-    public void setDoorTiles(TIntObjectHashMap<TiledMapTile> doorTiles) {
+    public void setDoorTiles(HashIntObjMap<TiledMapTile> doorTiles) {
         this.doorTiles = doorTiles;
     }
     
@@ -217,7 +218,7 @@ public class MainGameScreen extends PokemonScreen {
         
         TiledMapTileSet tileSet = getMaps()[0].getTileSets().getTileSet("SinnohTileSet");
     
-        setDoorTiles(new TIntObjectHashMap<>());
+        setDoorTiles(HashIntObjMaps.newMutableMap());
         for(TiledMapTile tile : tileSet) {
             Object property = tile.getProperties().get("Door Animation");
             if(property != null) {

@@ -628,7 +628,7 @@ public class User extends AbstractPlayer {
                                         (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
                                         getFutureRectangle(-Engine.getTileSize(), 0
                                         ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
-        
+    
             if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
                 //Create a lambda for moving the User a single tile in the direction the User is pointing to.
@@ -638,7 +638,7 @@ public class User extends AbstractPlayer {
                                                                                                                           getPositionMethod
                                                                                                                               .get() +
                                                                                                                           alterValue);
-            
+        
                 Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition
                                                                                .alterPosition(this::setPositionY,
                                                                                               this::getPositionY,
@@ -718,8 +718,8 @@ public class User extends AbstractPlayer {
     }
     
     /**
-     * Gets the {@link CollidableTileObject} that has the same positions as the {@link Rectangle} instance inputted.  A null value is returned if no object ends up being found from the
-     * current map.
+     * Gets the {@link CollidableTileObject} that has the same positions as the {@link Rectangle} instance inputted.  A
+     * null value is returned if no object ends up being found from the current map.
      *
      * @param rectangle {@link Rectangle} instance to check if there is a similar {@link CollidableTileObject} in the current map.
      *
@@ -830,13 +830,13 @@ public class User extends AbstractPlayer {
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
                (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-    
+
                (getCurrentState() == PlayerActions.RUNNING) ?
                (getDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
                (getDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
-    
+
                (getCurrentState() == PlayerActions.SWIMMING) ?
                (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :

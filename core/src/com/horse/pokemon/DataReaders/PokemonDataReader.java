@@ -8,7 +8,8 @@ import com.horse.pokemon.ObjectData.PokemonData.PokemonExperience;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonInformation;
 import com.horse.pokemon.ObjectData.PokemonData.PokemonTypes;
 import com.horse.pokemon.ObjectData.PokemonData.StatTypes;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import com.koloboke.collect.map.hash.HashIntObjMap;
+import com.koloboke.collect.map.hash.HashIntObjMaps;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,11 +33,14 @@ public final class PokemonDataReader {
     static {
         //long start = System.nanoTime();
         pokemonData = new HashMap<>();
+    
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
             String pokemon = bufferedReader.readLine();
             while(pokemon != null) {
-                String[] data = pokemon.split(";");
-                pokemonData.put(data[0], getPokemon(data));
+                if(pokemon.charAt(0) != '#') {
+                    String[] data = pokemon.split(";");
+                    pokemonData.put(data[0], getPokemon(data));
+                }
                 pokemon = bufferedReader.readLine();
             }
         } catch(IOException e) {
@@ -71,9 +75,9 @@ public final class PokemonDataReader {
         pokemon.getInformation().setExperienceRate(ExperienceTypes.valueOf(data[11]));
         pokemon.getInformation().setBaseHappiness(Integer.parseInt(data[12]));
     
-        TIntObjectHashMap<Moves> moveList   = new TIntObjectHashMap<>();
-        String[]                 moves      = data[13].split(",");
-        ArrayList<String>        moveValues = new ArrayList<>(moves.length * 2);
+        String[]             moves      = data[13].split(",");
+        HashIntObjMap<Moves> moveList   = HashIntObjMaps.newMutableMap(moves.length);
+        ArrayList<String>    moveValues = new ArrayList<>(moves.length * 2);
         for(String move : moves) {
             for(String value : moves) {
                 Collections.addAll(moveValues, value.split(":"));
@@ -133,6 +137,7 @@ public final class PokemonDataReader {
     public static void main(String[] args) {
         Pokemon pokemon  = PokemonDataReader.getPokemon("Bulbasaur");
         Pokemon pokemon2 = PokemonDataReader.getPokemon("Ivysaur");
+        Pokemon pokemon3 = PokemonDataReader.getPokemon("Venasaur");
         //System.out.println(pokemon);
         //System.out.println(pokemon2);
         int    repeatCount = 10000;

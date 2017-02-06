@@ -6,21 +6,15 @@ import java.util.Objects;
 public class PokemonTypeKey {
     private final int attackingType;
     private final int defendingTypeOne;
-    private final int defendingTypeTwo;
     
-    public PokemonTypeKey(PokemonTypes attackingType, PokemonTypes defendingTypeOne) {
-        this(attackingType, defendingTypeOne, null);
-    }
-    
-    public PokemonTypeKey(PokemonTypes attackingType, PokemonTypes defendingTypeOne, PokemonTypes defendingTypeTwo) {
+    PokemonTypeKey(PokemonTypes attackingType, PokemonTypes defendingTypeOne) {
         this.attackingType = attackingType.ordinal();
         this.defendingTypeOne = defendingTypeOne == null ? -1 : defendingTypeOne.ordinal();
-        this.defendingTypeTwo = defendingTypeTwo == null ? -1 : defendingTypeTwo.ordinal();
     }
     
     @Override
     public int hashCode() {
-        return Arrays.hashCode(new Object[] {getAttackingType(), getDefendingTypeOne(), getDefendingTypeTwo()});
+        return Arrays.hashCode(new Object[] {getAttackingType(), getDefendingTypeOne()});
     }
     
     @Override
@@ -32,22 +26,15 @@ public class PokemonTypeKey {
             return false;
         }
         PokemonTypeKey that = (PokemonTypeKey)(o);
-        return (Objects.equals(this.getAttackingType(), that.getAttackingType())) &&
-               (Objects.equals(this.getDefendingTypeOne(), that.getDefendingTypeOne()) ||
-                Objects.equals(this.getDefendingTypeOne(), that.getDefendingTypeTwo())) &&
-               (Objects.equals(this.getDefendingTypeTwo(), that.getDefendingTypeTwo()) ||
-                Objects.equals(this.getDefendingTypeTwo(), that.getDefendingTypeOne()));
+        return Objects.equals(this.getAttackingType(), that.getAttackingType()) &&
+               Objects.equals(this.getDefendingTypeOne(), that.getDefendingTypeOne());
     }
     
-    public int getAttackingType() {
+    private int getAttackingType() {
         return attackingType;
     }
     
-    public int getDefendingTypeOne() {
+    private int getDefendingTypeOne() {
         return defendingTypeOne;
-    }
-    
-    public int getDefendingTypeTwo() {
-        return defendingTypeTwo;
     }
 }

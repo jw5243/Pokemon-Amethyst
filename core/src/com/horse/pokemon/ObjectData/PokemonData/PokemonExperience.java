@@ -1,5 +1,7 @@
 package com.horse.pokemon.ObjectData.PokemonData;
 
+import com.horse.pokemon.DataReaders.PokemonDataReader;
+
 /**
  * Experience Object for PokemonData, allowing for getting a PokemonData's
  * current level based on their <code>currentExperience</code>.
@@ -118,6 +120,17 @@ public class PokemonExperience {
                 ));
             }
         }
+    
+        long iterations = 100000000;
+        long sum        = 0;
+        for(int i = 0; i < iterations; i++) {
+            long start1 = System.nanoTime();
+            calculateExperienceWon(PokemonDataReader.getPokemon("Bulbasaur"), PokemonDataReader.getPokemon("Ivysaur"));
+            long end1 = System.nanoTime();
+            sum += end1 - start1;
+        }
+    
+        System.out.println(sum / iterations);
     }
     
     public static int getExperienceBasedOnLevelAndType(ExperienceTypes experienceType, int level) {
