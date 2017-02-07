@@ -1,5 +1,10 @@
 package com.horse.utility;
 
+import com.koloboke.collect.map.hash.HashIntIntMap;
+import com.koloboke.collect.map.hash.HashIntIntMaps;
+import com.koloboke.collect.map.hash.HashIntObjMap;
+import com.koloboke.collect.map.hash.HashIntObjMaps;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -105,9 +110,17 @@ public class HashIntIntIntMap {
         
         otherMap.put(5, 6);
         map.put(4, otherMap);
+    
+        HashIntIntMap                kolobokeInnerMap = HashIntIntMaps.newMutableMap(innerMap);
+        HashIntIntMap                kolobokeOtherMap = HashIntIntMaps.newMutableMap(otherMap);
+        HashIntObjMap<HashIntIntMap> kolobokeMap      = HashIntObjMaps.newMutableMap();
+        kolobokeMap.put(1, kolobokeInnerMap);
+        kolobokeMap.put(4, kolobokeOtherMap);
         
         HashIntIntIntMap hashIntIntIntMap = new HashIntIntIntMap(map);
+    
         System.out.println(MemoryCalculator.sizeOf(map));
+        System.out.println(MemoryCalculator.sizeOf(kolobokeMap));
         System.out.println(MemoryCalculator.sizeOf(hashIntIntIntMap));
     }
     
