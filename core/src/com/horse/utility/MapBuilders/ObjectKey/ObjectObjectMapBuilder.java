@@ -10,11 +10,11 @@ public class ObjectObjectMapBuilder<K, V> {
         this.map = map;
     }
     
-    static <K, V> ObjectObjectMapBuilder<K, V> unordered() {
+    public static <K, V> ObjectObjectMapBuilder<K, V> unordered() {
         return new ObjectObjectMapBuilder<>(HashObjObjMaps.newMutableMap());
     }
     
-    ObjectObjectMapBuilder<K, V> put(K key, V value) {
+    public ObjectObjectMapBuilder<K, V> put(K key, V value) {
         if(map == null) {
             throw new IllegalStateException();
         }
@@ -30,7 +30,7 @@ public class ObjectObjectMapBuilder<K, V> {
         return this;
     }
     
-    HashObjObjMap<K, V> build() {
+    public HashObjObjMap<K, V> build() {
         HashObjObjMap<K, V> m = map;
         map = null;
         return HashObjObjMaps.newImmutableMap(m);

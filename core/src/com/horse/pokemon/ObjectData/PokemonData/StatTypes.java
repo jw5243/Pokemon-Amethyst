@@ -101,5 +101,15 @@ public enum StatTypes {
      *
      * @see Pokemon
      */
-    HEALTH, ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED
+    HEALTH,
+    
+    /**
+     * The {@code ATTACK} stat affects how much damage is dealt to an opposing {@code Pokemon} if the attack type is
+     * physical.  Knowing whether or not the {@code Pokemon} being used has a higher {@code ATTACK} or
+     * {@code SPECIAL_ATTACK} can be vital to a pokemon battle, as a higher {@code ATTACK} stat will damage the
+     * defending {@code Pokemon} more than {@code SPECIAL_ATTACK}.
+     *
+     * @see Pokemon
+     */
+    ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED
 }

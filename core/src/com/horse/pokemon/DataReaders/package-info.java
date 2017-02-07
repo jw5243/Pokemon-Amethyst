@@ -1,6 +1,12 @@
 /**
- * Reads in all information from {@link com.horse.pokemon.ObjectData.PokemonData.Pokemon} and
- * stores the information in a {@link java.util.HashMap}.  A PokemonData or Move can be easily
- * accessed by its name, returning the base stats and mutable information.
+ * The {@code DataReaders} package reads .dat files in order to generate {@code Pokemon} and {@code Moves} for the game
+ * to utilize.  There are two {@code DataReaders} in this package:
+ * <ul>
+ *     <li>The {@code DataReader} that generates all Pokemon Moves, {@code MoveDataReader}.</li>
+ *     <li>The {@code DataReader} that generates all Pokemon, {@code PokemonDataReader}.</li>
+ * </ul>
+ *
+ * @see com.horse.pokemon.ObjectData.PokemonData.Pokemon
+ * @see com.horse.pokemon.ObjectData.PokemonData.Moves
  */
 package com.horse.pokemon.DataReaders;

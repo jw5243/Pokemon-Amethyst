@@ -28,51 +28,71 @@ import com.horse.pokemon.ObjectData.TiledObjects.Sign;
 import com.horse.pokemon.ObjectData.TiledObjects.Water;
 
 /**
- * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#camera} revolves around a {@code User} instance by following the {@code User} when
- * moving.  The {@code User} moves by key presses of the arrow keys, and other actions are represented with other various keys.
+ * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#camera} revolves
+ * around a {@code User} instance by following the {@code User} when moving.  The {@code User} moves by key presses of
+ * the arrow keys, and other actions are represented with other various keys.
  * <p>
- * Actions with the corresponding key:
+ *     Actions with the corresponding key:
+ * </p>
  * <ul>
- * <li>Up Arrow     - Moves the {@code User} upwards.</li>
- * <li>Down Arrow   - Moves the {@code User} downwards.</li>
- * <li>Right Arrow  - Moves the {@code User} to the right.</li>
- * <li>Left Arrow   - Moves the {@code User} to the left.</li>
- * <li>Shift (Both) - Alters {@code User} action by running if on land.</li>
- * <li>X Key        - Various actions depending on the situation:
- * <ul>
- * <li>Asks to swim when next to a {@link Water} tile.</li>
- * <li>{@link Dialog} appears from being next to a {@link Sign}.</li>
- * <li>Speaks to an {@link NPC} with a {@link Dialog}.</li>
- * <li>Progresses a conversion through the {@link Dialog}.</li>
- * </ul>
- * </li>
- * </ul>
- * <p>
- * The {@code User} can go through a battle and have {@link Pokemon} from progressing through the {@link Game}.  {@link Pokemon} are obtained by the {@code User} by 'catching' them
- * with things called Pokeballs, which can be bought from a store called the Pokemart.  There should only be a single {@code User} instance per {@link Game}, otherwise the {@link MainGameScreen#camera}
- * will have a hard time determining which {@code User} to follow and all keyboard actions will cause both {@code User}s to act identically.
- * <p>
- * The {@code User} is drawn onto the {@link MainGameScreen} by the {@link #draw(Batch, float)} method, which is called every frame by the {@link MainGameScreen#render(float)} method.  It
- * is important that the {@link #userSprite} is updated according to the delta time, {@link #getDirection()}, and {@link #getCurrentState()}, as the animation adds realism to the {@link Game}.
- * It is also good to not that the {@code User} is an {@link AbstractPlayer} which is also an {@link Actor}, meaning that the {@code User} is to be a part of a {@link Stage}.
- * <p>
- * There are many different actions that the {@code User} can execute:
- * <ul>
- * <li>Idle          - Non-moving action.</li>
- * <li>Walking       - {@code User} moves at a decent pace on land.</li>
- * <li>Running       - {@code User} moves at a quick pace on land.</li>
- * <li>Biking        - {@code User} swiftly glides through the ground on a bike (And of course on land).</li>
- * <li>Swimming      - {@code User} travels at a decent pace on {@link Water}.</li>
- * <li>Using HM Move - {@code User} uses a {@link Pokemon} in order to accomplish some sort of in-game task.</li>
- * <li>Fishing       - {@code User} uses a fishing rod to obtain an item or encounter a {@link Pokemon} in the {@link Water}.</li>
- * <li>In Battle     - When the {@code User} is fighting against another {@link AbstractPlayer}, adding a lot of functionality to the {@link Game}, and allowing the {@link Pokemon} to level up.</li>
+ *     <li>Up Arrow     - Moves the {@code User} upwards.</li>
+ *     <li>Down Arrow   - Moves the {@code User} downwards.</li>
+ *     <li>Right Arrow  - Moves the {@code User} to the right.</li>
+ *     <li>Left Arrow   - Moves the {@code User} to the left.</li>
+ *     <li>Shift (Both) - Alters {@code User} action by running if on land.</li>
+ *     <li>X Key        - Various actions depending on the situation:
+ *         <ul>
+ *             <li>Asks to swim when next to a {@link Water} tile.</li>
+ *             <li>{@link Dialog} appears from being next to a {@link Sign}.</li>
+ *             <li>Speaks to an {@link NPC} with a {@link Dialog}.</li>
+ *             <li>Progresses a conversion through the {@link Dialog}.</li>
+ *         </ul>
+ *     </li>
  * </ul>
  * <p>
- * For setting up a {@link Screen} for a {@code User} to be in, an {@link Engine} is required to be in the {@link Screen}.  The {@code User} must be extended with the constructor changed as
- * it requires a {@link MainGameScreen}, not just a {@link Screen}, as the major values in the {@link MainGameScreen} are required for the {@code User} to use to function properly.  Another
- * way could be to have a new class extend {@link MainGameScreen} and work from there.
+ *     The {@code User} can go through a battle and have {@link Pokemon} from progressing through the {@link Game}.
+ *     {@link Pokemon} are obtained by the {@code User} by 'catching' them with things called Pokeballs, which can be
+ *     bought from a store called the Pokemart.  There should only be a single {@code User} instance per {@link Game},
+ *     otherwise the {@link MainGameScreen#camera} will have a hard time determining which {@code User} to follow and
+ *     all keyboard actions will cause both {@code User}s to act identically.
+ * </p>
  * <p>
- * In order to create a {@code User} in the {@link Screen#show()} method of a {@link Screen}, an example is:
+ *     The {@code User} is drawn onto the {@link MainGameScreen} by the {@link #draw(Batch, float)} method, which is
+ *     called every frame by the {@link MainGameScreen#render(float)} method.  It is important that the
+ *     {@link #userSprite} is updated according to the delta time, {@link #getDirection()}, and
+ *     {@link #getCurrentState()}, as the animation adds realism to the {@link Game}. It is also good to not that the
+ *     {@code User} is an {@link AbstractPlayer} which is also an {@link Actor}, meaning that the {@code User} is to be
+ *     a part of a {@link Stage}.
+ * </p>
+ * <p>
+ *     There are many different actions that the {@code User} can execute:
+ * </p>
+ * <ul>
+ *     <li>Idle          - Non-moving action.</li>
+ *     <li>Walking       - {@code User} moves at a decent pace on land.</li>
+ *     <li>Running       - {@code User} moves at a quick pace on land.</li>
+ *     <li>Biking        - {@code User} swiftly glides through the ground on a bike (And of course on land).</li>
+ *     <li>Swimming      - {@code User} travels at a decent pace on {@link Water}.</li>
+ *     <li>Using HM Move - {@code User} uses a {@link Pokemon} in order to accomplish some sort of in-game task.</li>
+ *     <li>
+ *         Fishing       - {@code User} uses a fishing rod to obtain an item or encounter a {@link Pokemon} in the
+ *         {@link Water}.
+ *     </li>
+ *     <li>
+ *         In Battle     - When the {@code User} is fighting against another {@link AbstractPlayer}, adding a lot of
+ *         functionality to the {@link Game}, and allowing the {@link Pokemon} to level up.
+ *     </li>
+ * </ul>
+ * <p>
+ *     For setting up a {@link Screen} for a {@code User} to be in, an {@link Engine} is required to be in the
+ *     {@link Screen}.  The {@code User} must be extended with the constructor changed as it requires a
+ *     {@link MainGameScreen}, not just a {@link Screen}, as the major values in the {@link MainGameScreen} are required
+ *     for the {@code User} to use to function properly.  Another way could be to have a new class extend
+ *     {@link MainGameScreen} and work from there.
+ * </p>
+ * <p>
+ *     In order to create a {@code User} in the {@link Screen#show()} method of a {@link Screen}, an example is:
+ * </p>
  * <blockquote><pre>
  *     private MultiTmxMapLoader mapLoader;
  *     private MultiTiledMap[] maps;
@@ -87,7 +107,8 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  *     }
  * </pre></blockquote>
  * <p>
- * To draw the {@code User} onto the {@link Screen}, in the {@link Screen}, add:
+ *     To draw the {@code User} onto the {@link Screen}, in the {@link Screen}, add:
+ * </p>
  * <blockquote><pre>
  *     private Stage stage;
  *
@@ -102,14 +123,16 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  *     }
  * </pre></blockquote>
  * <p>
- * At the end, remember to dispose of the {@link Stage} when the {@link Game} ends, by doing:
+ *     At the end, remember to dispose of the {@link Stage} when the {@link Game} ends, by doing:
+ * </p>
  * <blockquote><pre>
  *     public void dispose() {
  *         stage.dispose();
  *     }
  * </pre></blockquote>
  * <p>
- * Finally, to get a {@link OrthographicCamera} to follow the {@code User}, an example is:
+ *     Finally, to get a {@link OrthographicCamera} to follow the {@code User}, an example is:
+ * </p>
  * <blockquote><pre>
  *     private static final int WORLD_WIDTH  = 720;
  *     private static final int WORLD_HEIGHT = 640;
