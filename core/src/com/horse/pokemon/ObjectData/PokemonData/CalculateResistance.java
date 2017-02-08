@@ -4,7 +4,6 @@ import com.badlogic.gdx.utils.StringBuilder;
 import com.horse.pokemon.DataReaders.MoveDataReader;
 import com.horse.pokemon.DataReaders.PokemonDataReader;
 import com.horse.utility.MapBuilders.ObjectKey.ObjectIntMapBuilder;
-import com.horse.utility.MemoryCalculator;
 import com.koloboke.collect.map.hash.HashObjIntMap;
 
 import static com.horse.pokemon.ObjectData.PokemonData.PokemonTypes.BUG;
@@ -480,7 +479,7 @@ public class CalculateResistance {
         long          end         = System.nanoTime();
         System.out.println(resistance);
         System.out.println(end - start);
-        System.out.println(MemoryCalculator.sizeOf(getResistanceData()));
+        //System.out.println(MemoryCalculator.sizeOf(getResistanceData()));
     
         int longestNameLength = 0;
         for(PokemonTypes pokemonType : PokemonTypes.values()) {

@@ -105,8 +105,11 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="com.koloboke:koloboke-api-jdk8:1.0.0" level="project" />
+    <orderEntry type="library" name="org.openjdk.jol:jol-cli:0.7.1" level="project" />
+    <orderEntry type="library" name="org.openjdk.jol:jol-core:0.7.1" level="project" />
+    <orderEntry type="library" name="org.openjdk.jol:jol-samples:0.7.1" level="project" />
     <orderEntry type="library" name="com.koloboke:koloboke-compile:0.5.1" level="project" />
+    <orderEntry type="library" name="com.koloboke:koloboke-api-jdk8:1.0.0" level="project" />
     <orderEntry type="library" name="com.koloboke:koloboke-impl-common-jdk8:1.0.0" level="project" />
     <orderEntry type="library" name="com.koloboke:koloboke-impl-jdk8:1.0.0" level="project" />
   </component>

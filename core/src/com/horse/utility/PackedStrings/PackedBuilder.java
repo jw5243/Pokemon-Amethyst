@@ -1,7 +1,7 @@
 package com.horse.utility.PackedStrings;
 
-import com.horse.utility.MemoryCalculator;
 import com.horse.utility.PackedStrings.Immutable.Packed28;
+import org.openjdk.jol.info.GraphLayout;
 
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
@@ -58,23 +58,28 @@ public class PackedBuilder {
         PackedBuilder packedBuilder = new PackedBuilder();
         packedBuilder.append("Test").append("SecondTester");
         System.out.println(packedBuilder.toString());
-        System.out.println(MemoryCalculator.sizeOf(packedBuilder.getMutablePacked()));
+        System.out.println(GraphLayout.parseInstance(packedBuilder.getMutablePacked()).toFootprint());
+        //System.out.println(MemoryCalculator.sizeOf(packedBuilder.getMutablePacked()));
         
         String stringValue = "TestSecondTestTestSecondTest";
-        System.out.println(MemoryCalculator.sizeOf(stringValue));
+        System.out.println(GraphLayout.parseInstance(stringValue).toFootprint());
+        //System.out.println(MemoryCalculator.sizeOf(stringValue));
         
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("Test").append("SecondTest");
-        System.out.println(MemoryCalculator.sizeOf(stringBuilder));
+        System.out.println(GraphLayout.parseInstance(stringBuilder).toFootprint());
+        //System.out.println(MemoryCalculator.sizeOf(stringBuilder));
         
         PackedBase packedBase = new Packed28(convertToEncodedBytes("TestSecondTesterTestSecondTest"));
-        System.out.println(MemoryCalculator.sizeOf(packedBase));
+        System.out.println(GraphLayout.parseInstance(packedBase).toFootprint());
+        //System.out.println(MemoryCalculator.sizeOf(packedBase));
         
         PackedBuilder packedBuilder1 = new PackedBuilder();
         packedBuilder1.append(new MutablePacked(convertToEncodedBytes("Test"))).append("Test")
                       .append(new char[] {'a', 'b', 'c'}).append(1).append(1f);
         System.out.println(packedBuilder1.toString());
-        System.out.println(MemoryCalculator.sizeOf(packedBuilder1));
+        System.out.println(GraphLayout.parseInstance(packedBuilder1).toFootprint());
+        //System.out.println(MemoryCalculator.sizeOf(packedBuilder1));
     }
     
     public MutablePacked getMutablePacked() {

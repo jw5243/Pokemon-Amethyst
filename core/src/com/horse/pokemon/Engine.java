@@ -7,8 +7,7 @@ import com.horse.pokemon.BattleEngine.BackgroundData;
 import com.horse.pokemon.BattleEngine.BattleScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.IntroScreen;
 import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
-import com.horse.utility.MemoryCalculator;
-import com.horse.utility.PackedStrings.PackedBuilder;
+import org.openjdk.jol.info.GraphLayout;
 
 /**
  * Class acting as the manager for containing all the screens to be used and some constants.
@@ -102,8 +101,7 @@ public class Engine extends Game {
         getScreen(screenTypes.MAIN_GAME_SCREEN).dispose();
         getScreen(screenTypes.BATTLE_SCREEN).dispose();
     
-        System.out
-                .println(new PackedBuilder().append("Memory User: ").append(MemoryCalculator.sizeOf(this)).toString());
+        System.out.println(GraphLayout.parseInstance(this).toFootprint());
     }
     
     @Override
