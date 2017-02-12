@@ -12,7 +12,7 @@ import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
 
 import java.util.ArrayList;
 
-public class NPC extends AbstractPlayer {
+public class NPC extends BasePlayer {
     //DEFAULT: Characters\\NPCSpriteSheets\\NPC 01.png
     private static final int                  DEFAULT_WIDTH   = 32;
     private static final int                  DEFAULT_HEIGHT  = 48;

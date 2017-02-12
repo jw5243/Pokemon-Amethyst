@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.horse.pokemon.AnimationEngine.AnimationInterface;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
+import com.horse.pokemon.BattleEngine.BattleScreen;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.GraphicsEngine.MainInterface.HandleInput;
@@ -61,7 +62,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  *     called every frame by the {@link MainGameScreen#render(float)} method.  It is important that the
  *     {@link #userSprite} is updated according to the delta time, {@link #getDirection()}, and
  *     {@link #getCurrentState()}, as the animation adds realism to the {@link Game}. It is also good to not that the
- *     {@code User} is an {@link AbstractPlayer} which is also an {@link Actor}, meaning that the {@code User} is to be
+ *     {@code User} is an {@link BasePlayer} which is also an {@link Actor}, meaning that the {@code User} is to be
  *     a part of a {@link Stage}.
  * </p>
  * <p>
@@ -79,7 +80,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  *         {@link Water}.
  *     </li>
  *     <li>
- *         In Battle     - When the {@code User} is fighting against another {@link AbstractPlayer}, adding a lot of
+ *         In Battle     - When the {@code User} is fighting against another {@link BasePlayer}, adding a lot of
  *         functionality to the {@link Game}, and allowing the {@link Pokemon} to level up.
  *     </li>
  * </ul>
@@ -163,7 +164,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  * </pre></blockquote>
  *
  * @see Stage
- * @see AbstractPlayer
+ * @see BasePlayer
  * @see Actor
  * @see AnimationInterface
  * @see TextureRegion
@@ -173,7 +174,7 @@ import com.horse.pokemon.ObjectData.TiledObjects.Water;
  * @see Sprite
  * @see Rectangle
  */
-public class User extends AbstractPlayer {
+public class User extends BasePlayer {
     /**
      * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
      * {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the user
@@ -692,6 +693,10 @@ public class User extends AbstractPlayer {
                 futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
                 getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.
                 setRestrictedMovement(true); //Stops any form of movement the User would normally be able to do.
+            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) ==
+                                                             null) { //Check if the User is pointing at an NPC character.
+                getMainGameScreen()
+                    .changeCurrentScreen(BattleScreen.class); //Change the screen so that a battle is ensued.
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
                   isRestrictedMovement()) { //Checks if X key is pressed when the User is in a non-movable position.

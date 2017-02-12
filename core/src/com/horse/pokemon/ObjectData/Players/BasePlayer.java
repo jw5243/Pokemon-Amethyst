@@ -14,7 +14,7 @@ import com.horse.pokemon.ObjectData.PokemonData.Pokemon;
  * @version 1.0
  * @since 1.0
  */
-public abstract class AbstractPlayer extends Actor {
+public abstract class BasePlayer extends Actor {
     /**
      * The {@code byte} representing the 'up' direction for when the character is moving upwards or at a constant position pointing up.
      */
@@ -50,50 +50,50 @@ public abstract class AbstractPlayer extends Actor {
     private static final int MAX_POKEMON = 6;
     
     /**
-     * The {@code float} instance representing where the {@code AbstractPlayer} is every frame in terms of horizontal pixels.
+     * The {@code float} instance representing where the {@code BasePlayer} is every frame in terms of horizontal pixels.
      */
     private float   positionX;
     /**
-     * The {@code float} instance representing where the {@code AbstractPlayer} is every frame in terms of vertical pixels.
+     * The {@code float} instance representing where the {@code BasePlayer} is every frame in terms of vertical pixels.
      */
     private float   positionY;
     /**
-     * The {@code boolean} instance representing if the {@link HandleInput} of the {@code AbstractPlayer} has a keyboard press that will represent that the {@code AbstractPlayer} is to
+     * The {@code boolean} instance representing if the {@link HandleInput} of the {@code BasePlayer} has a keyboard press that will represent that the {@code BasePlayer} is to
      * try and move throughout the map.
      */
     private boolean moving;
     /**
-     * The {@code boolean} instance representing if the {@code AbstractPlayer} is correctly positioned onto one of the game tiles.  This may also be thought of as a
+     * The {@code boolean} instance representing if the {@code BasePlayer} is correctly positioned onto one of the game tiles.  This may also be thought of as a
      * snap-to-grid type of system.
      */
     private boolean aligned;
     
     /**
-     * The {@link MapCreator} instance representing the current map the {@code AbstractPlayer} is on, which is used to calculate whether the {@code AbstractPlayer} is
+     * The {@link MapCreator} instance representing the current map the {@code BasePlayer} is on, which is used to calculate whether the {@code BasePlayer} is
      * colliding with any of the objects of the map.
      */
     private MapCreator    mapCreator;
     /**
-     * The {@link Rectangle} instance representing the boundaries of the {@code AbstractPlayer} to detect collisions.
+     * The {@link Rectangle} instance representing the boundaries of the {@code BasePlayer} to detect collisions.
      */
     private Rectangle     currentCollisionRectangle;
     /**
-     * The {@link PlayerActions} instance representing the last action the {@code AbstractPlayer} was in to implement smoot animation transitions and to check whether
-     * the animation of the {@code AbstractPlayer} should be reset or continued.
+     * The {@link PlayerActions} instance representing the last action the {@code BasePlayer} was in to implement smoot animation transitions and to check whether
+     * the animation of the {@code BasePlayer} should be reset or continued.
      */
     private PlayerActions previousState;
     /**
-     * The {@code boolean} instance representing if the {@code AbstractPlayer} is going to collide in the next tile position by referencing the {@link #direction} of the {@code
-     * AbstractPlayer} to identify the correct {@link Rectangle} the {@code AbstractPlayer} would be on top of.  This ensures the {@code AbstractPlayer} stays {@link #aligned} with the
+     * The {@code boolean} instance representing if the {@code BasePlayer} is going to collide in the next tile position by referencing the {@link #direction} of the {@code
+     * BasePlayer} to identify the correct {@link Rectangle} the {@code BasePlayer} would be on top of.  This ensures the {@code BasePlayer} stays {@link #aligned} with the
      * tiles.
      */
     private boolean       futureCollision;
     /**
-     * The {@code boolean} instance representing if the {@code AbstractPlayer} is able to move not in terms of collisions but during some scenes in the game.
+     * The {@code boolean} instance representing if the {@code BasePlayer} is able to move not in terms of collisions but during some scenes in the game.
      */
     private boolean       restrictedMovement;
     /**
-     * The {@code byte} instance representing where the {@code AbstractPlayer} is pointing towards.
+     * The {@code byte} instance representing where the {@code BasePlayer} is pointing towards.
      */
     private byte          direction;
     /**
@@ -110,7 +110,7 @@ public abstract class AbstractPlayer extends Actor {
     private Pokemon[] currentPokemon = new Pokemon[MAX_POKEMON];
     
     /**
-     * Returns the representation for when the {@code AbstractPlayer} is pointing upwards.
+     * Returns the representation for when the {@code BasePlayer} is pointing upwards.
      *
      * @return {@link #UP}
      */
@@ -119,7 +119,7 @@ public abstract class AbstractPlayer extends Actor {
     }
     
     /**
-     * Returns the representation for when the {@code AbstractPlayer} is pointing downwards.
+     * Returns the representation for when the {@code BasePlayer} is pointing downwards.
      *
      * @return {@link #DOWN}
      */
@@ -128,7 +128,7 @@ public abstract class AbstractPlayer extends Actor {
     }
     
     /**
-     * Returns the representation for when the {@code AbstractPlayer} is pointing to the right.
+     * Returns the representation for when the {@code BasePlayer} is pointing to the right.
      *
      * @return {@link #RIGHT}
      */
@@ -137,7 +137,7 @@ public abstract class AbstractPlayer extends Actor {
     }
     
     /**
-     * Returns the representation for when the {@code AbstractPlayer} is pointing to the left.
+     * Returns the representation for when the {@code BasePlayer} is pointing to the left.
      *
      * @return {@link #LEFT}
      */
@@ -163,7 +163,7 @@ public abstract class AbstractPlayer extends Actor {
     }
     
     /**
-     * Returns the {@link Rectangle} instance representing the collision box of the {@code AbstractPlayer} to detect future collisions and special actions.
+     * Returns the {@link Rectangle} instance representing the collision box of the {@code BasePlayer} to detect future collisions and special actions.
      *
      * @return {@link #currentCollisionRectangle}
      */
@@ -174,7 +174,7 @@ public abstract class AbstractPlayer extends Actor {
     /**
      * Sets the {@link #currentCollisionRectangle} to a new {@link Rectangle} instance.
      *
-     * @param currentCollisionRectangle New {@link Rectangle} instance to be represented as the collision box of the {@code AbstractPlayer}.
+     * @param currentCollisionRectangle New {@link Rectangle} instance to be represented as the collision box of the {@code BasePlayer}.
      */
     void setCurrentCollisionRectangle(Rectangle currentCollisionRectangle) {
         this.currentCollisionRectangle = currentCollisionRectangle;
@@ -253,14 +253,14 @@ public abstract class AbstractPlayer extends Actor {
     }
     
     /**
-     * Method for checking if something is to be changed with an {@code AbstractPlayer} each frame.
+     * Method for checking if something is to be changed with an {@code BasePlayer} each frame.
      *
      * @param deltaTime Amount of time between each frame.
      */
     abstract void update(float deltaTime);
     
     /**
-     * Method that draws out the {@code AbstractPlayer} every frame.
+     * Method that draws out the {@code BasePlayer} every frame.
      *
      * @param batch       Drawing tool.
      * @param parentAlpha Alpha value to add transparency to all children.

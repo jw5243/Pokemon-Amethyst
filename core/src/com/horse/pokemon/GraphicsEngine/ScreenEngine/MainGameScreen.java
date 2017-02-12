@@ -2,7 +2,6 @@ package com.horse.pokemon.GraphicsEngine.ScreenEngine;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
@@ -15,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.Audio.AudioData;
+import com.horse.pokemon.BattleEngine.BattleScreen;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
 import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.TextSpeeds;
@@ -53,7 +53,8 @@ public class MainGameScreen extends PokemonScreen {
     private Engine engine;
     
     /**
-     * The {@link OrthographicCamera} instance representing the sight of the {@link User}.
+     * The {@link OrthographicCamera} instance representing the sight of the {@link User}.  The {@code User} should
+     * always be at the center of the screen as the {@code User} is the protagonist of the game.
      */
     private OrthographicCamera                camera;
     private Viewport                          viewport;
@@ -70,8 +71,8 @@ public class MainGameScreen extends PokemonScreen {
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
     private HashIntObjMap<TiledMapTile>       doorTiles;
     private Door                              doorToOpen;
-    private int                               currentDoorFrameCount;
     private NPC                               npc;
+    private int                               currentDoorFrameCount;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
@@ -262,11 +263,6 @@ public class MainGameScreen extends PokemonScreen {
     
     @Override
     public void render(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.BATTLE_SCREEN));
-            getSound().getAudio().dispose();
-        }
-    
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -326,6 +322,13 @@ public class MainGameScreen extends PokemonScreen {
         getStage().dispose();
         getSound().getAudio().dispose();
         getDialog().dispose();
+    }
+    
+    public void changeCurrentScreen(Class<? extends Screen> screenToSwitchTo) {
+        getEngine().setScreen(getEngine().getScreen(
+            screenToSwitchTo == BattleScreen.class ? Engine.screenTypes.BATTLE_SCREEN :
+            Engine.screenTypes.INTRO_SCREEN));
+        getSound().getAudio().dispose();
     }
     
     public void animateDoor() {

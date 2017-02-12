@@ -2,6 +2,8 @@ package com.horse.pokemon.BattleEngine;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.horse.pokemon.Engine;
+import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.Dialog;
+import com.horse.pokemon.GraphicsEngine.MainInterface.DialogEngine.TextSpeeds;
 
 public class BackgroundSetup implements Disposable {
     private static final float SCREEN_TO_BACKGROUND_WIDTH_RATIO  =
@@ -21,11 +23,17 @@ public class BackgroundSetup implements Disposable {
     private float                 currentTransitionTime;
     private Engine                engine;
     private BackgroundInformation backgroundInformation;
+    private Dialog                dialog;
+    private BattleMain            battleMain;
     
     public BackgroundSetup(Engine engine, BackgroundInformation backgroundInformation) {
         setCurrentTransitionTime(0 - getTransitionDelay());
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
+        setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, ""));
+        setBattleMain(new BattleMain());
+    
+        getDialog().setVisible(false);
     }
     
     public static int getTransitionDelay() {
@@ -68,6 +76,22 @@ public class BackgroundSetup implements Disposable {
         return TRANSITION_TIME;
     }
     
+    public BattleMain getBattleMain() {
+        return battleMain;
+    }
+    
+    public void setBattleMain(BattleMain battleMain) {
+        this.battleMain = battleMain;
+    }
+    
+    public Dialog getDialog() {
+        return dialog;
+    }
+    
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+    
     public Engine getEngine() {
         return engine;
     }
@@ -97,7 +121,7 @@ public class BackgroundSetup implements Disposable {
         getEngine().getBatch().end();
     
         if(isTransitionFinished()) {
-            BattleMain.render(delta, null, null);
+            getBattleMain().render(getDialog(), delta, null, null);
         }
     }
     
