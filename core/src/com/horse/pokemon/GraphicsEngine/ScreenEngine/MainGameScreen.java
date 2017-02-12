@@ -23,6 +23,7 @@ import com.horse.pokemon.GraphicsEngine.MapEngine.Maps;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTileMapRenderer;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTiledMap;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MultiTmxMapLoader;
+import com.horse.pokemon.ObjectData.Players.NPC;
 import com.horse.pokemon.ObjectData.Players.User;
 import com.horse.pokemon.ObjectData.TiledObjects.Door;
 import com.horse.utility.Graphics.PokemonScreen;
@@ -70,6 +71,7 @@ public class MainGameScreen extends PokemonScreen {
     private HashIntObjMap<TiledMapTile>       doorTiles;
     private Door                              doorToOpen;
     private int                               currentDoorFrameCount;
+    private NPC                               npc;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
@@ -82,6 +84,14 @@ public class MainGameScreen extends PokemonScreen {
     
     public static int getFramesToAnimateDoor() {
         return FRAMES_TO_ANIMATE_DOOR;
+    }
+    
+    public NPC getNpc() {
+        return npc;
+    }
+    
+    public void setNpc(NPC npc) {
+        this.npc = npc;
     }
     
     public AudioData getSound() {
@@ -204,6 +214,7 @@ public class MainGameScreen extends PokemonScreen {
         setMapCreator(new MapCreator(this, getMaps()));
     
         setUser(new User(this));
+        setNpc(new NPC(getMapCreator(), "Characters\\NPCSpriteSheets\\NPC 01.png"));
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
@@ -211,6 +222,7 @@ public class MainGameScreen extends PokemonScreen {
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
+        getStage().addActor(getNpc());
         Gdx.input.setInputProcessor(getStage());
     
         setSound(AudioData.TWINLEAF_TOWN_DAYTIME);
@@ -360,6 +372,7 @@ public class MainGameScreen extends PokemonScreen {
         handleInput(deltaTime);
         
         getUser().update(deltaTime);
+        getNpc().update(deltaTime);
     
         getCamera().position.x = getUser().getPositionX();
         getCamera().position.y = getUser().getPositionY();

@@ -723,6 +723,12 @@ public class User extends AbstractPlayer {
      * @see Barrier
      */
     private boolean isColliding(final Rectangle rectangle, final boolean activateCollisionMethod) {
+        for(Rectangle collidingRectangle : NPC.getNpcPositions()) {
+            if(collidingRectangle.overlaps(rectangle)) {
+                return true;
+            }
+        }
+        
         for(CollidableTileObject collidableTileObject : getMapCreator()
                                                             .getCollidableTileObjects()) { //Iterate through all the objects stored in the current map.
             if(collidableTileObject.isColliding(rectangle)) {

@@ -5,30 +5,46 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.horse.pokemon.AnimationEngine.AnimationManager;
 import com.horse.pokemon.Engine;
 import com.horse.pokemon.GraphicsEngine.MapEngine.MapCreator;
 
+import java.util.ArrayList;
+
 public class NPC extends AbstractPlayer {
     //DEFAULT: Characters\\NPCSpriteSheets\\NPC 01.png
-    private static final int   DEFAULT_WIDTH   = 32;
-    private static final int   DEFAULT_HEIGHT  = 48;
-    private static final int   IN_GAME_WIDTH   = 16;
-    private static final int   IN_GAME_HEIGHT  = 24;
-    private static final float ANIMATION_SPEED = 0.5f;
+    private static final int                  DEFAULT_WIDTH   = 32;
+    private static final int                  DEFAULT_HEIGHT  = 48;
+    private static final int                  IN_GAME_WIDTH   = 16;
+    private static final int                  IN_GAME_HEIGHT  = 24;
+    private static final float                ANIMATION_SPEED = 0.5f;
+    private static       ArrayList<Rectangle> npcPositions    = new ArrayList<>(0);
     private final String          npcSpriteSheetPath;
     private final Sprite          npcSprite;
     private final TextureRegion[] idleFrames;
     private final Animation[]     movingFrames;
+    private final int             positionID;
     
     public NPC(MapCreator mapCreator, String npcSpriteSheetPath) {
         this.npcSpriteSheetPath = npcSpriteSheetPath;
         this.npcSprite = new Sprite(new Texture(getNpcSpriteSheetPath()));
         setMapCreator(mapCreator);
+        setDirection(getDOWN());
         resetPosition();
+        positionID = getNpcPositions().size();
+        getNpcPositions().add(getPositionID(), getCurrentCollisionRectangle());
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
+    }
+    
+    public static ArrayList<Rectangle> getNpcPositions() {
+        return npcPositions;
+    }
+    
+    public static void setNpcPositions(ArrayList<Rectangle> npcPositions) {
+        NPC.npcPositions = npcPositions;
     }
     
     public static float getAnimationSpeed() {
@@ -49,6 +65,10 @@ public class NPC extends AbstractPlayer {
     
     public static int getDefaultHeight() {
         return DEFAULT_HEIGHT;
+    }
+    
+    public int getPositionID() {
+        return positionID;
     }
     
     private void resetPosition() {
@@ -138,11 +158,21 @@ public class NPC extends AbstractPlayer {
         setY(getPositionY() - getInGameHeight() / 2);
     }
     
+    private void updateCurrentCollisionRectangle() {
+        setCurrentCollisionRectangle(new Rectangle(getX(), getY(), Engine.getHalfTileSize(), Engine.getHalfTileSize()));
+    }
+    
+    private void updateGlobalPosition() {
+        getNpcPositions().set(getPositionID(), getCurrentCollisionRectangle());
+    }
+    
     @Override
-    void update(float deltaTime) {
+    public void update(float deltaTime) {
         updateAlignment();
+        updateCurrentCollisionRectangle();
         updateActorXY();
         updateAnimation(deltaTime);
+        updateGlobalPosition();
     }
     
     @Override

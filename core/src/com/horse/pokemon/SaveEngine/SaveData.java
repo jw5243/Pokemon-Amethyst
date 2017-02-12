@@ -15,8 +15,10 @@ public class SaveData {
     }
     
     public static boolean saveUserPosition(User user) {
-        try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("saveData.txt"), "utf-8"))) {
+        try(Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("saveData.dat"), "utf-8"))) {
             writer.write(String.valueOf(user.getX()));
+            writer.write("\n");
+            writer.write(String.valueOf(user.getY()));
         } catch(IOException e) {
             return false;
         }

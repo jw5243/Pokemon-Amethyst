@@ -88,7 +88,7 @@ public class MapCreator {
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(object.getProperties().get("type").toString().contains("NPC")) {
-                        getNpcStartPositions().put(object.getProperties().get("type").toString(),
+                        getNpcStartPositions().put(object.getProperties().get("Filename").toString(),
                                                    new Vector2(rectangle.getX(), rectangle.getY())
                         );
                     } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
