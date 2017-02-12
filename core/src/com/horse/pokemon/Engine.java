@@ -3,10 +3,10 @@ package com.horse.pokemon;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.horse.pokemon.BattleEngine.BackgroundData;
-import com.horse.pokemon.BattleEngine.BattleScreen;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.IntroScreen;
-import com.horse.pokemon.GraphicsEngine.ScreenEngine.MainGameScreen;
+import com.horse.pokemon.amethyst.graphics.IntroScreen;
+import com.horse.pokemon.amethyst.graphics.MainGameScreen;
+import com.horse.pokemon.amethyst.graphics.battle.system.BackgroundData;
+import com.horse.pokemon.amethyst.graphics.battle.system.BattleScreen;
 import org.openjdk.jol.info.GraphLayout;
 
 /**
