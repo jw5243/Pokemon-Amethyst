@@ -4,7 +4,7 @@ import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.math.Rectangle;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 
 public class MultiTiledMap extends TiledMap {
     private int offsetX;

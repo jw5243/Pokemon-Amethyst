@@ -1,8 +1,9 @@
 package com.horse.pokemon.amethyst.data.pokemon;
 
 /**
- * Class for storing the value for a {@link Pokemon} that will raise each stat according to its corresponding {@code EffortValue} stat.  There is a mutable and immutable
- * {@code EffortValue} for each stat.  The immutable stat is for when a {@link Pokemon} is defeated and the winner gains {@code EffortValue} points.  The mutable value is the
+ * Class for storing the value for a {@link Pokemon} that will raise each stat according to its corresponding
+ * {@code EffortValue} stat.  There is a mutable and immutable {@code EffortValue} for each stat.  The immutable stat is
+ * for when a {@link Pokemon} is defeated and the winner gains {@code EffortValue} points.  The mutable value is the
  * changing number for when the opposing {@link Pokemon} is defeated (They keep track of the EV's).
  *
  * @see Pokemon

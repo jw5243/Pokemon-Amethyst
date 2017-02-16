@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
 import com.horse.pokemon.amethyst.data.objects.Door;
@@ -337,7 +337,7 @@ public class User extends BasePlayer {
         setMovementKeyHeldDownTime(
             0f);      //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
         setMainGameScreen(mainGameScreen);   //Initializes the main game screen to the parameter value.
-    
+        
         setMapCreator(mainGameScreen
                           .getMapCreator()); //Set the map creator to the same instance as the one in the main game screen to store the collision rectangles.
         
@@ -650,12 +650,19 @@ public class User extends BasePlayer {
             Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                                         (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
                                         (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
-                                        getFutureRectangle(-Engine.getTileSize(), 0
+                                        getFutureRectangle(-Engine.getTileSize(),
+                                                           0
                                         ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
-    
+            
             if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
-                //Create a lambda for moving the User a single tile in the direction the User is pointing to.
+                
+                setPositionX(getPositionX() + (getDirection() == getRIGHT() ? Engine.getTileSize() :
+                                               (getDirection() == getLEFT()) ? -Engine.getTileSize() : 0));
+                setPositionY(getPositionY() + (getDirection() == getUP() ? Engine.getTileSize() :
+                                               (getDirection() == getDOWN()) ? -Engine.getTileSize() : 0));
+                
+                /*//Create a lambda for moving the User a single tile in the direction the User is pointing to.
                 AlterPlayerPosition alterPlayerPosition =
                     (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod
                                                                                                                       .accept(
@@ -688,7 +695,7 @@ public class User extends BasePlayer {
                                                                                                  -Engine.getTileSize()
                                                                                              ); //Creates an action to move the User depending on the direction of the User.
                 
-                alterAction.run(); //Executes the action for moving the User.
+                alterAction.run(); //Executes the action for moving the User.*/
             } else if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
                 getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.
@@ -864,13 +871,13 @@ public class User extends BasePlayer {
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
                (getDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-
+        
                (getCurrentState() == PlayerActions.RUNNING) ?
                (getDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
                (getDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
-
+        
                (getCurrentState() == PlayerActions.SWIMMING) ?
                (getDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
                (getDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :

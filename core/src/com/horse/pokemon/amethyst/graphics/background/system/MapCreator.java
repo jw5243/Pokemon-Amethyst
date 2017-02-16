@@ -5,7 +5,7 @@ import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
 import com.horse.pokemon.amethyst.data.objects.Door;
@@ -25,7 +25,7 @@ public class MapCreator {
     private Array<ConnectionInformation>    connections           = new Array<>();
     private MainGameScreen screen;
     
-    public MapCreator(MainGameScreen screen, MultiTiledMap... maps) {
+    public MapCreator(MainGameScreen screen, MultiTiledMap[] maps) {
         addTiledObjects(screen, maps);
     }
     
@@ -45,13 +45,13 @@ public class MapCreator {
         this.screen = screen;
     }
     
-    public void resetTiledObjects(MainGameScreen screen, MultiTiledMap... map) {
+    public void resetTiledObjects(MainGameScreen screen, MultiTiledMap[] map) {
         getCollidableTileObjects().clear();
         addTiledObjects(screen, map);
         screen.getUser().setMapCreator(this);
     }
     
-    public void addTiledObjects(MainGameScreen screen, MultiTiledMap... maps) {
+    public void addTiledObjects(MainGameScreen screen, MultiTiledMap[] maps) {
         setScreen(screen);
         for(int index = 0; index < maps.length; index++) {
             for(MapObject object : maps[index].getLayers().get("Collisions").getObjects()
@@ -60,38 +60,40 @@ public class MapCreator {
         
                 rectangle.setX(rectangle.getX() + screen.getMaps()[index].getOffsetX() * Engine.getTileSize());
                 rectangle.setY(rectangle.getY() + screen.getMaps()[index].getOffsetY() * Engine.getTileSize());
-                
-                if(object.getProperties().get("type") instanceof String) {
-                    if(object.getProperties().get("type").toString().equalsIgnoreCase("Door")) {
+    
+                Object mapProperty = object.getProperties().get("type");
+                if(mapProperty instanceof String) {
+                    String stringMapProperty = mapProperty.toString();
+                    if(stringMapProperty.equalsIgnoreCase("Door")) {
                         if(object.getProperties().containsKey("Filename")) {
                             String fileName = object.getProperties().get("Filename").toString();
                             getCollidableTileObjects().add(new Door(screen, rectangle, fileName));
                         } else {
                             getCollidableTileObjects().add(new Door(rectangle));
                         }
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Sign")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Sign")) {
                         getCollidableTileObjects().add(new Sign(rectangle));
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Water")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Water")) {
                         getCollidableTileObjects().add(new Water(rectangle));
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Barrier")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Barrier")) {
                         getCollidableTileObjects().add(new Barrier(rectangle));
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Mailbox")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Mailbox")) {
                         getCollidableTileObjects().add(new Mailbox(rectangle));
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Grass")) {
-    
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Edging")) {
-                        
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Bed")) {
-                        
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Stairs")) {
-                        
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Start Position")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Grass")) {
+            
+                    } else if(stringMapProperty.equalsIgnoreCase("Edging")) {
+            
+                    } else if(stringMapProperty.equalsIgnoreCase("Bed")) {
+            
+                    } else if(stringMapProperty.equalsIgnoreCase("Stairs")) {
+            
+                    } else if(stringMapProperty.equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
-                    } else if(object.getProperties().get("type").toString().contains("NPC")) {
+                    } else if(stringMapProperty.contains("NPC")) {
                         getNpcStartPositions().put(object.getProperties().get("Filename").toString(),
                                                    new Vector2(rectangle.getX(), rectangle.getY())
                         );
-                    } else if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
+                    } else if(stringMapProperty.equalsIgnoreCase("Connection")) {
                         getConnections().add(
                             new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString()));
                     }

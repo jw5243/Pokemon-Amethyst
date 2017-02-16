@@ -5,54 +5,222 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 
 import java.util.ArrayList;
 
 public class Dialog extends Actor implements Disposable {
-    private static final String dialogFile = "DialogBoxes\\dialogDiamond.png";
-    private Viewport                   viewport;
-    private Stage                      stage;
-    private SpriteBatch                batch;
-    private String                     text;
-    private Texture                    dialog;
-    private TextSpeeds                 textSpeeds;
-    private int                        xPosition;
-    private int                        yPosition;
-    private int                        xSize;
-    private int                        ySize;
-    private int                        currentCharacterXPosition;
-    private int                        currentCharacterYPosition;
-    private ArrayList<CharacterWriter> characterWriterArrayList;
-    private float                      timer;
-    private boolean                    visible;
+    private static final Texture DIALOG_TEXTURE       =
+        new Texture(Gdx.files.internal("DialogBoxes\\generalDialog.png"));
+    private static final Texture DIALOG_ARROW_TEXTURE = new Texture(Gdx.files.internal("DialogBoxes\\arrow.png"));
     
-    public Dialog(Engine engine, int xPosition, int yPosition, int xSize, int ySize, TextSpeeds textSpeeds,
-                  String text) {
-        setViewport(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()));
-        setStage(new Stage(getViewport(), engine.getBatch()));
-        setBatch(engine.getBatch());
-        setxPosition(xPosition);
-        setyPosition(yPosition);
-        setText(text);
-        setTextSpeeds(textSpeeds);
-        setxSize(xSize);
-        setySize(ySize);
-        setCharacterWriterArrayList(new ArrayList<>(getText().length()));
-        setDialog(new Texture(Gdx.files.internal(getDialogFile())));
-        getStage().addActor(this);
+    private ArrayList<CharacterWriter> charactersToTypeArrayList;
+    private SpriteBatch                spriteBatch;
+    private String                     unparsedTextToWrite;
+    private TextSpeeds                 textSpeed;
+    private float                      timer;
+    
+    public Dialog() {
+        this(0, 0, 0, 0, TextSpeeds.NORMAL, null);
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition) {
+        this(dialogXPosition, dialogYPosition, 0, 0, TextSpeeds.NORMAL, null);
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight) {
+        this(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight, TextSpeeds.NORMAL, null);
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed) {
+        this(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight, textSpeed, null);
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed,
+                  String unparsedTextToWrite) {
+        this(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight, textSpeed, unparsedTextToWrite, false,
+             new SpriteBatch(unparsedTextToWrite.length())
+        );
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed,
+                  String unparsedTextToWrite, boolean isVisible) {
+        this(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight, textSpeed, unparsedTextToWrite, isVisible,
+             new SpriteBatch(unparsedTextToWrite.length())
+        );
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed,
+                  String unparsedTextToWrite, boolean isVisible, SpriteBatch spriteBatch) {
+        this(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight, textSpeed, unparsedTextToWrite, isVisible,
+             spriteBatch, new Stage(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()))
+        );
+    }
+    
+    public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed,
+                  String unparsedTextToWrite, boolean isVisible, SpriteBatch spriteBatch, Stage stage) {
+        this(new Rectangle(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight), textSpeed, unparsedTextToWrite,
+             isVisible, spriteBatch,
+             new Stage(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()))
+        );
+    }
+    
+    public Dialog(Rectangle dialogRectangle, TextSpeeds textSpeed) {
+        this(dialogRectangle, textSpeed, "");
+    }
+    
+    public Dialog(Rectangle dialogRectangle, TextSpeeds textSpeed, String unparsedTextToWrite) {
+        this(dialogRectangle, textSpeed, unparsedTextToWrite, false);
+    }
+    
+    public Dialog(Rectangle dialogRectangle, TextSpeeds textSpeed, String unparsedTextToWrite, boolean isVisible) {
+        this(dialogRectangle, textSpeed, unparsedTextToWrite, isVisible, new SpriteBatch(unparsedTextToWrite.length()));
+    }
+    
+    public Dialog(Rectangle dialogRectangle, TextSpeeds textSpeed, String unparsedTextToWrite, boolean isVisible,
+                  SpriteBatch spriteBatch) {
+        this((int)(dialogRectangle.getX()), (int)(dialogRectangle.getY()), (int)(dialogRectangle.getWidth()),
+             (int)(dialogRectangle.getHeight()), textSpeed, unparsedTextToWrite, isVisible, spriteBatch
+        );
+    }
+    
+    public Dialog(Rectangle dialogRectangle, TextSpeeds textSpeed, String unparsedTextToWrite, boolean isVisible,
+                  SpriteBatch spriteBatch, Stage stage) {
+        setStage(stage);
+        setSpriteBatch(spriteBatch);
+        setTextSpeed(textSpeed);
+        setCharactersToTypeArrayList(new ArrayList<>(unparsedTextToWrite.length()));
+        setUnparsedTextToWrite(unparsedTextToWrite);
+        setVisible(isVisible);
         setTimer(0f);
-        setVisible(false);
+        
+        setX(dialogRectangle.getX());
+        setY(dialogRectangle.getY());
+        setWidth(dialogRectangle.getWidth());
+        setHeight(dialogRectangle.getHeight());
+        
+        getStage().addActor(this);
+        
         setupCharactersToWrite();
     }
     
-    public static String getDialogFile() {
-        return dialogFile;
+    public static Texture getDialogArrowTexture() {
+        return DIALOG_ARROW_TEXTURE;
+    }
+    
+    public static Texture getDialogTexture() {
+        return DIALOG_TEXTURE;
+    }
+    
+    private void setupCharactersToWrite() {
+        if(getUnparsedTextToWrite() != null) {
+            float currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
+            float currentWriterYPosition = getY() + getHeight() - DialogCharacter.getDefaultHeight() -
+                                           CharacterWriter.getDefaultCharacterStartYPositionBuffer();
+        
+            for(char character : getUnparsedTextToWrite().toCharArray()) {
+                if(character == '\n') {
+                    currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
+                    currentWriterYPosition = currentWriterYPosition - DialogCharacter.getDefaultHeight();
+                } else if(character == ' ') {
+                    currentWriterXPosition = currentWriterXPosition + DialogCharacter.SPACE.getWidth();
+                    if(currentWriterXPosition + DialogCharacter.getDefaultWidth() +
+                       CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getX() + getWidth()) {
+                        currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
+                        currentWriterYPosition = currentWriterYPosition - DialogCharacter.getDefaultHeight();
+                    }
+                } else {
+                    CharacterWriter characterWriter =
+                        new CharacterWriter(character, (int)(currentWriterXPosition), (int)(currentWriterYPosition));
+                
+                    getCharactersToTypeArrayList().add(characterWriter);
+                
+                    currentWriterXPosition = currentWriterXPosition + characterWriter.getCharacterWidth();
+                    if(currentWriterXPosition + DialogCharacter.getDefaultWidth() +
+                       CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getX() + getWidth()) {
+                        currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
+                        currentWriterYPosition = currentWriterYPosition - DialogCharacter.getDefaultHeight();
+                    }
+                }
+            }
+        }
+    }
+    
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        setTimer(getTimer() + Gdx.graphics.getDeltaTime());
+        
+        getSpriteBatch().begin();
+        
+        getSpriteBatch().draw(getDialogTexture(), getX(), getY(), getWidth(), getHeight());
+        
+        for(int index = 0; index < getCharactersToTypeArrayList().size(); index++) {
+            if(getTimer() > (index + 1) * getTextSpeed().getSpeed()) {
+                getCharactersToTypeArrayList().get(index).draw(getSpriteBatch(), parentAlpha);
+            }
+        }
+        
+        if(getTimer() > (getCharactersToTypeArrayList().size() + 1) * getTextSpeed().getSpeed()) {
+            if(getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1).getCharacterXPosition() +
+               getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1).getCharacterWidth() +
+               CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getX() + getWidth()) {
+                getSpriteBatch()
+                    .draw(getDialogArrowTexture(), CharacterWriter.getDefaultCharacterStartXPositionBuffer(),
+                          getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1)
+                                                        .getCharacterYPosition() -
+                          getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1)
+                                                        .getCharacterHeight()
+                    );
+            } else {
+                getSpriteBatch().draw(getDialogArrowTexture(),
+                                      getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1)
+                                                                    .getCharacterXPosition() +
+                                      getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1)
+                                                                    .getCharacterWidth(),
+                                      getCharactersToTypeArrayList().get(getCharactersToTypeArrayList().size() - 1)
+                                                                    .getCharacterYPosition()
+                );
+            }
+        }
+        
+        getSpriteBatch().end();
+    }
+    
+    public ArrayList<CharacterWriter> getCharactersToTypeArrayList() {
+        return charactersToTypeArrayList;
+    }
+    
+    public void setCharactersToTypeArrayList(ArrayList<CharacterWriter> charactersToTypeArrayList) {
+        this.charactersToTypeArrayList = charactersToTypeArrayList;
+    }
+    
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
+    }
+    
+    public void setSpriteBatch(SpriteBatch spriteBatch) {
+        this.spriteBatch = spriteBatch;
+    }
+    
+    public String getUnparsedTextToWrite() {
+        return unparsedTextToWrite;
+    }
+    
+    public void setUnparsedTextToWrite(String unparsedTextToWrite) {
+        this.unparsedTextToWrite = unparsedTextToWrite;
+    }
+    
+    public TextSpeeds getTextSpeed() {
+        return textSpeed;
+    }
+    
+    public void setTextSpeed(TextSpeeds textSpeed) {
+        this.textSpeed = textSpeed;
     }
     
     public float getTimer() {
@@ -63,180 +231,9 @@ public class Dialog extends Actor implements Disposable {
         this.timer = timer;
     }
     
-    public ArrayList<CharacterWriter> getCharacterWriterArrayList() {
-        return characterWriterArrayList;
-    }
-    
-    public void setCharacterWriterArrayList(ArrayList<CharacterWriter> characterWriterArrayList) {
-        this.characterWriterArrayList = characterWriterArrayList;
-    }
-    
-    public TextSpeeds getTextSpeeds() {
-        return textSpeeds;
-    }
-    
-    public void setTextSpeeds(TextSpeeds textSpeeds) {
-        this.textSpeeds = textSpeeds;
-    }
-    
-    private void setupCharactersToWrite() {
-        setCurrentCharacterXPosition(getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-        setCurrentCharacterYPosition(getyPosition() + getySize() - DialogCharacter.getDefaultHeight() -
-                                     CharacterWriter.getDefaultCharacterStartYPositionBuffer());
-        for(char character : getText().toCharArray()) {
-            if(character == '\n') {
-                setCurrentCharacterXPosition(
-                    getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-                setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
-            } else if(character == ' ') {
-                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + DialogCharacter.SPACE.getWidth());
-                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
-                   CharacterWriter.getDefaultCharacterStartXPositionBuffer() >= getxPosition() + getxSize()) {
-                    setCurrentCharacterXPosition(
-                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
-                }
-            } else {
-                CharacterWriter characterWriter =
-                    new CharacterWriter(character, getCurrentCharacterXPosition(), getCurrentCharacterYPosition());
-                getCharacterWriterArrayList().add(characterWriter);
-    
-                setCurrentCharacterXPosition(getCurrentCharacterXPosition() + characterWriter.getCharacterWidth());
-                if(getCurrentCharacterXPosition() + DialogCharacter.getDefaultWidth() +
-                   CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getxPosition() + getxSize()) {
-                    setCurrentCharacterXPosition(
-                        getxPosition() + CharacterWriter.getDefaultCharacterStartXPositionBuffer());
-                    setCurrentCharacterYPosition(getCurrentCharacterYPosition() - DialogCharacter.getDefaultHeight());
-                }
-            }
-        }
-    }
-    
-    public int getCurrentCharacterXPosition() {
-        return currentCharacterXPosition;
-    }
-    
-    public void setCurrentCharacterXPosition(int currentCharacterXPosition) {
-        this.currentCharacterXPosition = currentCharacterXPosition;
-    }
-    
-    public int getCurrentCharacterYPosition() {
-        return currentCharacterYPosition;
-    }
-    
-    public void setCurrentCharacterYPosition(int currentCharacterYPosition) {
-        this.currentCharacterYPosition = currentCharacterYPosition;
-    }
-    
-    public Viewport getViewport() {
-        return viewport;
-    }
-    
-    public void setViewport(Viewport viewport) {
-        this.viewport = viewport;
-    }
-    
-    public SpriteBatch getBatch() {
-        return batch;
-    }
-    
-    public void setBatch(SpriteBatch batch) {
-        this.batch = batch;
-    }
-    
-    public String getText() {
-        return text;
-    }
-    
-    public void setText(String text) {
-        this.text = text;
-    }
-    
-    public Texture getDialog() {
-        return dialog;
-    }
-    
-    public void setDialog(Texture dialog) {
-        this.dialog = dialog;
-    }
-    
-    public int getxPosition() {
-        return xPosition;
-    }
-    
-    public void setxPosition(int xPosition) {
-        this.xPosition = xPosition;
-    }
-    
-    public int getyPosition() {
-        return yPosition;
-    }
-    
-    public void setyPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
-    
-    public int getxSize() {
-        return xSize;
-    }
-    
-    public void setxSize(int xSize) {
-        this.xSize = xSize;
-    }
-    
-    public int getySize() {
-        return ySize;
-    }
-    
-    public void setySize(int ySize) {
-        this.ySize = ySize;
-    }
-    
-    @Override
-    public void draw(Batch batch, float parentAlpha) {
-        if(isVisible()) {
-            setTimer(getTimer() + Gdx.graphics.getDeltaTime());
-    
-            getBatch().draw(getDialog(), getxPosition(), getyPosition(), getxSize(), getySize());
-    
-            for(int index = 0; index < getCharacterWriterArrayList().size(); index++) {
-                if(getTimer() > (index + 1) * getTextSpeeds().getSpeed()) {
-                    getCharacterWriterArrayList().get(index).draw(batch, parentAlpha);
-                }
-            }
-        }
-    }
-    
-    public Stage getStage() {
-        return stage;
-    }
-    
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-    
-    @Override
-    public boolean isVisible() {
-        return visible;
-    }
-    
-    @Override
-    public void setVisible(boolean visible) {
-        this.visible = visible;
-    }
-    
-    public int[] getDialogPosition() {
-        return new int[] {getxPosition(), getyPosition()};
-    }
-    
-    public double getXSize() {
-        return xSize;
-    }
-    
-    public double getYSize() {
-        return ySize;
-    }
-    
+    /**
+     * Releases all resources of this object.
+     */
     @Override
     public void dispose() {
         getStage().dispose();

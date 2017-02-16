@@ -3,7 +3,7 @@ package com.horse.pokemon.amethyst.graphics.battle.system;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.audio.AudioData;
 
 public class BattleScreen implements Screen {

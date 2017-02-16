@@ -1,4 +1,4 @@
-package com.horse.pokemon;
+package com.horse.pokemon.amethyst;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;

@@ -1,7 +1,7 @@
 package com.horse.pokemon.amethyst.graphics.battle.system;
 
 import com.badlogic.gdx.utils.Disposable;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
 import com.horse.pokemon.amethyst.graphics.dialog.TextSpeeds;
 
@@ -30,7 +30,7 @@ public class BackgroundSetup implements Disposable {
         setCurrentTransitionTime(0 - getTransitionDelay());
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
-        setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, ""));
+        setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, ""));
         setBattleMain(new BattleMain());
     
         getDialog().setVisible(false);

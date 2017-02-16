@@ -1,7 +1,7 @@
 package com.horse.pokemon.amethyst.graphics;
 
 import com.badlogic.gdx.Screen;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 
 public class IntroScreen implements Screen {
     private Engine engine;

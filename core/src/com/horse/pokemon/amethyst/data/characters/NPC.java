@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
 

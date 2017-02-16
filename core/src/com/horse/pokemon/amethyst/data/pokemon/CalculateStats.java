@@ -8,7 +8,7 @@ public class CalculateStats {
         
         StringBuilder stringBuilder = new StringBuilder();
         long          sum           = 0;
-        for(int i = 1; i <= 100; i++) {
+        for(int i = 1; i <= 100; ++i) {
             pokemon.getInformation().setCurrentLevel(i);
             
             long start = System.nanoTime();

@@ -13,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.characters.NPC;
 import com.horse.pokemon.amethyst.data.characters.User;
 import com.horse.pokemon.amethyst.data.objects.Door;
@@ -253,10 +253,11 @@ public class MainGameScreen implements Screen {
         }
         setDoorToOpen(null);
         setCurrentDoorFrameCount(getStartDoorFrameCount());
-        
-        setDialog(new Dialog(getEngine(), 0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
+    
+        setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
                              "Test Character Writer\nABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
-                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line"
+                             "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line",
+                             false, getEngine().getBatch(), getStage()
         ));
     }
     

@@ -5,7 +5,8 @@ import com.horse.pokemon.amethyst.data.handlers.readers.PokemonDataReader;
 import com.horse.utility.NumberGenerator;
 
 /**
- * Class for calculating the amount of hitpoints to deduct off a {@link Pokemon} when a {@link Pokemon} uses one of its {@link Moves}.
+ * Class for calculating the amount of hitpoints to deduct off a {@link Pokemon} when a {@link Pokemon} uses one of its
+ * {@link Moves}.
  *
  * @see Pokemon
  * @see Moves
