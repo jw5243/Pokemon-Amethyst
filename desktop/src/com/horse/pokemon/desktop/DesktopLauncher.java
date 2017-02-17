@@ -2,7 +2,7 @@ package com.horse.pokemon.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.horse.pokemon.Engine;
+import com.horse.pokemon.amethyst.Engine;
 
 public class DesktopLauncher {
     public static void main(String[] arg) {

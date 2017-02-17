@@ -263,14 +263,20 @@ public class MainGameScreen implements Screen {
     
     @Override
     public void render(float delta) {
+        getEngine().getBatch().begin();
+        
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         renderBackground();
+    
+        getEngine().getBatch().end();
         
         getStage().act(delta);
         getStage().draw();
+    
+        getEngine().getBatch().begin();
         
         renderObjects();
     
@@ -283,6 +289,8 @@ public class MainGameScreen implements Screen {
     
         //getEngine().getBatch().setProjectionMatrix(getHud().stage.getCamera().combined);
         //getHud().stage.draw();
+    
+        getEngine().getBatch().end();
         
         getEngine().getBatch().setProjectionMatrix(getDialog().getStage().getCamera().combined);
     

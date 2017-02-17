@@ -126,8 +126,6 @@ public class MultiTileMapRenderer implements Disposable {
     }
     
     public void renderTileLayer(TiledMapTileLayer layer) {
-        getBatch().begin();
-        
         final Color batchColor = batch.getColor();
         final float color =
             Color.toFloatBits(batchColor.r, batchColor.g, batchColor.b, batchColor.a * layer.getOpacity());
@@ -268,7 +266,6 @@ public class MultiTileMapRenderer implements Disposable {
             }
             y -= layerTileHeight;
         }
-        getBatch().end();
     }
     
     @Override

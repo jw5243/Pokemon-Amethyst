@@ -646,7 +646,7 @@ public class User extends BasePlayer {
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) &&
                   !isRestrictedMovement()) { //If the User is not currently trying to move to a new location, check if the User is allowed to move when the X key is pressed.
-            
+            //Shifts the User one tile if the User is pointing in the direction of water and is adjacent to that water in the corresponding direction.
             Rectangle futureRectangle = (getDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                                         (getDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
                                         (getDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
@@ -656,46 +656,10 @@ public class User extends BasePlayer {
             
             if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
-                
                 setPositionX(getPositionX() + (getDirection() == getRIGHT() ? Engine.getTileSize() :
                                                (getDirection() == getLEFT()) ? -Engine.getTileSize() : 0));
                 setPositionY(getPositionY() + (getDirection() == getUP() ? Engine.getTileSize() :
                                                (getDirection() == getDOWN()) ? -Engine.getTileSize() : 0));
-                
-                /*//Create a lambda for moving the User a single tile in the direction the User is pointing to.
-                AlterPlayerPosition alterPlayerPosition =
-                    (PrimitiveConsumer setPositionMethod, PrimitiveSupplier getPositionMethod, int alterValue) -> setPositionMethod
-                                                                                                                      .accept(
-                                                                                                                          getPositionMethod
-                                                                                                                              .get() +
-                                                                                                                          alterValue);
-        
-                Runnable alterAction = (getDirection() == getUP()) ? () -> alterPlayerPosition
-                                                                               .alterPosition(this::setPositionY,
-                                                                                              this::getPositionY,
-                                                                                              Engine.getTileSize()
-                                                                               ) : (getDirection() == getDOWN()) ?
-                                                                                   () -> alterPlayerPosition
-                                                                                             .alterPosition(
-                                                                                                 this::setPositionY,
-                                                                                                 this::getPositionY,
-                                                                                                 -Engine.getTileSize()
-                                                                                             ) :
-                                                                                   (getDirection() == getRIGHT()) ?
-                                                                                   () -> alterPlayerPosition
-                                                                                             .alterPosition(
-                                                                                                 this::setPositionX,
-                                                                                                 this::getPositionX,
-                                                                                                 Engine.getTileSize()
-                                                                                             ) :
-                                                                                   () -> alterPlayerPosition
-                                                                                             .alterPosition(
-                                                                                                 this::setPositionX,
-                                                                                                 this::getPositionX,
-                                                                                                 -Engine.getTileSize()
-                                                                                             ); //Creates an action to move the User depending on the direction of the User.
-                
-                alterAction.run(); //Executes the action for moving the User.*/
             } else if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
                 getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.

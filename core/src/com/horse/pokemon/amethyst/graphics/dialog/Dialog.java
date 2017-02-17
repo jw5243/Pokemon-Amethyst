@@ -95,7 +95,7 @@ public class Dialog extends Actor implements Disposable {
         setSpriteBatch(spriteBatch);
         setTextSpeed(textSpeed);
         setCharactersToTypeArrayList(new ArrayList<>(unparsedTextToWrite.length()));
-        setUnparsedTextToWrite(unparsedTextToWrite);
+    
         setVisible(isVisible);
         setTimer(0f);
         
@@ -105,8 +105,9 @@ public class Dialog extends Actor implements Disposable {
         setHeight(dialogRectangle.getHeight());
         
         getStage().addActor(this);
-        
-        setupCharactersToWrite();
+    
+        setUnparsedTextToWrite(unparsedTextToWrite);
+        //setupCharactersToWrite();
     }
     
     public static Texture getDialogArrowTexture() {
@@ -154,8 +155,10 @@ public class Dialog extends Actor implements Disposable {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         setTimer(getTimer() + Gdx.graphics.getDeltaTime());
-        
-        getSpriteBatch().begin();
+    
+        if(!getSpriteBatch().isDrawing()) {
+            getSpriteBatch().begin();
+        }
         
         getSpriteBatch().draw(getDialogTexture(), getX(), getY(), getWidth(), getHeight());
         
@@ -213,6 +216,7 @@ public class Dialog extends Actor implements Disposable {
     
     public void setUnparsedTextToWrite(String unparsedTextToWrite) {
         this.unparsedTextToWrite = unparsedTextToWrite;
+        setupCharactersToWrite();
     }
     
     public TextSpeeds getTextSpeed() {

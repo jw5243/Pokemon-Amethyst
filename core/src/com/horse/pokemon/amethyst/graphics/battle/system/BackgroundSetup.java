@@ -30,8 +30,8 @@ public class BackgroundSetup implements Disposable {
         setCurrentTransitionTime(0 - getTransitionDelay());
         setEngine(engine);
         setBackgroundInformation(backgroundInformation);
-        setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, ""));
-        setBattleMain(new BattleMain());
+        setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST, "", false, engine.getBatch()));
+        setBattleMain(new BattleMain(getDialog()));
     
         getDialog().setVisible(false);
     }
@@ -117,11 +117,13 @@ public class BackgroundSetup implements Disposable {
         drawBackground();
         drawEnemyBase();
         drawUserBase();
-        
-        getEngine().getBatch().end();
     
         if(isTransitionFinished()) {
-            getBattleMain().render(getDialog(), delta, null, null);
+            getBattleMain().render(delta, null, null);
+        }
+    
+        if(getEngine().getBatch().isDrawing()) {
+            getEngine().getBatch().end();
         }
     }
     
