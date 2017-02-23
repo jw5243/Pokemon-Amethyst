@@ -60,7 +60,6 @@ public class CalculateResistance {
      *
      * @see PokemonTypes
      * @see JIntIntIntMap
-     * @see PokemonTypeKey
      * @see IntIntIntMapBuilder
      */
     private static final JIntIntIntMap RESISTANCE_DATA = IntIntIntMapBuilder.unordered()

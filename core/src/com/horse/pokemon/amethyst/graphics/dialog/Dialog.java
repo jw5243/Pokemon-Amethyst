@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.horse.pokemon.amethyst.Engine;
@@ -107,7 +109,24 @@ public class Dialog extends Actor implements Disposable {
         getStage().addActor(this);
     
         setUnparsedTextToWrite(unparsedTextToWrite);
-        //setupCharactersToWrite();
+    }
+    
+    public static void addTextAction(final Dialog dialog, final String unparsedTextToWrite,
+                                     final int visibilityTrigger) {
+        dialog.addAction(Actions.sequence(new Action() {
+            @Override
+            public boolean act(float delta) {
+                dialog.setUnparsedTextToWrite(unparsedTextToWrite);
+                dialog.setVisible(true);
+                return Gdx.input.isKeyJustPressed(visibilityTrigger);
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                dialog.setVisible(false);
+                return true;
+            }
+        }));
     }
     
     public static Texture getDialogArrowTexture() {

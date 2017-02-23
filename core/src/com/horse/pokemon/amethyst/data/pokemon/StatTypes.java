@@ -20,7 +20,7 @@ package com.horse.pokemon.amethyst.data.pokemon;
  *     </li>
  *     <li>
  *         {@code IndividualValue}s will raise the stats of a {@code Pokemon} when leveling up, showing its full
- *         potential at max level.  Say there is a level 100 (Should be max) Venasaur with a neutral nature.
+ *         potential at max level.  Say there is a level 100 (Should be max level) Venasaur with a neutral nature.
  *         Its {@code ATTACK} stat is 169, as there has been no interaction with its stats other than just leveling
  *         up.  {@code IndividualValue}s are based on a scale from 0 to 31, and three of the stats in
  *         {@code StatTypes} are forced to have perfect {@code IndividualValue}s.  The way {@code IndividualValue}s
@@ -111,5 +111,19 @@ public enum StatTypes {
      *
      * @see Pokemon
      */
-    ATTACK, DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED
+    ATTACK,
+    
+    /**
+     * The {@code DEFENSE} stat affects how much damage is dealt onto itself from an opposing {@code Pokemon} attacking
+     * the defending {@code Pokemon}.  This stat will come to use only when the attacks used on a defending
+     * {@code Pokemon} are physical.
+     * <p>
+     *     A higher {@code DEFENSE} stat will lower the amount of damage dealt on the corresponding {@code Pokemon},
+     *     whereas a lower {@code DEFENSE} stat will cause a higher amount of damage inflicted onto the defending
+     *     {@code Pokemon}.
+     * </p>
+     *
+     * @see Pokemon
+     */
+    DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED
 }

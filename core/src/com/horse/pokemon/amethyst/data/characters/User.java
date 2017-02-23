@@ -320,23 +320,22 @@ public class User extends BasePlayer {
     public User(final MainGameScreen mainGameScreen) {
         setPreviousState(
             getCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
-        setStateTimer(
-            0);                    //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
+        setStateTimer(0); //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
         setDirection(
-            getDOWN());             //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
+            getDOWN()); //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
         setMoving(
-            false);                    //Initializes moving to false because the User is in an IDLE state, meaning that the character should not be moving in that state.
+            false); //Initializes moving to false because the User is in an IDLE state, meaning that the character should not be moving in that state.
         setAligned(
-            true);                    //Initializes aligned to true because the User should be placed correctly on the grid so that aligned should be true already.
+            true); //Initializes aligned to true because the User should be placed correctly on the grid so that aligned should be true already.
         setFutureCollision(
-            false);           //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
+            false); //Initializes futureCollision to false because the User will have enough time to check if there will be a collision.
         setSwimming(
-            false);                  //Initializes swimming to false because the User should start on land at the beginning of the game.
+            false); //Initializes swimming to false because the User should start on land at the beginning of the game.
         setRestrictedMovement(
-            false);        //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
+            false); //Initializes restrictedMovement to false because there is no scene that requires a computer-controlled User.
         setMovementKeyHeldDownTime(
-            0f);      //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
-        setMainGameScreen(mainGameScreen);   //Initializes the main game screen to the parameter value.
+            0f); //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
+        setMainGameScreen(mainGameScreen); //Initializes the main game screen to the parameter value.
         
         setMapCreator(mainGameScreen
                           .getMapCreator()); //Set the map creator to the same instance as the one in the main game screen to store the collision rectangles.
@@ -349,7 +348,7 @@ public class User extends BasePlayer {
         updateCurrentCollisionRectangle();
         
         handleInput = new HandleInput((float dt) -> {
-            if(isAligned() && !isRestrictedMovement()) {
+            if(isAligned() && !isRestrictedMovement() && getCurrentState() != PlayerActions.IN_BATTLE) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getUP());
@@ -357,7 +356,7 @@ public class User extends BasePlayer {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned() && !isRestrictedMovement()) {
+            if(isAligned() && !isRestrictedMovement() && getCurrentState() != PlayerActions.IN_BATTLE) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getDOWN());
@@ -365,7 +364,7 @@ public class User extends BasePlayer {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned() && !isRestrictedMovement()) {
+            if(isAligned() && !isRestrictedMovement() && getCurrentState() != PlayerActions.IN_BATTLE) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getRIGHT());
@@ -373,7 +372,7 @@ public class User extends BasePlayer {
                 setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
             }
         }, (float dt) -> {
-            if(isAligned() && !isRestrictedMovement()) {
+            if(isAligned() && !isRestrictedMovement() && getCurrentState() != PlayerActions.IN_BATTLE) {
                 setMoving(true);
                 setAligned(false);
                 setDirection(getLEFT());
@@ -869,18 +868,27 @@ public class User extends BasePlayer {
      * @return Action the {@code User} is performing at the current frame.
      */
     private PlayerActions getCurrentState() {
-        if(!isMoving() || isRestrictedMovement()) {
-            return PlayerActions.IDLE;
-        } else {
-            if(!isSwimming()) {
-                if(!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) && !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
-                    return PlayerActions.WALKING;
+        if(getMainGameScreen() != null) {
+            if(!isMoving() || isRestrictedMovement()) {
+                if(getMainGameScreen().getEngine().getScreen().getClass() != BattleScreen.class) {
+                    return PlayerActions.IDLE;
                 } else {
-                    return PlayerActions.RUNNING;
+                    return PlayerActions.IN_BATTLE;
                 }
             } else {
-                return PlayerActions.SWIMMING;
+                if(!isSwimming()) {
+                    if(!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) &&
+                       !Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
+                        return PlayerActions.WALKING;
+                    } else {
+                        return PlayerActions.RUNNING;
+                    }
+                } else {
+                    return PlayerActions.SWIMMING;
+                }
             }
         }
+    
+        return PlayerActions.IDLE;
     }
 }

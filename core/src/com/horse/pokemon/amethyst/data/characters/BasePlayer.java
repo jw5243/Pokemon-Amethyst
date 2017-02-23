@@ -57,16 +57,30 @@ public abstract class BasePlayer extends Actor {
      * The {@code float} instance representing where the {@code BasePlayer} is every frame in terms of vertical pixels.
      */
     private float   positionY;
+    
     /**
      * The {@code boolean} instance representing if the {@link HandleInput} of the {@code BasePlayer} has a keyboard press that will represent that the {@code BasePlayer} is to
      * try and move throughout the map.
      */
     private boolean moving;
+    
     /**
      * The {@code boolean} instance representing if the {@code BasePlayer} is correctly positioned onto one of the game tiles.  This may also be thought of as a
      * snap-to-grid type of system.
      */
     private boolean aligned;
+    
+    /**
+     * The {@code boolean} instance representing if the {@code BasePlayer} is going to collide in the next tile position by referencing the {@link #direction} of the {@code
+     * BasePlayer} to identify the correct {@link Rectangle} the {@code BasePlayer} would be on top of.  This ensures the {@code BasePlayer} stays {@link #aligned} with the
+     * tiles.
+     */
+    private boolean futureCollision;
+    
+    /**
+     * The {@code boolean} instance representing if the {@code BasePlayer} is able to move not in terms of collisions but during some scenes in the game.
+     */
+    private boolean restrictedMovement;
     
     /**
      * The {@link MapCreator} instance representing the current map the {@code BasePlayer} is on, which is used to calculate whether the {@code BasePlayer} is
@@ -82,16 +96,7 @@ public abstract class BasePlayer extends Actor {
      * the animation of the {@code BasePlayer} should be reset or continued.
      */
     private PlayerActions previousState;
-    /**
-     * The {@code boolean} instance representing if the {@code BasePlayer} is going to collide in the next tile position by referencing the {@link #direction} of the {@code
-     * BasePlayer} to identify the correct {@link Rectangle} the {@code BasePlayer} would be on top of.  This ensures the {@code BasePlayer} stays {@link #aligned} with the
-     * tiles.
-     */
-    private boolean       futureCollision;
-    /**
-     * The {@code boolean} instance representing if the {@code BasePlayer} is able to move not in terms of collisions but during some scenes in the game.
-     */
-    private boolean       restrictedMovement;
+    
     /**
      * The {@code byte} instance representing where the {@code BasePlayer} is pointing towards.
      */

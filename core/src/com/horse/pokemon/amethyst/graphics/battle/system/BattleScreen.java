@@ -1,7 +1,5 @@
 package com.horse.pokemon.amethyst.graphics.battle.system;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.audio.AudioData;
@@ -48,10 +46,10 @@ public class BattleScreen implements Screen {
     
     @Override
     public void render(float delta) {
-        if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
-            getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.MAIN_GAME_SCREEN));
-            getSound().getAudio().dispose();
-        }
+        //if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) {
+        //    getEngine().setScreen(getEngine().getScreen(Engine.screenTypes.MAIN_GAME_SCREEN));
+        //    getSound().getAudio().dispose();
+        //}
         getBackgroundSetup().render(delta);
     }
     

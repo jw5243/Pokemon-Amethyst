@@ -66,6 +66,9 @@ project(":core") {
         compile "com.badlogicgames.ashley:ashley:$ashleyVersion"
         compile "com.badlogicgames.gdx:gdx-ai:$aiVersion"
         compile "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
+        compile fileTree(dir: 'dependencies/JOL', include: '*.jar')
+        compile fileTree(dir: 'dependencies/Koloboke', include: '*.jar')
+        compile fileTree(dir: 'dependencies/JMH', include: '*.jar')
     }
 }
 
