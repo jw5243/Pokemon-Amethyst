@@ -125,5 +125,39 @@ public enum StatTypes {
      *
      * @see Pokemon
      */
-    DEFENSE, SPECIAL_ATTACK, SPECIAL_DEFENSE, SPEED
+    DEFENSE,
+    
+    /**
+     * The {@code SPECIAL_ATTACK} stat affects how much damage is dealt to an opposing {@code Pokemon} if the attack
+     * type is special, or a non-contacting attack.  Knowing whether or not the {@code Pokemon} being used has a higher
+     * {@code SPECIAL_ATTACK} or {@code ATTACK} can be vital to a pokemon battle, as a higher {@code SPECIAL_ATTACK}
+     * stat will damage the defending {@code Pokemon} more than {@code ATTACK}.
+     *
+     * @see Pokemon
+     */
+    SPECIAL_ATTACK,
+    
+    /**
+     * The {@code SPECIAL_DEFENSE} stat affects how much damage is dealt onto itself from an opposing {@code Pokemon}
+     * attacking the defending {@code Pokemon}.  This stat will come to use only when the attacks used on a defending
+     * {@code Pokemon} are special, or attacks that have no direct contact.
+     * <p>
+     *     A higher {@code SPECIAL_DEFENSE} stat will lower the amount of damage dealt on the corresponding
+     *     {@code Pokemon}, whereas a lower {@code SPECIAL_DEFENSE} stat will cause a higher amount of damage inflicted
+     *     onto the defending {@code Pokemon}.
+     * </p>
+     *
+     * @see Pokemon
+     */
+    SPECIAL_DEFENSE,
+    
+    /**
+     * The {@code SPEED} stat can be vital when in a {@code Pokemon} battle, determining the entire outcome at times
+     * when both final {@code Pokemon} have a shortage of {@code HEALTH}.  When {@code SPEED} is taken into account, in
+     * a battle, which is when both {@code Pokemon} have decided to attack, the stat is compared to each other, the
+     * higher one causing the corresponding {@code Pokemon} to strike before the other {@code Pokemon}.
+     *
+     * @see Pokemon
+     */
+    SPEED
 }
