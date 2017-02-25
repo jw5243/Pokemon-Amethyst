@@ -7,7 +7,7 @@ import com.horse.pokemon.amethyst.Engine;
 public class DesktopLauncher {
     public static void main(String[] arg) {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.title = "Pokemon Game";
+        config.title = "Pokemon Amethyst";
         config.resizable = true;
         config.width = Engine.getvWidth() * 2;
         config.height = Engine.getvHeight() * 2;

@@ -30,7 +30,7 @@ public class NPC extends BasePlayer {
         this.npcSpriteSheetPath = npcSpriteSheetPath;
         this.npcSprite = new Sprite(new Texture(getNpcSpriteSheetPath()));
         setMapCreator(mapCreator);
-        setDirection(getDOWN());
+        setCurrentDirection(getDOWN());
         resetPosition();
         positionID = getNpcPositions().size();
         getNpcPositions().add(getPositionID(), getCurrentCollisionRectangle());
@@ -77,8 +77,8 @@ public class NPC extends BasePlayer {
     
     public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
         setMapCreator(resetMapCreator ? mapCreator : getMapCreator());
-        setPositionX((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).x + getInGameWidth() / 2));
-        setPositionY((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).y + getInGameHeight() / 2));
+        setX((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).x + getInGameWidth() / 2));
+        setY((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).y + getInGameHeight() / 2));
     }
     
     public Sprite getNpcSprite() {
@@ -122,40 +122,42 @@ public class NPC extends BasePlayer {
     }
     
     private TextureRegion getFrame(float deltaTime) {
-        float stateTime = getStateTimer() * getAnimationSpeed();
-        
-        setStateTimer(getCurrentState() == getPreviousState() ? getStateTimer() + deltaTime : 0);
-        setPreviousState(getCurrentState());
-        return (getCurrentState() == PlayerActions.WALKING) ?
-               (getDirection() == getUP()) ? (TextureRegion)(getMovingFrames()[0].getKeyFrame(stateTime, true)) :
-               (getDirection() == getDOWN()) ? (TextureRegion)(getMovingFrames()[1].getKeyFrame(stateTime, true)) :
-               (getDirection() == getRIGHT()) ? (TextureRegion)(getMovingFrames()[2].getKeyFrame(stateTime, true)) :
+        float stateTime = getAnimationTimer() * getAnimationSpeed();
+    
+        setAnimationTimer(findCurrentState() == findCurrentState() ? getAnimationTimer() + deltaTime : 0);
+        setPreviousState(findCurrentState());
+        return (findCurrentState() == getWALKING()) ?
+               (getCurrentDirection() == getUP()) ? (TextureRegion)(getMovingFrames()[0].getKeyFrame(stateTime, true)) :
+               (getCurrentDirection() == getDOWN()) ?
+               (TextureRegion)(getMovingFrames()[1].getKeyFrame(stateTime, true)) :
+               (getCurrentDirection() == getRIGHT()) ?
+               (TextureRegion)(getMovingFrames()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getMovingFrames()[3].getKeyFrame(stateTime, true)) :
-               (getDirection() == getUP()) ? getIdleFrames()[0] : (getDirection() == getDOWN()) ? getIdleFrames()[1] :
-                                                                  (getDirection() == getRIGHT()) ? getIdleFrames()[2] :
-                                                                  getIdleFrames()[3];
+               (getCurrentDirection() == getUP()) ? getIdleFrames()[0] :
+               (getCurrentDirection() == getDOWN()) ? getIdleFrames()[1] :
+               (getCurrentDirection() == getRIGHT()) ? getIdleFrames()[2] : getIdleFrames()[3];
     }
     
-    private PlayerActions getCurrentState() {
-        if(isMoving()) {
-            return PlayerActions.WALKING;
+    @Override
+    public byte findCurrentState() {
+        if(isFlag(getIsMoving())) {
+            return getWALKING();
         } else {
-            return PlayerActions.IDLE;
+            return getIDLE();
         }
     }
     
     private void updateAlignment() {
-        setAligned((getPositionX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
-                   (getPositionY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0);
+        if((getX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
+           (getY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0) {
+            raiseFlag(getIsAligned());
+        } else {
+            removeFlag(getIsAligned());
+        }
     }
     
     private void updateAnimation(float deltaTime) {
         getNpcSprite().setRegion(getFrame(deltaTime));
-    }
-    
-    private void updateActorXY() {
-        setX(getPositionX() - getInGameWidth() / 2);
-        setY(getPositionY() - getInGameHeight() / 2);
     }
     
     private void updateCurrentCollisionRectangle() {
@@ -167,18 +169,17 @@ public class NPC extends BasePlayer {
     }
     
     @Override
-    public void update(float deltaTime) {
-        updateAlignment();
-        updateCurrentCollisionRectangle();
-        updateActorXY();
-        updateAnimation(deltaTime);
-        updateGlobalPosition();
+    public void draw(Batch batch, float parentAlpha) {
+        batch.draw(getNpcSprite(), getX() - getInGameWidth() / 2, getY() - getInGameHeight() / 2, getInGameWidth(),
+                   getInGameHeight()
+        );
     }
     
     @Override
-    public void draw(Batch batch, float parentAlpha) {
-        batch.draw(getNpcSprite(), getPositionX() - getInGameWidth() / 2, getPositionY() - getInGameHeight() / 2,
-                   getInGameWidth(), getInGameHeight()
-        );
+    public void act(float deltaTime) {
+        updateAlignment();
+        updateCurrentCollisionRectangle();
+        updateAnimation(deltaTime);
+        updateGlobalPosition();
     }
 }

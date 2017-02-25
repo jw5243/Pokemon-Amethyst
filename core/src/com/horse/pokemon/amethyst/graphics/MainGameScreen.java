@@ -381,12 +381,9 @@ public class MainGameScreen implements Screen {
     
     private void update(float deltaTime) {
         handleInput(deltaTime);
-        
-        getUser().update(deltaTime);
-        getNpc().update(deltaTime);
     
-        getCamera().position.x = getUser().getPositionX();
-        getCamera().position.y = getUser().getPositionY();
+        getCamera().position.x = getUser().getX();
+        getCamera().position.y = getUser().getY();
         
         getCamera().update();
         getRenderer().setView(getCamera());

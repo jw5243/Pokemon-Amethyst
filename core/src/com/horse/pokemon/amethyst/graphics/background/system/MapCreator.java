@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.horse.pokemon.amethyst.Engine;
+import com.horse.pokemon.amethyst.data.characters.BasePlayer;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
 import com.horse.pokemon.amethyst.data.objects.Door;
@@ -48,7 +49,7 @@ public class MapCreator {
     public void resetTiledObjects(MainGameScreen screen, MultiTiledMap[] map) {
         getCollidableTileObjects().clear();
         addTiledObjects(screen, map);
-        screen.getUser().setMapCreator(this);
+        BasePlayer.setMapCreator(this);
     }
     
     public void addTiledObjects(MainGameScreen screen, MultiTiledMap[] maps) {
@@ -57,7 +58,7 @@ public class MapCreator {
             for(MapObject object : maps[index].getLayers().get("Collisions").getObjects()
                                               .getByType(RectangleMapObject.class)) {
                 Rectangle rectangle = ((RectangleMapObject)(object)).getRectangle();
-        
+    
                 rectangle.setX(rectangle.getX() + screen.getMaps()[index].getOffsetX() * Engine.getTileSize());
                 rectangle.setY(rectangle.getY() + screen.getMaps()[index].getOffsetY() * Engine.getTileSize());
     
@@ -80,13 +81,13 @@ public class MapCreator {
                     } else if(stringMapProperty.equalsIgnoreCase("Mailbox")) {
                         getCollidableTileObjects().add(new Mailbox(rectangle));
                     } else if(stringMapProperty.equalsIgnoreCase("Grass")) {
-            
+    
                     } else if(stringMapProperty.equalsIgnoreCase("Edging")) {
-            
+    
                     } else if(stringMapProperty.equalsIgnoreCase("Bed")) {
-            
+    
                     } else if(stringMapProperty.equalsIgnoreCase("Stairs")) {
-            
+    
                     } else if(stringMapProperty.equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(stringMapProperty.contains("NPC")) {

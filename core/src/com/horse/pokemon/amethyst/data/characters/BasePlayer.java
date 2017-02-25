@@ -1,11 +1,9 @@
 package com.horse.pokemon.amethyst.data.characters;
 
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.horse.pokemon.amethyst.data.pokemon.Pokemon;
+import com.horse.pokemon.amethyst.data.pokemon.PartyPokemon;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
-import com.horse.pokemon.amethyst.graphics.input.HandleInput;
 
 /**
  * The base class for all new characters in the game.
@@ -15,306 +13,232 @@ import com.horse.pokemon.amethyst.graphics.input.HandleInput;
  * @since 1.0
  */
 public abstract class BasePlayer extends Actor {
-    /**
-     * The {@code byte} representing the 'up' direction for when the character is moving upwards or at a constant position pointing up.
-     */
-    private static final byte UP = 1;
+    private static final byte UP    = 0x01;
+    private static final byte DOWN  = 0x02;
+    private static final byte RIGHT = 0x03;
+    private static final byte LEFT  = 0x04;
     
-    /**
-     * The {@code byte} representing the 'down' direction for when the character is moving downwards or at a constant position pointing down.
-     */
-    private static final byte DOWN = 2;
+    private static final byte IDLE          = 0x11;
+    private static final byte WALKING       = 0x12;
+    private static final byte RUNNING       = 0x13;
+    private static final byte BIKING        = 0x14;
+    private static final byte SWIMMING      = 0x15;
+    private static final byte USING_HM_MOVE = 0x16;
+    private static final byte FISHING       = 0x17;
+    private static final byte IN_BATTLE     = 0x18;
     
-    /**
-     * The {@code byte} representing the 'right' direction for when the character is moving to the right or at a constant position pointing to the right.
-     */
-    private static final byte RIGHT = 3;
+    private static final byte IDLE_SPEED          = 0;
+    private static final byte WALKING_SPEED       = 1;
+    private static final byte RUNNING_SPEED       = 2;
+    private static final byte BIKING_SPEED        = 3;
+    private static final byte SWIMMING_SPEED      = 1;
+    private static final byte USING_HM_MOVE_SPEED = 0;
+    private static final byte FISHING_SPEED       = 0;
+    private static final byte IN_BATTLE_SPEED     = 0;
     
-    /**
-     * The {@code byte} representing the 'left' direction for when the character is moving to the left of at a constant position pointing to the left.
-     */
-    private static final byte LEFT = 4;
+    private static final byte MAX_POKEMON_PER_PARTY = 0x0A;
     
-    /*private static final byte IDLE          = 1;
-    private static final byte WALKING       = 2;
-    private static final byte RUNNING       = 3;
-    private static final byte BIKING        = 4;
-    private static final byte SWIMMING      = 5;
-    private static final byte USING_HM_MOVE = 6;
-    private static final byte FISHING       = 7;
-    private static final byte IN_BATTLE     = 8;*/
+    private static final byte IS_MOVING              = 0b0000_0001;
+    private static final byte IS_ALIGNED             = 0b0000_0010;
+    private static final byte IS_FUTURE_COLLISION    = 0b0000_0100;
+    private static final byte IS_RESTRICTED_MOVEMENT = 0b0000_1000;
+    private static final byte DEFAULT_FLAGS          = 0b0000_0000;
     
-    /**
-     * The max amount of slots with PokemonData a Player can have at one time.
-     */
-    private static final int MAX_POKEMON = 6;
+    private static MapCreator mapCreator;
     
-    /**
-     * The {@code float} instance representing where the {@code BasePlayer} is every frame in terms of horizontal pixels.
-     */
-    private float   positionX;
-    /**
-     * The {@code float} instance representing where the {@code BasePlayer} is every frame in terms of vertical pixels.
-     */
-    private float   positionY;
+    private byte         flags;
+    private byte         currentDirection;
+    private byte         previousState;
+    private float        animationTimer;
+    private PartyPokemon partyPokemon;
+    private Rectangle    currentCollisionRectangle;
     
-    /**
-     * The {@code boolean} instance representing if the {@link HandleInput} of the {@code BasePlayer} has a keyboard press that will represent that the {@code BasePlayer} is to
-     * try and move throughout the map.
-     */
-    private boolean moving;
-    
-    /**
-     * The {@code boolean} instance representing if the {@code BasePlayer} is correctly positioned onto one of the game tiles.  This may also be thought of as a
-     * snap-to-grid type of system.
-     */
-    private boolean aligned;
-    
-    /**
-     * The {@code boolean} instance representing if the {@code BasePlayer} is going to collide in the next tile position by referencing the {@link #direction} of the {@code
-     * BasePlayer} to identify the correct {@link Rectangle} the {@code BasePlayer} would be on top of.  This ensures the {@code BasePlayer} stays {@link #aligned} with the
-     * tiles.
-     */
-    private boolean futureCollision;
-    
-    /**
-     * The {@code boolean} instance representing if the {@code BasePlayer} is able to move not in terms of collisions but during some scenes in the game.
-     */
-    private boolean restrictedMovement;
-    
-    /**
-     * The {@link MapCreator} instance representing the current map the {@code BasePlayer} is on, which is used to calculate whether the {@code BasePlayer} is
-     * colliding with any of the objects of the map.
-     */
-    private MapCreator    mapCreator;
-    /**
-     * The {@link Rectangle} instance representing the boundaries of the {@code BasePlayer} to detect collisions.
-     */
-    private Rectangle     currentCollisionRectangle;
-    /**
-     * The {@link PlayerActions} instance representing the last action the {@code BasePlayer} was in to implement smoot animation transitions and to check whether
-     * the animation of the {@code BasePlayer} should be reset or continued.
-     */
-    private PlayerActions previousState;
-    
-    /**
-     * The {@code byte} instance representing where the {@code BasePlayer} is pointing towards.
-     */
-    private byte          direction;
-    /**
-     * The {@code float} instance used to represent the amount of time passed during a new action, also specifying which frame is to be drawn.
-     */
-    private float         stateTimer;
-    /**
-     * The {@link String} instance representing a Player's name.
-     */
-    private String        name;
-    /**
-     * The {@link Pokemon} array instance representing the Player's PokemonData slots.
-     */
-    private Pokemon[] currentPokemon = new Pokemon[MAX_POKEMON];
-    
-    /**
-     * Returns the representation for when the {@code BasePlayer} is pointing upwards.
-     *
-     * @return {@link #UP}
-     */
-    static byte getUP() {
-        return UP;
+    public static byte getSpeed(final byte currentState) {
+        return (currentState == getIDLE()) ? getIdleSpeed() : (currentState == getWALKING()) ? getWalkingSpeed() :
+                                                              (currentState == getRUNNING()) ? getRunningSpeed() :
+                                                              (currentState == getBIKING()) ? getBikingSpeed() :
+                                                              (currentState == getSWIMMING()) ? getSwimmingSpeed() :
+                                                              (currentState == getUsingHmMove()) ?
+                                                              getUsingHmMoveSpeed() :
+                                                              (currentState == getFISHING()) ? getFishingSpeed() :
+                                                              getInBattleSpeed();
     }
     
-    /**
-     * Returns the representation for when the {@code BasePlayer} is pointing downwards.
-     *
-     * @return {@link #DOWN}
-     */
-    static byte getDOWN() {
-        return DOWN;
+    public static byte getIdleSpeed() {
+        return IDLE_SPEED;
     }
     
-    /**
-     * Returns the representation for when the {@code BasePlayer} is pointing to the right.
-     *
-     * @return {@link #RIGHT}
-     */
-    static byte getRIGHT() {
-        return RIGHT;
+    public static byte getWalkingSpeed() {
+        return WALKING_SPEED;
     }
     
-    /**
-     * Returns the representation for when the {@code BasePlayer} is pointing to the left.
-     *
-     * @return {@link #LEFT}
-     */
-    static byte getLEFT() {
-        return LEFT;
+    public static byte getRunningSpeed() {
+        return RUNNING_SPEED;
     }
     
-    /**
-     * Returns the max number of PokemonData a Player can have at one time.
-     *
-     * @return {@link #MAX_POKEMON}
-     */
-    public static int getMaxPokemon() {
-        return MAX_POKEMON;
+    public static byte getBikingSpeed() {
+        return BIKING_SPEED;
     }
     
-    float getStateTimer() {
-        return stateTimer;
+    public static byte getSwimmingSpeed() {
+        return SWIMMING_SPEED;
     }
     
-    void setStateTimer(float stateTimer) {
-        this.stateTimer = stateTimer;
+    public static byte getUsingHmMoveSpeed() {
+        return USING_HM_MOVE_SPEED;
     }
     
-    /**
-     * Returns the {@link Rectangle} instance representing the collision box of the {@code BasePlayer} to detect future collisions and special actions.
-     *
-     * @return {@link #currentCollisionRectangle}
-     */
-    Rectangle getCurrentCollisionRectangle() {
-        return currentCollisionRectangle;
+    public static byte getFishingSpeed() {
+        return FISHING_SPEED;
     }
     
-    /**
-     * Sets the {@link #currentCollisionRectangle} to a new {@link Rectangle} instance.
-     *
-     * @param currentCollisionRectangle New {@link Rectangle} instance to be represented as the collision box of the {@code BasePlayer}.
-     */
-    void setCurrentCollisionRectangle(Rectangle currentCollisionRectangle) {
-        this.currentCollisionRectangle = currentCollisionRectangle;
+    public static byte getInBattleSpeed() {
+        return IN_BATTLE_SPEED;
     }
     
-    MapCreator getMapCreator() {
+    public static MapCreator getMapCreator() {
         return mapCreator;
     }
     
-    public void setMapCreator(MapCreator mapCreator) {
-        this.mapCreator = mapCreator;
+    public static void setMapCreator(MapCreator mapCreator) {
+        BasePlayer.mapCreator = mapCreator;
     }
     
-    PlayerActions getPreviousState() {
+    public static byte getDefaultFlags() {
+        return DEFAULT_FLAGS;
+    }
+    
+    public static byte getUP() {
+        return UP;
+    }
+    
+    public static byte getDOWN() {
+        return DOWN;
+    }
+    
+    public static byte getRIGHT() {
+        return RIGHT;
+    }
+    
+    public static byte getLEFT() {
+        return LEFT;
+    }
+    
+    public static byte getIDLE() {
+        return IDLE;
+    }
+    
+    public static byte getWALKING() {
+        return WALKING;
+    }
+    
+    public static byte getRUNNING() {
+        return RUNNING;
+    }
+    
+    public static byte getBIKING() {
+        return BIKING;
+    }
+    
+    public static byte getSWIMMING() {
+        return SWIMMING;
+    }
+    
+    public static byte getUsingHmMove() {
+        return USING_HM_MOVE;
+    }
+    
+    public static byte getFISHING() {
+        return FISHING;
+    }
+    
+    public static byte getInBattle() {
+        return IN_BATTLE;
+    }
+    
+    public static byte getMaxPokemonPerParty() {
+        return MAX_POKEMON_PER_PARTY;
+    }
+    
+    public static byte getIsMoving() {
+        return IS_MOVING;
+    }
+    
+    public static byte getIsAligned() {
+        return IS_ALIGNED;
+    }
+    
+    public static byte getIsFutureCollision() {
+        return IS_FUTURE_COLLISION;
+    }
+    
+    public static byte getIsRestrictedMovement() {
+        return IS_RESTRICTED_MOVEMENT;
+    }
+    
+    abstract public byte findCurrentState();
+    
+    public Rectangle getCurrentCollisionRectangle() {
+        return currentCollisionRectangle;
+    }
+    
+    public void setCurrentCollisionRectangle(Rectangle currentCollisionRectangle) {
+        this.currentCollisionRectangle = currentCollisionRectangle;
+    }
+    
+    public byte getPreviousState() {
         return previousState;
     }
     
-    void setPreviousState(PlayerActions previousState) {
-        this.previousState = previousState;
+    public void setPreviousState(byte previousState) {
+        this.previousState &= previousState;
     }
     
-    boolean isRestrictedMovement() {
-        return restrictedMovement;
+    public byte getCurrentDirection() {
+        return currentDirection;
     }
     
-    void setRestrictedMovement(boolean restrictedMovement) {
-        this.restrictedMovement = restrictedMovement;
+    public void setCurrentDirection(byte currentDirection) {
+        this.currentDirection = currentDirection;
     }
     
-    byte getDirection() {
-        return direction;
+    public float getAnimationTimer() {
+        return animationTimer;
     }
     
-    void setDirection(byte direction) {
-        this.direction = direction;
+    public void setAnimationTimer(float animationTimer) {
+        this.animationTimer = animationTimer;
     }
     
-    boolean isFutureCollision() {
-        return futureCollision;
+    public PartyPokemon getPartyPokemon() {
+        return partyPokemon;
     }
     
-    void setFutureCollision(boolean futureCollision) {
-        this.futureCollision = futureCollision;
+    public void setPartyPokemon(PartyPokemon partyPokemon) {
+        this.partyPokemon = partyPokemon;
     }
     
-    public float getPositionX() {
-        return positionX;
+    public byte getFlags() {
+        return flags;
     }
     
-    void setPositionX(float positionX) {
-        this.positionX = positionX;
+    public void setFlags(byte flags) {
+        this.flags = flags;
     }
     
-    public float getPositionY() {
-        return positionY;
+    public void raiseFlag(final byte flagToAdd) {
+        this.flags |= flagToAdd;
     }
     
-    void setPositionY(float positionY) {
-        this.positionY = positionY;
+    public void resetFlags() {
+        setFlags(getDefaultFlags());
     }
     
-    boolean isMoving() {
-        return moving;
+    public void removeFlag(final byte flagToRemove) {
+        this.flags &= ~flagToRemove;
     }
     
-    void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-    
-    boolean isAligned() {
-        return aligned;
-    }
-    
-    void setAligned(boolean aligned) {
-        this.aligned = aligned;
-    }
-    
-    /**
-     * Method for checking if something is to be changed with an {@code BasePlayer} each frame.
-     *
-     * @param deltaTime Amount of time between each frame.
-     */
-    abstract void update(float deltaTime);
-    
-    /**
-     * Method that draws out the {@code BasePlayer} every frame.
-     *
-     * @param batch       Drawing tool.
-     * @param parentAlpha Alpha value to add transparency to all children.
-     */
-    abstract public void draw(Batch batch, float parentAlpha);
-    
-    /**
-     * Returns the Player's name.
-     *
-     * @return {@link #name}
-     */
-    public String getName() {
-        return name;
-    }
-    
-    /**
-     * Sets the {@link #name}.
-     *
-     * @param name {@link #name}
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-    
-    /**
-     * Sets a specific index of the {@link #currentPokemon} instance.
-     *
-     * @param currentPokemon {@link #currentPokemon}
-     * @param Index          {@link Integer} representing the index of the PokemonData slot to set or replace.
-     */
-    public void setCurrentPokemon(Pokemon currentPokemon, int Index) {
-        this.currentPokemon[Index] = currentPokemon;
-    }
-    
-    /**
-     * Returns the Player's current PokemonData.
-     *
-     * @return {@link #currentPokemon}
-     */
-    public Pokemon[] getCurrentPokemon() {
-        return currentPokemon;
-    }
-    
-    /**
-     * Sets the {@link #currentPokemon} (All slots).
-     *
-     * @param currentPokemon {@link #currentPokemon}
-     */
-    public void setCurrentPokemon(Pokemon[] currentPokemon) {
-        this.currentPokemon = currentPokemon;
+    public boolean isFlag(final byte flagToCheck) {
+        return (getFlags() & flagToCheck) == flagToCheck;
     }
 }

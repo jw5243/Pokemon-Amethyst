@@ -142,7 +142,7 @@ public class Dialog extends Actor implements Disposable {
             float currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
             float currentWriterYPosition = getY() + getHeight() - DialogCharacter.getDefaultHeight() -
                                            CharacterWriter.getDefaultCharacterStartYPositionBuffer();
-        
+    
             for(char character : getUnparsedTextToWrite().toCharArray()) {
                 if(character == '\n') {
                     currentWriterXPosition = getX() + CharacterWriter.getDefaultCharacterStartXPositionBuffer();
@@ -157,9 +157,9 @@ public class Dialog extends Actor implements Disposable {
                 } else {
                     CharacterWriter characterWriter =
                         new CharacterWriter(character, (int)(currentWriterXPosition), (int)(currentWriterYPosition));
-                
+    
                     getCharactersToTypeArrayList().add(characterWriter);
-                
+    
                     currentWriterXPosition = currentWriterXPosition + characterWriter.getCharacterWidth();
                     if(currentWriterXPosition + DialogCharacter.getDefaultWidth() +
                        CharacterWriter.getDefaultCharacterEndXPositionBuffer() >= getX() + getWidth()) {
