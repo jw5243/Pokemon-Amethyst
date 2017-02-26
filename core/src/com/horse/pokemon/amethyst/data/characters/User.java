@@ -266,7 +266,7 @@ public class User extends BasePlayer {
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is quickly moving.
      */
-    private static final Animation[]     userRun                = new Animation[] {
+    private static final Animation[] userRun         = new Animation[] {
         AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {153, 135, 172, 135}, 6,
                                       getUserWalkWidth(), getUserWalkHeight()
         ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {27, 62, 45, 62}, 49,
@@ -345,19 +345,22 @@ public class User extends BasePlayer {
     
         addListener(new InputListener() {
             public boolean keyDown(InputEvent event, int keycode) {
-                setMovementFlag((keycode == Input.Keys.UP) ? getIsMovingUp() :
-                                (keycode == Input.Keys.DOWN) ? getIsMovingDown() :
-                                (keycode == Input.Keys.RIGHT) ? getIsMovingRight() :
-                                (keycode == Input.Keys.LEFT) ? getIsMovingLeft() : getMovementFlag());
-            
+                setMovementFlag((keycode == Input.Keys.UP) ? (byte)(getMovementFlag() | getIsMovingUp()) :
+                                (keycode == Input.Keys.DOWN) ? (byte)(getMovementFlag() | getIsMovingDown()) :
+                                (keycode == Input.Keys.RIGHT) ? (byte)(getMovementFlag() | getIsMovingRight()) :
+                                (keycode == Input.Keys.LEFT) ? (byte)(getMovementFlag() | getIsMovingLeft()) :
+                                getMovementFlag());
+                
                 return true;
             }
         
             public boolean keyUp(InputEvent event, int keycode) {
-                setMovementFlag(
-                    (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN || keycode == Input.Keys.RIGHT ||
-                     keycode == Input.Keys.LEFT) ? 0b0000_0000 : getMovementFlag());
-            
+                setMovementFlag((keycode == Input.Keys.UP) ? (byte)(getMovementFlag() & ~getIsMovingUp()) :
+                                (keycode == Input.Keys.DOWN) ? (byte)(getMovementFlag() & ~getIsMovingDown()) :
+                                (keycode == Input.Keys.RIGHT) ? (byte)(getMovementFlag() & ~getIsMovingRight()) :
+                                (keycode == Input.Keys.LEFT) ? (byte)(getMovementFlag() & ~getIsMovingLeft()) :
+                                getMovementFlag());
+                
                 return true;
             }
         });
