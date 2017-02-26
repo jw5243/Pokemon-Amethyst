@@ -223,6 +223,8 @@ public class MainGameScreen implements Screen {
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(getUser());
         getStage().addActor(getNpc());
+        getStage().setKeyboardFocus(getUser());
+        
         Gdx.input.setInputProcessor(getStage());
     
         setSound(AudioData.TWINLEAF_TOWN_DAYTIME);

@@ -99,7 +99,15 @@ import java.util.Map;
  * @see GraphLayout#toFootprint()
  */
 public class JIntIntIntMap {
+    /**
+     * The {@code byte} representing the length in terms of arrays on how many indeces are occupied from a single set of
+     * keys following to one value.
+     */
     private static final byte DEFAULT_KEYS_AND_VALUES_SIZE = 3;
+    
+    /**
+     * The {@code int[]} instance that stores all information for the {@linkplain Object} to read and write from.
+     */
     private int[] keysAndValues;
     
     public JIntIntIntMap() {

@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
@@ -177,28 +179,28 @@ import com.horse.pokemon.amethyst.graphics.input.HandleInput;
 public class User extends BasePlayer {
     /**
      * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
-     * {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the user
+     * {@link #getWALKING()} or {@link #getIDLE()} if the {@code User} is on land, also determining how big the user
      * is drawn every frame x-wise.
      */
     private static final byte USER_WALK_WIDTH = 16;
     
     /**
      * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
-     * the {@link PlayerActions} {@link PlayerActions#WALKING} or {@link PlayerActions#IDLE} if the {@code User} is on land, also determining how big the
+     * the {@link #getWALKING()} or {@link #getIDLE()} state if the {@code User} is on land, also determining how big the
      * user is draw every frame y-wise.
      */
     private static final byte USER_WALK_HEIGHT = 19;
     
     /**
      * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
-     * {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how big the user
+     * {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how big the user
      * is drawn every frame x-wise.
      */
     private static final byte USER_SWIM_WIDTH = 22;
     
     /**
      * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
-     * the {@link PlayerActions} {@link PlayerActions#SWIMMING} or {@link PlayerActions#IDLE} if the {@code User} is on water, also determining how big the
+     * the {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how big the
      * user is drawn every frame y-wise.
      */
     private static final byte USER_SWIM_HEIGHT = 24;
@@ -278,7 +280,7 @@ public class User extends BasePlayer {
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
-    private static final Animation[]     userSwim               = new Animation[] {
+    private static final Animation[] userSwim        = new Animation[] {
         AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {192, 170}, 97,
                                       getUserSwimWidth(), getUserSwimHeight()
         ), AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {147, 125}, 97,
@@ -289,24 +291,24 @@ public class User extends BasePlayer {
                                      getUserSwimHeight()
     )
     };
-    /**
-     * The {@link HandleInput} representing how the {@code User} reacts for when  specific keyboard keys are pressed.
-     */
-    private final HandleInput handleInput;
+    private static final byte        IS_MOVING_UP    = 0b0000_0001;
+    private static final byte        IS_MOVING_DOWN  = 0b0000_0010;
+    private static final byte        IS_MOVING_RIGHT = 0b0000_0100;
+    private static final byte        IS_MOVING_LEFT  = 0b000_1000;
+    
     /**
      * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move the {@code User}.
      */
-    private       float       movementKeyHeldDownTime;
-    
+    private float          movementKeyHeldDownTime;
     /**
      * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
      */
-    private boolean swimming;
-    
+    private boolean        swimming;
     /**
      * The {@link MainGameScreen} instance representing the current {@link Screen} the {@code User} is placed in.
      */
     private MainGameScreen mainGameScreen;
+    private byte           movementFlag;
     
     /**
      * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
@@ -340,61 +342,41 @@ public class User extends BasePlayer {
         resetPosition();
         
         updateCurrentCollisionRectangle();
+    
+        addListener(new InputListener() {
+            public boolean keyDown(InputEvent event, int keycode) {
+                setMovementFlag((keycode == Input.Keys.UP) ? getIsMovingUp() :
+                                (keycode == Input.Keys.DOWN) ? getIsMovingDown() :
+                                (keycode == Input.Keys.RIGHT) ? getIsMovingRight() :
+                                (keycode == Input.Keys.LEFT) ? getIsMovingLeft() : getMovementFlag());
+            
+                return true;
+            }
         
-        handleInput = new HandleInput((float dt) -> {
-            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
-                raiseFlag(getIsMoving());
-                removeFlag(getIsAligned());
-                setCurrentDirection(getUP());
-                if(isColliding(getFutureRectangle(0, Engine.getTileSize()), true)) {
-                    raiseFlag(getIsFutureCollision());
-                } else {
-                    removeFlag(getIsFutureCollision());
-                }
-                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
-            }
-        }, (float dt) -> {
-            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
-                raiseFlag(getIsMoving());
-                removeFlag(getIsAligned());
-                setCurrentDirection(getDOWN());
-                if(isColliding(getFutureRectangle(0, -Engine.getTileSize()), true)) {
-                    raiseFlag(getIsFutureCollision());
-                } else {
-                    removeFlag(getIsFutureCollision());
-                }
-                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
-            }
-        }, (float dt) -> {
-            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
-                raiseFlag(getIsMoving());
-                removeFlag(getIsAligned());
-                setCurrentDirection(getRIGHT());
-                if(isColliding(getFutureRectangle(Engine.getTileSize(), 0), true)) {
-                    raiseFlag(getIsFutureCollision());
-                } else {
-                    removeFlag(getIsFutureCollision());
-                }
-                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
-            }
-        }, (float dt) -> {
-            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
-                raiseFlag(getIsMoving());
-                removeFlag(getIsAligned());
-                setCurrentDirection(getLEFT());
-                if(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), true)) {
-                    raiseFlag(getIsFutureCollision());
-                } else {
-                    removeFlag(getIsFutureCollision());
-                }
-                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + dt);
-            }
-        }, (float dt) -> {
-            if(isFlag(getIsAligned())) {
-                removeFlag(getIsMoving());
-                setMovementKeyHeldDownTime(0f);
+            public boolean keyUp(InputEvent event, int keycode) {
+                setMovementFlag(
+                    (keycode == Input.Keys.UP || keycode == Input.Keys.DOWN || keycode == Input.Keys.RIGHT ||
+                     keycode == Input.Keys.LEFT) ? 0b0000_0000 : getMovementFlag());
+            
+                return true;
             }
         });
+    }
+    
+    public static byte getIsMovingUp() {
+        return IS_MOVING_UP;
+    }
+    
+    public static byte getIsMovingDown() {
+        return IS_MOVING_DOWN;
+    }
+    
+    public static byte getIsMovingRight() {
+        return IS_MOVING_RIGHT;
+    }
+    
+    public static byte getIsMovingLeft() {
+        return IS_MOVING_LEFT;
     }
     
     private static float getKeyPressToMoveTime() {
@@ -411,7 +393,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the horizontal pixel value when the {@code User} is in a {@link PlayerActions#SWIMMING} state or {@link PlayerActions#IDLE} state when on water.
+     * Returns the horizontal pixel value when the {@code User} is in a {@link #getSWIMMING()} state or {@link #getIDLE()} state when on water.
      *
      * @return {@link #USER_SWIM_WIDTH}
      */
@@ -420,7 +402,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the vertical pixel value when the {@code User} is in a {@link PlayerActions#SWIMMING} state or {@link PlayerActions#IDLE} state when on water.
+     * Returns the vertical pixel value when the {@code User} is in a {@link #getSWIMMING()} state or {@link #getIDLE()} state when on water.
      *
      * @return {@link #USER_SWIM_HEIGHT}
      */
@@ -438,7 +420,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the horizontal pixel value when the {@code User} is in a {@link PlayerActions#WALKING} state or {@link PlayerActions#IDLE} state when on land.
+     * Returns the horizontal pixel value when the {@code User} is in a {@link #getWALKING()} state or {@link #getIDLE()} state when on land.
      *
      * @return {@link #USER_WALK_WIDTH}
      */
@@ -447,7 +429,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the vertical pixel value when the {@code User} is in a {@link PlayerActions#WALKING} state of {@link PlayerActions#IDLE} state when on land.
+     * Returns the vertical pixel value when the {@code User} is in a {@link #getWALKING()} state of {@link #getIDLE()} state when on land.
      *
      * @return {@link #USER_WALK_HEIGHT}
      */
@@ -465,7 +447,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link PlayerActions#IDLE}
+     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link #getIDLE()}
      * positions for when the {@code User} is not moving in water.
      *
      * @return {@link #userIdleOnWater}
@@ -493,7 +475,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link PlayerActions#IDLE}
+     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link #getIDLE()}
      * positions for when the {@code User} is not moving on land.
      *
      * @return {@link #userIdleOnLand}
@@ -509,6 +491,14 @@ public class User extends BasePlayer {
      */
     private static Animation[] getUserWalk() {
         return userWalk;
+    }
+    
+    public byte getMovementFlag() {
+        return movementFlag;
+    }
+    
+    public void setMovementFlag(byte movementFlag) {
+        this.movementFlag = movementFlag;
     }
     
     /**
@@ -633,7 +623,6 @@ public class User extends BasePlayer {
      * @param deltaTime Time between frames.
      */
     public void handleInput(final float deltaTime) {
-        getHandleInput().update(deltaTime); //Update the general movements and direction of the User.
         if(!isFlag(getIsAligned()) && !isFlag(getIsFutureCollision()) && !isFlag(
             getIsRestrictedMovement())) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
             if(getCurrentDirection() == getUP()) { //Checks if the current direction of the User if upwards.
@@ -753,15 +742,6 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link HandleInput} to check for general key presses with {@link HandleInput#update(float)}.
-     *
-     * @return {@link #handleInput}
-     */
-    private HandleInput getHandleInput() {
-        return handleInput;
-    }
-    
-    /**
      * Method for drawing the {@code User} onto the {@link Screen}, based on the movement and action of the {@code User}.
      *
      * @param batch       Drawing tool.
@@ -789,9 +769,67 @@ public class User extends BasePlayer {
     @Override
     public void act(final float deltaTime) {
         updateAlignment();
+        updateInput(deltaTime);
         updateCurrentCollisionRectangle();
         updateSwimming();
         updateAnimation(deltaTime);
+    }
+    
+    private void updateInput(float deltaTime) {
+        if(getMovementFlag() == getIsMovingUp()) {
+            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setCurrentDirection(getUP());
+                if(isColliding(getFutureRectangle(0, Engine.getTileSize()), true)) {
+                    raiseFlag(getIsFutureCollision());
+                } else {
+                    removeFlag(getIsFutureCollision());
+                }
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + deltaTime);
+            }
+        } else if(getMovementFlag() == getIsMovingDown()) {
+            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setCurrentDirection(getDOWN());
+                if(isColliding(getFutureRectangle(0, -Engine.getTileSize()), true)) {
+                    raiseFlag(getIsFutureCollision());
+                } else {
+                    removeFlag(getIsFutureCollision());
+                }
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + deltaTime);
+            }
+        } else if(getMovementFlag() == getIsMovingRight()) {
+            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setCurrentDirection(getRIGHT());
+                if(isColliding(getFutureRectangle(Engine.getTileSize(), 0), true)) {
+                    raiseFlag(getIsFutureCollision());
+                } else {
+                    removeFlag(getIsFutureCollision());
+                }
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + deltaTime);
+            }
+        } else if(getMovementFlag() == getIsMovingLeft()) {
+            if(isFlag(getIsAligned()) && !isFlag(getIsRestrictedMovement()) && findCurrentState() != getInBattle()) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setCurrentDirection(getLEFT());
+                if(isColliding(getFutureRectangle(-Engine.getTileSize(), 0), true)) {
+                    raiseFlag(getIsFutureCollision());
+                } else {
+                    removeFlag(getIsFutureCollision());
+                }
+                setMovementKeyHeldDownTime(getMovementKeyHeldDownTime() + deltaTime);
+            }
+        } else {
+            if(isFlag(getIsAligned())) {
+                removeFlag(getIsMoving());
+                setMovementKeyHeldDownTime(0f);
+            }
+        }
     }
     
     /**
@@ -839,13 +877,13 @@ public class User extends BasePlayer {
                (getCurrentDirection() == getDOWN()) ? (TextureRegion)(getUserWalk()[1].getKeyFrame(stateTime, true)) :
                (getCurrentDirection() == getRIGHT()) ? (TextureRegion)(getUserWalk()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserWalk()[3].getKeyFrame(stateTime, true)) :
-    
+
                (findCurrentState() == getRUNNING()) ?
                (getCurrentDirection() == getUP()) ? (TextureRegion)(getUserRun()[0].getKeyFrame(stateTime, true)) :
                (getCurrentDirection() == getDOWN()) ? (TextureRegion)(getUserRun()[1].getKeyFrame(stateTime, true)) :
                (getCurrentDirection() == getRIGHT()) ? (TextureRegion)(getUserRun()[2].getKeyFrame(stateTime, true)) :
                (TextureRegion)(getUserRun()[3].getKeyFrame(stateTime, true)) :
-    
+
                (findCurrentState() == getSWIMMING()) ?
                (getCurrentDirection() == getUP()) ? (TextureRegion)(getUserSwim()[0].getKeyFrame(stateTime, true)) :
                (getCurrentDirection() == getDOWN()) ? (TextureRegion)(getUserSwim()[1].getKeyFrame(stateTime, true)) :
