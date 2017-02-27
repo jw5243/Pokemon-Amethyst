@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
@@ -37,6 +39,8 @@ public class NPC extends BasePlayer {
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
+    
+        addAction(Actions.forever(getMovementAction()));
     }
     
     public static ArrayList<Rectangle> getNpcPositions() {
@@ -87,11 +91,11 @@ public class NPC extends BasePlayer {
     
     private void initializeAnimation() {
         movingFrames[0] = AnimationManager
-                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 0,
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 144,
                                             getDefaultWidth(), getDefaultHeight()
                               );
         movingFrames[1] = AnimationManager
-                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 48,
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 0,
                                             getDefaultWidth(), getDefaultHeight()
                               );
         movingFrames[2] = AnimationManager
@@ -99,10 +103,11 @@ public class NPC extends BasePlayer {
                                             getDefaultWidth(), getDefaultHeight()
                               );
         movingFrames[3] = AnimationManager
-                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 144,
+                              .getAnimation(getNpcSprite().getTexture(), 4, 0.1f, new int[] {0, 32, 64, 96}, 48,
                                             getDefaultWidth(), getDefaultHeight()
                               );
-        
+    
+    
         idleFrames[0] = new TextureRegion(getNpcSprite().getTexture(), 0, 0, getDefaultWidth(), getDefaultHeight());
         idleFrames[1] = new TextureRegion(getNpcSprite().getTexture(), 0, 48, getDefaultWidth(), getDefaultHeight());
         idleFrames[2] = new TextureRegion(getNpcSprite().getTexture(), 0, 96, getDefaultWidth(), getDefaultHeight());
@@ -149,7 +154,7 @@ public class NPC extends BasePlayer {
     
     private void updateAlignment() {
         if((getX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
-           (getY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 1 == 0) {
+           (getY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 4 == 0) {
             raiseFlag(getIsAligned());
         } else {
             removeFlag(getIsAligned());
@@ -177,9 +182,85 @@ public class NPC extends BasePlayer {
     
     @Override
     public void act(float deltaTime) {
+        super.act(deltaTime);
+        updateDireciton();
         updateAlignment();
         updateCurrentCollisionRectangle();
         updateAnimation(deltaTime);
         updateGlobalPosition();
+    }
+    
+    @Override
+    public void setX(float x) {
+        if(x > getX()) {
+            setMovementFlag(getIsMovingRight());
+        } else if(x < getX()) {
+            setMovementFlag(getIsMovingLeft());
+        }
+        
+        super.setX(x);
+    }
+    
+    @Override
+    public void setY(float y) {
+        if(y > getY()) {
+            setMovementFlag(getIsMovingUp());
+        } else if(y < getY()) {
+            setMovementFlag(getIsMovingDown());
+        }
+        
+        super.setY(y);
+    }
+    
+    private void updateDireciton() {
+        if(getMovementFlag() == getIsMovingUp()) {
+            setCurrentDirection(getUP());
+        } else if(getMovementFlag() == getIsMovingDown()) {
+            setCurrentDirection(getDOWN());
+        } else if(getMovementFlag() == getIsMovingRight()) {
+            setCurrentDirection(getRIGHT());
+        } else if(getMovementFlag() == getIsMovingLeft()) {
+            setCurrentDirection(getLEFT());
+        }
+    }
+    
+    private Action getMovementAction() {
+        return Actions.sequence(new Action() {
+            @Override
+            public boolean act(float delta) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setX(getX() + 1);
+                updateAlignment();
+                return isFlag(getIsAligned());
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setY(getY() + 1);
+                updateAlignment();
+                return isFlag(getIsAligned());
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setX(getX() - 1);
+                updateAlignment();
+                return isFlag(getIsAligned());
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                raiseFlag(getIsMoving());
+                removeFlag(getIsAligned());
+                setY(getY() - 1);
+                updateAlignment();
+                return isFlag(getIsAligned());
+            }
+        });
     }
 }

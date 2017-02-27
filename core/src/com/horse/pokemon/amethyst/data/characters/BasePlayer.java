@@ -44,14 +44,34 @@ public abstract class BasePlayer extends Actor {
     private static final byte IS_RESTRICTED_MOVEMENT = 0b0000_1000;
     private static final byte DEFAULT_FLAGS          = 0b0000_0000;
     
-    private static MapCreator mapCreator;
+    private static final byte IS_MOVING_UP    = 0b0000_0001;
+    private static final byte IS_MOVING_DOWN  = 0b0000_0010;
+    private static final byte IS_MOVING_RIGHT = 0b0000_0100;
+    private static final byte IS_MOVING_LEFT  = 0b000_1000;
+    private static MapCreator   mapCreator;
+    private        byte         flags;
+    private        byte         currentDirection;
+    private        byte         previousState;
+    private        byte         movementFlag;
+    private        float        animationTimer;
+    private        PartyPokemon partyPokemon;
+    private        Rectangle    currentCollisionRectangle;
     
-    private byte         flags;
-    private byte         currentDirection;
-    private byte         previousState;
-    private float        animationTimer;
-    private PartyPokemon partyPokemon;
-    private Rectangle    currentCollisionRectangle;
+    static byte getIsMovingUp() {
+        return IS_MOVING_UP;
+    }
+    
+    static byte getIsMovingDown() {
+        return IS_MOVING_DOWN;
+    }
+    
+    static byte getIsMovingRight() {
+        return IS_MOVING_RIGHT;
+    }
+    
+    static byte getIsMovingLeft() {
+        return IS_MOVING_LEFT;
+    }
     
     public static byte getSpeed(final byte currentState) {
         return (currentState == getIDLE()) ? getIdleSpeed() : (currentState == getWALKING()) ? getWalkingSpeed() :
@@ -174,6 +194,14 @@ public abstract class BasePlayer extends Actor {
     
     public static byte getIsRestrictedMovement() {
         return IS_RESTRICTED_MOVEMENT;
+    }
+    
+    byte getMovementFlag() {
+        return movementFlag;
+    }
+    
+    void setMovementFlag(byte movementFlag) {
+        this.movementFlag = movementFlag;
     }
     
     abstract public byte findCurrentState();

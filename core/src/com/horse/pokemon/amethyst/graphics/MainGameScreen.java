@@ -266,8 +266,13 @@ public class MainGameScreen implements Screen {
     @Override
     public void render(float delta) {
         getEngine().getBatch().begin();
+    
+        getCamera().position.x = getUser().getX();
+        getCamera().position.y = getUser().getY();
+    
+        getCamera().update();
+        getRenderer().setView(getCamera());
         
-        update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
@@ -381,16 +386,6 @@ public class MainGameScreen implements Screen {
         }
     }
     
-    private void update(float deltaTime) {
-        handleInput(deltaTime);
-    
-        getCamera().position.x = getUser().getX();
-        getCamera().position.y = getUser().getY();
-        
-        getCamera().update();
-        getRenderer().setView(getCamera());
-    }
-    
     public MultiTileMapRenderer getRenderer() {
         return renderer;
     }
@@ -413,9 +408,5 @@ public class MainGameScreen implements Screen {
     
     private void setHud(Hud hud) {
         this.hud = hud;
-    }
-    
-    private void handleInput(float deltaTime) {
-        getUser().handleInput(deltaTime);
     }
 }

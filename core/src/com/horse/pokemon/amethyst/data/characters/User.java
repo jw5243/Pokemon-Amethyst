@@ -28,7 +28,6 @@ import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
 import com.horse.pokemon.amethyst.graphics.battle.system.BattleScreen;
 import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
-import com.horse.pokemon.amethyst.graphics.input.HandleInput;
 
 /**
  * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#camera} revolves
@@ -171,7 +170,6 @@ import com.horse.pokemon.amethyst.graphics.input.HandleInput;
  * @see AnimationInterface
  * @see TextureRegion
  * @see Animation
- * @see HandleInput
  * @see MapCreator
  * @see Sprite
  * @see Rectangle
@@ -291,10 +289,6 @@ public class User extends BasePlayer {
                                      getUserSwimHeight()
     )
     };
-    private static final byte        IS_MOVING_UP    = 0b0000_0001;
-    private static final byte        IS_MOVING_DOWN  = 0b0000_0010;
-    private static final byte        IS_MOVING_RIGHT = 0b0000_0100;
-    private static final byte        IS_MOVING_LEFT  = 0b000_1000;
     
     /**
      * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move the {@code User}.
@@ -308,7 +302,6 @@ public class User extends BasePlayer {
      * The {@link MainGameScreen} instance representing the current {@link Screen} the {@code User} is placed in.
      */
     private MainGameScreen mainGameScreen;
-    private byte           movementFlag;
     
     /**
      * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
@@ -364,22 +357,6 @@ public class User extends BasePlayer {
                 return true;
             }
         });
-    }
-    
-    public static byte getIsMovingUp() {
-        return IS_MOVING_UP;
-    }
-    
-    public static byte getIsMovingDown() {
-        return IS_MOVING_DOWN;
-    }
-    
-    public static byte getIsMovingRight() {
-        return IS_MOVING_RIGHT;
-    }
-    
-    public static byte getIsMovingLeft() {
-        return IS_MOVING_LEFT;
     }
     
     private static float getKeyPressToMoveTime() {
@@ -494,14 +471,6 @@ public class User extends BasePlayer {
      */
     private static Animation[] getUserWalk() {
         return userWalk;
-    }
-    
-    public byte getMovementFlag() {
-        return movementFlag;
-    }
-    
-    public void setMovementFlag(byte movementFlag) {
-        this.movementFlag = movementFlag;
     }
     
     /**
@@ -622,10 +591,8 @@ public class User extends BasePlayer {
     
     /**
      * Updating every frame, checks the user input and reacts upon specific {@link Input.Keys} presses.
-     *
-     * @param deltaTime Time between frames.
      */
-    public void handleInput(final float deltaTime) {
+    private void handleInput() {
         if(!isFlag(getIsAligned()) && !isFlag(getIsFutureCollision()) && !isFlag(
             getIsRestrictedMovement())) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
             if(getCurrentDirection() == getUP()) { //Checks if the current direction of the User if upwards.
@@ -765,12 +732,13 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Checks {@code User} values and updates them according to actions made in {@link #handleInput(float)}.
+     * Checks {@code User} values and updates them according to actions made in {@link #handleInput()}.
      *
      * @param deltaTime Amount of time between each frame.
      */
     @Override
     public void act(final float deltaTime) {
+        super.act(deltaTime);
         updateAlignment();
         updateInput(deltaTime);
         updateCurrentCollisionRectangle();
@@ -833,10 +801,12 @@ public class User extends BasePlayer {
                 setMovementKeyHeldDownTime(0f);
             }
         }
+    
+        handleInput();
     }
     
     /**
-     * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if {@link #handleInput(float)} gets no feedback.
+     * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if {@link #handleInput()} gets no feedback.
      */
     private void updateAlignment() {
         if((getX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
