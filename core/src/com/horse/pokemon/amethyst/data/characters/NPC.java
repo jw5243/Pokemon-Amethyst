@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.DelayAction;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
@@ -108,10 +109,10 @@ public class NPC extends BasePlayer {
                               );
     
     
-        idleFrames[0] = new TextureRegion(getNpcSprite().getTexture(), 0, 0, getDefaultWidth(), getDefaultHeight());
-        idleFrames[1] = new TextureRegion(getNpcSprite().getTexture(), 0, 48, getDefaultWidth(), getDefaultHeight());
+        idleFrames[0] = new TextureRegion(getNpcSprite().getTexture(), 0, 144, getDefaultWidth(), getDefaultHeight());
+        idleFrames[1] = new TextureRegion(getNpcSprite().getTexture(), 0, 0, getDefaultWidth(), getDefaultHeight());
         idleFrames[2] = new TextureRegion(getNpcSprite().getTexture(), 0, 96, getDefaultWidth(), getDefaultHeight());
-        idleFrames[3] = new TextureRegion(getNpcSprite().getTexture(), 0, 144, getDefaultWidth(), getDefaultHeight());
+        idleFrames[3] = new TextureRegion(getNpcSprite().getTexture(), 0, 48, getDefaultWidth(), getDefaultHeight());
     }
     
     public String getNpcSpriteSheetPath() {
@@ -225,9 +226,13 @@ public class NPC extends BasePlayer {
     }
     
     private Action getMovementAction() {
+        final DelayAction delayAction = Actions.action(DelayAction.class);
+        delayAction.setDuration(1f);
+        
         return Actions.sequence(new Action() {
             @Override
             public boolean act(float delta) {
+                delayAction.restart();
                 raiseFlag(getIsMoving());
                 removeFlag(getIsAligned());
                 setX(getX() + 1);
@@ -237,6 +242,13 @@ public class NPC extends BasePlayer {
         }, new Action() {
             @Override
             public boolean act(float delta) {
+                removeFlag(getIsMoving());
+                return true;
+            }
+        }, delayAction, new Action() {
+            @Override
+            public boolean act(float delta) {
+                delayAction.restart();
                 raiseFlag(getIsMoving());
                 removeFlag(getIsAligned());
                 setY(getY() + 1);
@@ -246,6 +258,13 @@ public class NPC extends BasePlayer {
         }, new Action() {
             @Override
             public boolean act(float delta) {
+                removeFlag(getIsMoving());
+                return true;
+            }
+        }, delayAction, new Action() {
+            @Override
+            public boolean act(float delta) {
+                delayAction.restart();
                 raiseFlag(getIsMoving());
                 removeFlag(getIsAligned());
                 setX(getX() - 1);
@@ -255,12 +274,25 @@ public class NPC extends BasePlayer {
         }, new Action() {
             @Override
             public boolean act(float delta) {
+                removeFlag(getIsMoving());
+                return true;
+            }
+        }, delayAction, new Action() {
+            @Override
+            public boolean act(float delta) {
+                delayAction.restart();
                 raiseFlag(getIsMoving());
                 removeFlag(getIsAligned());
                 setY(getY() - 1);
                 updateAlignment();
                 return isFlag(getIsAligned());
             }
-        });
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                removeFlag(getIsMoving());
+                return true;
+            }
+        }, delayAction);
     }
 }

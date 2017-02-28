@@ -6,13 +6,16 @@ import com.horse.pokemon.amethyst.data.pokemon.PartyPokemon;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
 
 /**
- * The base class for all new characters in the game.
+ * The {@code BasePlayer} class is to be extended as a {@code Pokemon} player.
  *
- * @author Horse
- * @version 1.0
- * @since 1.0
+ * @see Actor
+ * @see User
+ * @see NPC
  */
 public abstract class BasePlayer extends Actor {
+    /**
+     * The {@code byte} representing the times when the {@code BasePlayer} is pointing upwards.
+     */
     private static final byte UP    = 0x01;
     private static final byte DOWN  = 0x02;
     private static final byte RIGHT = 0x03;
