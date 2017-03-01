@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.horse.pokemon.amethyst.Engine;
-import com.horse.pokemon.amethyst.data.characters.BasePlayer;
+import com.horse.pokemon.amethyst.data.characters.User;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
 import com.horse.pokemon.amethyst.data.objects.Door;
@@ -17,42 +17,54 @@ import com.horse.pokemon.amethyst.graphics.MainGameScreen;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 public class MapCreator {
-    private ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
-    private Vector2                         startPosition         = new Vector2();
-    private HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
-    private Array<ConnectionInformation>    connections           = new Array<>();
-    private MainGameScreen screen;
+    private static ArrayList<Rectangle> npcPositions = new ArrayList<>(0);
+    private static User user;
+    private static ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
+    private static Vector2                         startPosition         = new Vector2();
+    private static HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
+    private static Array<ConnectionInformation>    connections           = new Array<>();
+    private static MainGameScreen screen;
     
-    public MapCreator(MainGameScreen screen, MultiTiledMap[] maps) {
-        addTiledObjects(screen, maps);
+    public static User getUser() {
+        return user;
     }
     
-    public HashMap<String, Vector2> getNpcStartPositions() {
+    public static void setUser(User user) {
+        MapCreator.user = user;
+    }
+    
+    public static ArrayList<Rectangle> getNpcPositions() {
+        return npcPositions;
+    }
+    
+    public static void setNpcPositions(ArrayList<Rectangle> npcPositions) {
+        MapCreator.npcPositions = npcPositions;
+    }
+    
+    public static HashMap<String, Vector2> getNpcStartPositions() {
         return npcStartPositions;
     }
     
-    public void setNpcStartPositions(HashMap<String, Vector2> npcStartPositions) {
-        this.npcStartPositions = npcStartPositions;
+    public static void setNpcStartPositions(HashMap<String, Vector2> npcStartPositions) {
+        MapCreator.npcStartPositions = npcStartPositions;
     }
     
-    public MainGameScreen getScreen() {
+    public static MainGameScreen getScreen() {
         return screen;
     }
     
-    public void setScreen(MainGameScreen screen) {
-        this.screen = screen;
+    public static void setScreen(MainGameScreen screen) {
+        MapCreator.screen = screen;
     }
     
-    public void resetTiledObjects(MainGameScreen screen, MultiTiledMap[] map) {
+    public static void resetTiledObjects(MainGameScreen screen, MultiTiledMap[] map) {
         getCollidableTileObjects().clear();
         addTiledObjects(screen, map);
-        BasePlayer.setMapCreator(this);
     }
     
-    public void addTiledObjects(MainGameScreen screen, MultiTiledMap[] maps) {
+    public static void addTiledObjects(MainGameScreen screen, MultiTiledMap[] maps) {
         setScreen(screen);
         for(int index = 0; index < maps.length; index++) {
             for(MapObject object : maps[index].getLayers().get("Collisions").getObjects()
@@ -103,46 +115,27 @@ public class MapCreator {
         }
     }
     
-    public ArrayList<CollidableTileObject> getCollidableTileObjects() {
+    public static ArrayList<CollidableTileObject> getCollidableTileObjects() {
         return collidableTileObjects;
     }
     
-    public void setCollidableTileObjects(ArrayList<CollidableTileObject> collidableTileObjects) {
-        this.collidableTileObjects = collidableTileObjects;
+    public static void setCollidableTileObjects(ArrayList<CollidableTileObject> collidableTileObjects) {
+        MapCreator.collidableTileObjects = collidableTileObjects;
     }
     
-    public Vector2 getStartPosition() {
+    public static Vector2 getStartPosition() {
         return startPosition;
     }
     
-    public void setStartPosition(Vector2 startPosition) {
-        this.startPosition = startPosition;
+    public static void setStartPosition(Vector2 startPosition) {
+        MapCreator.startPosition = startPosition;
     }
     
-    public Array<ConnectionInformation> getConnections() {
+    public static Array<ConnectionInformation> getConnections() {
         return connections;
     }
     
-    public void setConnections(Array<ConnectionInformation> connections) {
-        this.connections = connections;
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(getCollidableTileObjects(), getStartPosition(), getConnections());
-    }
-    
-    @Override
-    public boolean equals(Object o) {
-        if(this == o) {
-            return true;
-        }
-        if(o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        MapCreator that = (MapCreator)o;
-        return Objects.equals(getCollidableTileObjects(), that.getCollidableTileObjects()) &&
-               Objects.equals(getStartPosition(), that.getStartPosition()) &&
-               Objects.equals(getConnections(), that.getConnections());
+    public static void setConnections(Array<ConnectionInformation> connections) {
+        MapCreator.connections = connections;
     }
 }

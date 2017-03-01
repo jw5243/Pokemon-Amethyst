@@ -13,43 +13,30 @@ import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
 
-import java.util.ArrayList;
-
 public class NPC extends BasePlayer {
-    //DEFAULT: Characters\\NPCSpriteSheets\\NPC 01.png
     private static final int                  DEFAULT_WIDTH   = 32;
     private static final int                  DEFAULT_HEIGHT  = 48;
     private static final int                  IN_GAME_WIDTH   = 16;
     private static final int                  IN_GAME_HEIGHT  = 24;
     private static final float                ANIMATION_SPEED = 0.5f;
-    private static       ArrayList<Rectangle> npcPositions    = new ArrayList<>(0);
     private final String          npcSpriteSheetPath;
     private final Sprite          npcSprite;
     private final TextureRegion[] idleFrames;
     private final Animation[]     movingFrames;
     private final int             positionID;
     
-    public NPC(MapCreator mapCreator, String npcSpriteSheetPath) {
+    public NPC(String npcSpriteSheetPath) {
         this.npcSpriteSheetPath = npcSpriteSheetPath;
         this.npcSprite = new Sprite(new Texture(getNpcSpriteSheetPath()));
-        setMapCreator(mapCreator);
         setCurrentDirection(getDOWN());
         resetPosition();
-        positionID = getNpcPositions().size();
-        getNpcPositions().add(getPositionID(), getCurrentCollisionRectangle());
+        positionID = MapCreator.getNpcPositions().size();
+        MapCreator.getNpcPositions().add(getPositionID(), getCurrentCollisionRectangle());
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
     
         addAction(Actions.forever(getMovementAction()));
-    }
-    
-    public static ArrayList<Rectangle> getNpcPositions() {
-        return npcPositions;
-    }
-    
-    public static void setNpcPositions(ArrayList<Rectangle> npcPositions) {
-        NPC.npcPositions = npcPositions;
     }
     
     public static float getAnimationSpeed() {
@@ -76,14 +63,9 @@ public class NPC extends BasePlayer {
         return positionID;
     }
     
-    private void resetPosition() {
-        resetPosition(getMapCreator(), false);
-    }
-    
-    public void resetPosition(MapCreator mapCreator, boolean resetMapCreator) {
-        setMapCreator(resetMapCreator ? mapCreator : getMapCreator());
-        setX((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).x + getInGameWidth() / 2));
-        setY((int)(mapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).y + getInGameHeight() / 2));
+    public void resetPosition() {
+        setX((int)(MapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).x + getInGameWidth() / 2));
+        setY((int)(MapCreator.getNpcStartPositions().get(getNpcSpriteSheetPath()).y + getInGameHeight() / 2));
     }
     
     public Sprite getNpcSprite() {
@@ -171,7 +153,7 @@ public class NPC extends BasePlayer {
     }
     
     private void updateGlobalPosition() {
-        getNpcPositions().set(getPositionID(), getCurrentCollisionRectangle());
+        MapCreator.getNpcPositions().set(getPositionID(), getCurrentCollisionRectangle());
     }
     
     @Override
@@ -184,11 +166,13 @@ public class NPC extends BasePlayer {
     @Override
     public void act(float deltaTime) {
         super.act(deltaTime);
+    
         updateDireciton();
         updateAlignment();
         updateCurrentCollisionRectangle();
         updateAnimation(deltaTime);
         updateGlobalPosition();
+        updateFutureCollision();
     }
     
     @Override
@@ -198,8 +182,10 @@ public class NPC extends BasePlayer {
         } else if(x < getX()) {
             setMovementFlag(getIsMovingLeft());
         }
-        
-        super.setX(x);
+    
+        if(!isFlag(getIsFutureCollision())) {
+            super.setX(x);
+        }
     }
     
     @Override
@@ -209,8 +195,21 @@ public class NPC extends BasePlayer {
         } else if(y < getY()) {
             setMovementFlag(getIsMovingDown());
         }
-        
-        super.setY(y);
+    
+        if(!isFlag(getIsFutureCollision())) {
+            super.setY(y);
+        }
+    }
+    
+    private void updateFutureCollision() {
+        if((getCurrentDirection() == getUP() && isColliding(getFutureRectangle(0, Engine.getTileSize()), false)) ||
+           (getCurrentDirection() == getDOWN()) && isColliding(getFutureRectangle(0, -Engine.getTileSize()), false) ||
+           (getCurrentDirection() == getRIGHT()) && isColliding(getFutureRectangle(Engine.getTileSize(), 0), false) ||
+           (getCurrentDirection() == getLEFT()) && isColliding(getFutureRectangle(-Engine.getTileSize(), 0), false)) {
+            raiseFlag(getIsFutureCollision());
+        } else {
+            removeFlag(getIsFutureCollision());
+        }
     }
     
     private void updateDireciton() {
@@ -227,7 +226,7 @@ public class NPC extends BasePlayer {
     
     private Action getMovementAction() {
         final DelayAction delayAction = Actions.action(DelayAction.class);
-        delayAction.setDuration(1f);
+        delayAction.setDuration(2.5f);
         
         return Actions.sequence(new Action() {
             @Override

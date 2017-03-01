@@ -16,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.horse.pokemon.amethyst.Engine;
-import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
-import com.horse.pokemon.amethyst.data.objects.Door;
 import com.horse.pokemon.amethyst.data.objects.Sign;
 import com.horse.pokemon.amethyst.data.objects.Water;
 import com.horse.pokemon.amethyst.data.pokemon.Pokemon;
@@ -326,9 +324,6 @@ public class User extends BasePlayer {
             0f); //Initializes the time a key was pressed down to zero, as the specific key has not been pressed yet.
         setMainGameScreen(mainGameScreen); //Initializes the main game screen to the parameter value.
         
-        setMapCreator(mainGameScreen
-                          .getMapCreator()); //Set the map creator to the same instance as the one in the main game screen to store the collision rectangles.
-        
         setBounds(0, 0, Engine.getHalfTileSize(), Engine.getHalfTileSize());
         getUserSprite().setRegion(getUserIdleOnLand()[1]);
         
@@ -357,6 +352,8 @@ public class User extends BasePlayer {
                 return true;
             }
         });
+    
+        MapCreator.setUser(this);
     }
     
     private static float getKeyPressToMoveTime() {
@@ -522,7 +519,7 @@ public class User extends BasePlayer {
      *
      * @return {@link #swimming}
      */
-    private boolean isSwimming() {
+    boolean isSwimming() {
         return swimming;
     }
     
@@ -536,29 +533,16 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Replace the current position of the {@code User} and set it to the current {@link MapCreator#getStartPosition()} value.
-     */
-    private void resetPosition() {
-        resetPosition(getMapCreator(), false);
-    }
-    
-    /**
-     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the {@code User} position to it.  Also, the {@link #mapCreator} will be
+     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the {@code User} position to it.  Also, the {@link MapCreator} will be
      * changed if {@code resetMapCreator} is true.
-     *
-     * @param mapCreator      New instance of a {@link MapCreator} to set a new position.
-     * @param resetMapCreator Determines if the value of {@link #mapCreator} is altered to the {@code mapCreator} parameter.
      *
      * @see MapCreator
      * @see MapCreator#startPosition
-     * @see #mapCreator
      */
-    public void resetPosition(final MapCreator mapCreator, final boolean resetMapCreator) {
-        setMapCreator(resetMapCreator ? mapCreator :
-                      getMapCreator()); //Check if the mapCreator should be replaced depending on the resetMapCreator parameter.
-        setX((int)(mapCreator.getStartPosition().x + getUserWalkWidth() /
+    public void resetPosition() {
+        setX((int)(MapCreator.getStartPosition().x + getUserWalkWidth() /
                                                      2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
-        setY((int)(mapCreator.getStartPosition().y + getUserWalkHeight() /
+        setY((int)(MapCreator.getStartPosition().y + getUserWalkHeight() /
                                                      2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
     }
     
@@ -569,24 +553,6 @@ public class User extends BasePlayer {
      */
     private float getAnimationSpeed() {
         return ANIMATION_SPEED;
-    }
-    
-    /**
-     * Returns a {@link Rectangle} instance representing a future position of the {@code User} or the position of a {@link CollidableTileObject}.
-     *
-     * @param offsetX X-Position difference between the new x-position and the {@code User} x-position.
-     * @param offsetY Y-Position difference between the new y-position and the {@code User} y-position.
-     *
-     * @return {@link Rectangle} instance of the future position of the {@code User} or the position of a {@link CollidableTileObject}.
-     */
-    private Rectangle getFutureRectangle(final float offsetX, final float offsetY) {
-        Rectangle futureRectangle =
-            getCurrentCollisionRectangle(); //Get the rectangle instance of the collision box of the User.
-        futureRectangle.setX(
-            futureRectangle.getX() + offsetX); //Add the offset onto the x-position of the collision box of the User.
-        futureRectangle.setY(
-            futureRectangle.getY() + offsetY); //Add the offset onto the y-position of the collision box of the User.
-        return futureRectangle; //Return the new rectangle instance representing the future position.
     }
     
     /**
@@ -647,51 +613,6 @@ public class User extends BasePlayer {
     }
     
     /**
-     * The method {@code isColliding} checks to see whether a {@link Rectangle} instance overlaps with any of the {@link CollidableTileObject}s in {@link MapCreator#collidableTileObjects}.
-     * According to whether activateCollisionMethod is {@code true} or {@code false}, the {@link CollidableTileObject#onCollide()} will be notified if a collision is present.
-     * <p>
-     * For {@link Water} overlapping, the method will ignore the collision as {@link Water} does not have the same properties as other {@link CollidableTileObject}s like {@link Barrier}.
-     * As for {@link Door}s, the {@link Door#onCollide()} method will be called and the {@link Door} instance will start transitioning to the next room.
-     *
-     * @param rectangle               {@link Rectangle} instance to check among all other obstacles in {@link MapCreator#collidableTileObjects}.
-     * @param activateCollisionMethod Value for whether or not the {@link CollidableTileObject#onCollide()} is to be called if there is a collision.
-     *
-     * @return Value of if there is a collision between the {@link Rectangle} instance and values in {@link MapCreator#collidableTileObjects}.
-     *
-     * @see Rectangle
-     * @see CollidableTileObject
-     * @see CollidableTileObject#onCollide()
-     * @see MapCreator#collidableTileObjects
-     * @see Door
-     * @see Water
-     * @see Barrier
-     */
-    private boolean isColliding(final Rectangle rectangle, final boolean activateCollisionMethod) {
-        for(Rectangle collidingRectangle : NPC.getNpcPositions()) {
-            if(collidingRectangle.overlaps(rectangle)) {
-                return true;
-            }
-        }
-        
-        for(CollidableTileObject collidableTileObject : getMapCreator()
-                                                            .getCollidableTileObjects()) { //Iterate through all the objects stored in the current map.
-            rectangle.setSize(rectangle.getWidth() / 2, rectangle.getHeight() / 2);
-            if(collidableTileObject.isColliding(rectangle)) {
-                if(activateCollisionMethod) {
-                    if(collidableTileObject instanceof Door) {
-                        getMapCreator().getScreen().setDoorToOpen((Door)(collidableTileObject));
-                        collidableTileObject.onCollide();
-                        return false;
-                    }
-                    collidableTileObject.onCollide();
-                }
-                return !(isSwimming() && collidableTileObject instanceof Water);
-            }
-        }
-        return false;
-    }
-    
-    /**
      * Gets the {@link CollidableTileObject} that has the same positions as the {@link Rectangle} instance inputted.  A
      * null value is returned if no object ends up being found from the current map.
      *
@@ -703,7 +624,7 @@ public class User extends BasePlayer {
      * @see Rectangle
      */
     private CollidableTileObject getCollidingTileObject(final Rectangle rectangle) {
-        for(CollidableTileObject collidableTileObject : getMapCreator().getCollidableTileObjects()) {
+        for(CollidableTileObject collidableTileObject : MapCreator.getCollidableTileObjects()) {
             if(collidableTileObject.isColliding(rectangle)) {
                 return collidableTileObject;
             }

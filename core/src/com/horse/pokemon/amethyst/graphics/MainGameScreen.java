@@ -61,12 +61,10 @@ public class MainGameScreen implements Screen {
     private MultiTmxMapLoader                 mapLoader;
     private MultiTiledMap[]                   maps;
     private MultiTileMapRenderer              renderer;
-    private User                              user;
     private Stage                             stage;
     private AudioData                         sound;
     private Dialog                            dialog;
     private FPSLogger                         fpsLogger;
-    private MapCreator                        mapCreator;
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
     private HashIntObjMap<TiledMapTile>       doorTiles;
     private Door                              doorToOpen;
@@ -150,14 +148,6 @@ public class MainGameScreen implements Screen {
         this.doorTiles = doorTiles;
     }
     
-    public MapCreator getMapCreator() {
-        return mapCreator;
-    }
-    
-    public void setMapCreator(MapCreator mapCreator) {
-        this.mapCreator = mapCreator;
-    }
-    
     public Stage getStage() {
         return stage;
     }
@@ -211,19 +201,19 @@ public class MainGameScreen implements Screen {
         
         setRenderer(new MultiTileMapRenderer(1.0f, getEngine().getBatch()));
     
-        setMapCreator(new MapCreator(this, getMaps()));
+        MapCreator.addTiledObjects(this, getMaps());
     
-        setUser(new User(this));
-        setNpc(new NPC(getMapCreator(), "Characters\\NPCSpriteSheets\\NPC 01.png"));
+        MapCreator.setUser(new User(this));
+        setNpc(new NPC("Characters\\NPCSpriteSheets\\NPC 01.png"));
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
         );
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
-        getStage().addActor(getUser());
+        getStage().addActor(MapCreator.getUser());
         getStage().addActor(getNpc());
-        getStage().setKeyboardFocus(getUser());
+        getStage().setKeyboardFocus(MapCreator.getUser());
         
         Gdx.input.setInputProcessor(getStage());
     
@@ -267,8 +257,8 @@ public class MainGameScreen implements Screen {
     public void render(float delta) {
         getEngine().getBatch().begin();
     
-        getCamera().position.x = getUser().getX();
-        getCamera().position.y = getUser().getY();
+        getCamera().position.x = MapCreator.getUser().getX();
+        getCamera().position.y = MapCreator.getUser().getY();
     
         getCamera().update();
         getRenderer().setView(getCamera());
@@ -281,6 +271,17 @@ public class MainGameScreen implements Screen {
         getEngine().getBatch().end();
         
         getStage().act(delta);
+    
+        for(int i = 0; i < MapCreator.getNpcPositions().size(); i++) {
+            if(MapCreator.getUser().getY() > MapCreator.getNpcPositions().get(i).getY()) {
+                MapCreator.getUser().setZIndex(0);
+                getNpc().setZIndex(1);
+            } else {
+                MapCreator.getUser().setZIndex(1);
+                getNpc().setZIndex(0);
+            }
+        }
+            
         getStage().draw();
     
         getEngine().getBatch().begin();
@@ -392,14 +393,6 @@ public class MainGameScreen implements Screen {
     
     private void setRenderer(MultiTileMapRenderer renderer) {
         this.renderer = renderer;
-    }
-    
-    public User getUser() {
-        return user;
-    }
-    
-    public void setUser(User user) {
-        this.user = user;
     }
     
     private Hud getHud() {
