@@ -37,16 +37,6 @@ import java.util.ArrayList;
  */
 public class MainGameScreen implements Screen {
     /**
-     * The {@code int} representing the amount of iterations over {@link #render(float)} before the {@link Door} starts animating.
-     */
-    private static final int FRAMES_TO_ANIMATE_DOOR = 6;
-    
-    /**
-     * The {@code int} representing the beginning frame of {@link Door} when animating.
-     */
-    private static final int START_DOOR_FRAME_COUNT = 0;
-    
-    /**
      * The {@link Engine} instance representing the {@link Game} that is playing.
      */
     private Engine engine;
@@ -74,14 +64,6 @@ public class MainGameScreen implements Screen {
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
-    }
-    
-    public static int getStartDoorFrameCount() {
-        return START_DOOR_FRAME_COUNT;
-    }
-    
-    public static int getFramesToAnimateDoor() {
-        return FRAMES_TO_ANIMATE_DOOR;
     }
     
     public NPC getNpc() {
@@ -204,6 +186,7 @@ public class MainGameScreen implements Screen {
         MapCreator.addTiledObjects(this, getMaps());
     
         MapCreator.setUser(new User(this));
+    
         setNpc(new NPC("Characters\\NPCSpriteSheets\\NPC 01.png"));
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
@@ -244,7 +227,7 @@ public class MainGameScreen implements Screen {
             }
         }
         setDoorToOpen(null);
-        setCurrentDoorFrameCount(getStartDoorFrameCount());
+        setCurrentDoorFrameCount(Door.getStartDoorFrameCount());
     
         setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
                              "Test Character Writer\nABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
@@ -290,7 +273,7 @@ public class MainGameScreen implements Screen {
     
         if(getDoorToOpen() != null) {
             setCurrentDoorFrameCount(getCurrentDoorFrameCount() + 1);
-            if(getCurrentDoorFrameCount() % getFramesToAnimateDoor() == 0) {
+            if(getCurrentDoorFrameCount() % Door.getFramesToAnimateDoor() == 0) {
                 animateDoor();
             }
         }

@@ -14,11 +14,11 @@ import com.horse.pokemon.amethyst.graphics.animation.AnimationManager;
 import com.horse.pokemon.amethyst.graphics.background.system.MapCreator;
 
 public class NPC extends BasePlayer {
-    private static final int                  DEFAULT_WIDTH   = 32;
-    private static final int                  DEFAULT_HEIGHT  = 48;
-    private static final int                  IN_GAME_WIDTH   = 16;
-    private static final int                  IN_GAME_HEIGHT  = 24;
-    private static final float                ANIMATION_SPEED = 0.5f;
+    private static final int   DEFAULT_WIDTH   = 32;
+    private static final int   DEFAULT_HEIGHT  = 48;
+    private static final int   IN_GAME_WIDTH   = 16;
+    private static final int   IN_GAME_HEIGHT  = 24;
+    private static final float ANIMATION_SPEED = 0.5f;
     private final String          npcSpriteSheetPath;
     private final Sprite          npcSprite;
     private final TextureRegion[] idleFrames;

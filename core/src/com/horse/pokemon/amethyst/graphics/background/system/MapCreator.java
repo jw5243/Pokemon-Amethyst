@@ -18,13 +18,16 @@ import com.horse.pokemon.amethyst.graphics.MainGameScreen;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * The {@code MapCreator} acts as the container and background handler for the game.
+ */
 public class MapCreator {
-    private static ArrayList<Rectangle> npcPositions = new ArrayList<>(0);
-    private static User user;
+    private static ArrayList<Rectangle>            npcPositions          = new ArrayList<>(0);
     private static ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
-    private static Vector2                         startPosition         = new Vector2();
     private static HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
     private static Array<ConnectionInformation>    connections           = new Array<>();
+    private static Vector2                         startPosition         = new Vector2();
+    private static User           user;
     private static MainGameScreen screen;
     
     public static User getUser() {

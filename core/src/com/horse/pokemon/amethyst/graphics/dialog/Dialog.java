@@ -117,7 +117,13 @@ public class Dialog extends Actor implements Disposable {
             @Override
             public boolean act(float delta) {
                 dialog.setUnparsedTextToWrite(unparsedTextToWrite);
+                dialog.setTimer(0f);
                 dialog.setVisible(true);
+                return true;
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
                 return Gdx.input.isKeyJustPressed(visibilityTrigger);
             }
         }, new Action() {
@@ -235,6 +241,7 @@ public class Dialog extends Actor implements Disposable {
     
     public void setUnparsedTextToWrite(String unparsedTextToWrite) {
         this.unparsedTextToWrite = unparsedTextToWrite;
+        getCharactersToTypeArrayList().clear();
         setupCharactersToWrite();
     }
     

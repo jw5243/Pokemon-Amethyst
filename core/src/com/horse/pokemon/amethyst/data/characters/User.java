@@ -11,10 +11,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
 import com.horse.pokemon.amethyst.data.objects.Sign;
@@ -352,8 +354,6 @@ public class User extends BasePlayer {
                 return true;
             }
         });
-    
-        MapCreator.setUser(this);
     }
     
     private static float getKeyPressToMoveTime() {
@@ -589,26 +589,85 @@ public class User extends BasePlayer {
             
             if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
-                setX(getX() + (getCurrentDirection() == getRIGHT() ? Engine.getTileSize() :
-                               (getCurrentDirection() == getLEFT()) ? -Engine.getTileSize() : 0));
-                setY(getY() + (getCurrentDirection() == getUP() ? Engine.getTileSize() :
-                               (getCurrentDirection() == getDOWN()) ? -Engine.getTileSize() : 0));
+    
+                addAction(Actions.sequence(new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        Dialog.addTextAction(getMainGameScreen().getDialog(),
+                                             "The water is calm.\nWould you like to surf?", Input.Keys.X
+                        );
+                        return true;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        return getMainGameScreen().getDialog().getActions().size == 0;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        setX(getX() + (getCurrentDirection() == getRIGHT() ? Engine.getTileSize() :
+                                       (getCurrentDirection() == getLEFT()) ? -Engine.getTileSize() : 0));
+                        setY(getY() + (getCurrentDirection() == getUP() ? Engine.getTileSize() :
+                                       (getCurrentDirection() == getDOWN()) ? -Engine.getTileSize() : 0));
+                        removeFlag(getIsRestrictedMovement()); //Allows movement of the User.
+                        return true;
+                    }
+                }));
+    
+                raiseFlag(
+                    getIsRestrictedMovement()); //Stops any form of movement the User would normally be able to do.
             } else if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Sign) { //Check if the tile the User is looking at is a Sign.
-                getMainGameScreen().getDialog().setVisible(true); //Makes the main dialog visible to the User.
+    
+                addAction(Actions.sequence(new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        Dialog.addTextAction(getMainGameScreen().getDialog(), "Test", Input.Keys.X);
+                        return true;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        return getMainGameScreen().getDialog().getActions().size == 0;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        removeFlag(getIsRestrictedMovement()); //Allows movement of the User.
+                        return true;
+                    }
+                }));
+                
                 raiseFlag(
                     getIsRestrictedMovement()); //Stops any form of movement the User would normally be able to do.
             } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) ==
                                                              null) { //Check if the User is pointing at an NPC character.
-                getMainGameScreen()
-                    .changeCurrentScreen(BattleScreen.class); //Change the screen so that a battle is ensued.
+                addAction(Actions.sequence(new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        Dialog
+                            .addTextAction(getMainGameScreen().getDialog(), "Would you like to battle?", Input.Keys.X);
+                        return true;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        return getMainGameScreen().getDialog().getActions().size == 0;
+                    }
+                }, new Action() {
+                    @Override
+                    public boolean act(float delta) {
+                        removeFlag(getIsRestrictedMovement()); //Allows movement of the User.
+                        getMainGameScreen()
+                            .changeCurrentScreen(BattleScreen.class); //Change the screen so that a battle is ensued.
+                        return true;
+                    }
+                }));
+    
+                raiseFlag(
+                    getIsRestrictedMovement()); //Stops any form of movement the User would normally be able to do.
             }
-        } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && isFlag(
-            getIsRestrictedMovement())) { //Checks if X key is pressed when the User is in a non-movable position.
-            getMainGameScreen().getDialog().setVisible(false); //Removes the dialog from the screen.
-            getMainGameScreen().getDialog().setTimer(
-                0f); //Resets the point at which the dialog was drawing the characters onto the screen.
-            removeFlag(getIsRestrictedMovement()); //Allows movement of the User.
         }
     }
     
