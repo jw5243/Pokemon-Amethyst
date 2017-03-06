@@ -144,6 +144,8 @@ public class CharacterWriter {
                                                                     (primitiveCharacter == '8') ?
                                                                     DialogCharacter.EIGHT :
                                                                     (primitiveCharacter == '9') ? DialogCharacter.NINE :
+                                                                    (primitiveCharacter == '?') ?
+                                                                    DialogCharacter.QUESTION_MARK :
                                                                     DialogCharacter.SPACE;
     }
 }

@@ -641,8 +641,8 @@ public class User extends BasePlayer {
                 
                 raiseFlag(
                     getIsRestrictedMovement()); //Stops any form of movement the User would normally be able to do.
-            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(futureRectangle) ==
-                                                             null) { //Check if the User is pointing at an NPC character.
+            } else if(isColliding(futureRectangle, false) && getCollidingTileObject(
+                futureRectangle) instanceof NPC) { //Check if the User is pointing at an NPC character.
                 addAction(Actions.sequence(new Action() {
                     @Override
                     public boolean act(float delta) {
@@ -677,17 +677,26 @@ public class User extends BasePlayer {
      *
      * @param rectangle {@link Rectangle} instance to check if there is a similar {@link CollidableTileObject} in the current map.
      *
-     * @return {@link CollidableTileObject} that has similar values to the inputted {@link Rectangle}.
+     * @return {@link CollidableTileObject} that has similar values to the inputted {@link Rectangle}, or an {@code NPC}
+     *         if the {@code User} is colliding with one, otherwise this {@code Method} returns {@code null}.
      *
      * @see CollidableTileObject
      * @see Rectangle
+     * @see NPC
      */
-    private CollidableTileObject getCollidingTileObject(final Rectangle rectangle) {
+    private Object getCollidingTileObject(final Rectangle rectangle) {
         for(CollidableTileObject collidableTileObject : MapCreator.getCollidableTileObjects()) {
             if(collidableTileObject.isColliding(rectangle)) {
                 return collidableTileObject;
             }
         }
+    
+        for(Rectangle collidingRectangle : MapCreator.getNpcPositions()) {
+            if(collidingRectangle.overlaps(rectangle)) {
+                return getMainGameScreen().getNpc(); //TODO Add a storage method in MapCreator to get a single NPC.
+            }
+        }
+        
         return null;
     }
     

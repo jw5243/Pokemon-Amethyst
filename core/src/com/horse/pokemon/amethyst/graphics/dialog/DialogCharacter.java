@@ -14,7 +14,8 @@ public enum DialogCharacter {
     S_LOWER(108, 26), T_UPPER(114, 13), T_LOWER(114, 26, 5), U_UPPER(120, 13), U_LOWER(120, 26), V_UPPER(126, 13),
     V_LOWER(126, 26), W_UPPER(132, 13), W_LOWER(132, 26), X_UPPER(138, 13), X_LOWER(138, 26), Y_UPPER(144, 13),
     Y_LOWER(144, 26), Z_UPPER(150, 13), Z_LOWER(150, 26), ZERO(0, 0, 6), ONE(6, 0, 4), TWO(12, 0), THREE(18, 0),
-    FOUR(24, 0), FIVE(30, 0), SIX(36, 0), SEVEN(42, 0), EIGHT(48, 0), NINE(54, 0), SPACE(108, 0, 3);
+    FOUR(24, 0), FIVE(30, 0), SIX(36, 0), SEVEN(42, 0), EIGHT(48, 0), NINE(54, 0), QUESTION_MARK(114, 43),
+    SPACE(108, 0, 3),;
     
     private static final String  FONT_PATH      = "Fonts\\dialogFont.png";
     private static final int     DEFAULT_WIDTH  = 6;

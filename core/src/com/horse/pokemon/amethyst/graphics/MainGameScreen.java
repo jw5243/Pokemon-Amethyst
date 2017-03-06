@@ -10,7 +10,9 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.amethyst.Engine;
@@ -264,7 +266,7 @@ public class MainGameScreen implements Screen {
                 getNpc().setZIndex(0);
             }
         }
-            
+    
         getStage().draw();
     
         getEngine().getBatch().begin();
@@ -323,11 +325,27 @@ public class MainGameScreen implements Screen {
         getDialog().dispose();
     }
     
-    public void changeCurrentScreen(Class<? extends Screen> screenToSwitchTo) {
-        getEngine().setScreen(getEngine().getScreen(
-            screenToSwitchTo == BattleScreen.class ? Engine.screenTypes.BATTLE_SCREEN :
-            Engine.screenTypes.INTRO_SCREEN));
-        getSound().getAudio().dispose();
+    public void changeCurrentScreen(final Class<? extends Screen> screenToSwitchTo) {
+        final float[] timeData = {1.5f, 1.5f, 3f, 2f, 1f, 1f, 1f};
+        getStage().addAction(Actions.sequence(new Action() {
+            @Override
+            public boolean act(float delta) {
+                timeData[0] -= delta;
+                final float x = timeData[0] / timeData[1];
+                getEngine().getBatch()
+                           .setColor(timeData[4], timeData[5], timeData[6], x * x * x * (x * (x * 6 - 15) + 10));
+                return timeData[0] <= 0f;
+            }
+        }, new Action() {
+            @Override
+            public boolean act(float delta) {
+                getEngine().setScreen(getEngine().getScreen(
+                    screenToSwitchTo == BattleScreen.class ? Engine.screenTypes.BATTLE_SCREEN :
+                    Engine.screenTypes.INTRO_SCREEN));
+                getSound().getAudio().dispose();
+                return true;
+            }
+        }));
     }
     
     public void animateDoor() {

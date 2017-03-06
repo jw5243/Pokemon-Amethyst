@@ -124,6 +124,12 @@ public class Engine extends Game {
         
     }
     
+    @Override
+    public void setScreen(Screen screen) {
+        super.setScreen(screen);
+        getBatch().setColor(-1.7014117e38f);
+    }
+    
     public SpriteBatch getBatch() {
         return batch;
     }
