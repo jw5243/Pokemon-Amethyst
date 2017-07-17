@@ -3,6 +3,7 @@ package com.horse.pokemon.amethyst;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.horse.pokemon.amethyst.data.handlers.readers.PokemonDataReader;
 import com.horse.pokemon.amethyst.graphics.IntroScreen;
 import com.horse.pokemon.amethyst.graphics.MainGameScreen;
 import com.horse.pokemon.amethyst.graphics.battle.system.BackgroundData;
@@ -52,6 +53,7 @@ public class Engine extends Game {
     private static IntroScreen    introScreen;
     private static MainGameScreen mainGameScreen;
     private static BattleScreen   battleScreen;
+    private static PokemonDataReader pokemonDataReader = new PokemonDataReader();
     private        SpriteBatch    batch;
     
     public static int getHalfTileSize() {
@@ -91,8 +93,8 @@ public class Engine extends Game {
         introScreen = new IntroScreen(this);
         mainGameScreen = new MainGameScreen(this);
         battleScreen = new BattleScreen(this);
-        
-        setScreen(getScreen(screenTypes.INTRO_SCREEN));
+    
+        setScreen(getScreen(screenTypes.MAIN_GAME_SCREEN));
     }
     
     @Override

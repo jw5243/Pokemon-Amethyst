@@ -176,29 +176,36 @@ import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
  */
 public class User extends BasePlayer {
     /**
-     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
+     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the
+     * right-most part of the {@code User} when in the
      * {@link #getWALKING()} or {@link #getIDLE()} if the {@code User} is on land, also determining how big the user
      * is drawn every frame x-wise.
      */
     private static final byte USER_WALK_WIDTH = 16;
     
     /**
-     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
-     * the {@link #getWALKING()} or {@link #getIDLE()} state if the {@code User} is on land, also determining how big the
+     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the
+     * bottom-most part of the {@code User} when in
+     * the {@link #getWALKING()} or {@link #getIDLE()} state if the {@code User} is on land, also determining how big
+     * the
      * user is draw every frame y-wise.
      */
     private static final byte USER_WALK_HEIGHT = 19;
     
     /**
-     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the right-most part of the {@code User} when in the
-     * {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how big the user
+     * The {@code byte} representing the amount of pixels from the left-most part of the {@code User} to the
+     * right-most part of the {@code User} when in the
+     * {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how big
+     * the user
      * is drawn every frame x-wise.
      */
     private static final byte USER_SWIM_WIDTH = 22;
     
     /**
-     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the bottom-most part of the {@code User} when in
-     * the {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how big the
+     * The {@code byte} representing the amount of pixels from the upper-most part of the {@code User} to the
+     * bottom-most part of the {@code User} when in
+     * the {@link #getSWIMMING()} or {@link #getIDLE()} state if the {@code User} is on water, also determining how
+     * big the
      * user is drawn every frame y-wise.
      */
     private static final byte USER_SWIM_HEIGHT = 24;
@@ -214,17 +221,20 @@ public class User extends BasePlayer {
     private static final float keyPressToMoveTime = 0.1f;
     
     /**
-     * The {@link String} representing the location of the Texture Packer file of all the compact images of the {@code User}.
+     * The {@link String} representing the location of the Texture Packer file of all the compact images of the
+     * {@code User}.
      */
     private static final String USER_INFORMATION = "User\\GDX_Users\\User.pack";
     
     /**
-     * The {@link String} representing the name of all the sprites of the {@code User} for all movements and standard actions according to {@link
+     * The {@link String} representing the name of all the sprites of the {@code User} for all movements and standard
+     * actions according to {@link
      * #USER_INFORMATION}
      */
     private static final String          USER_ATLAS_REGION_NAME = "SpriteSheetUser";
     /**
-     * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using {@link #USER_ATLAS_REGION_NAME} to get the
+     * The {@link Sprite} representing the area of the {@link #USER_INFORMATION} to be used for movements using
+     * {@link #USER_ATLAS_REGION_NAME} to get the
      * Texture Packer information to have easy access to the x, y, width, and height of the sprite sheet.
      */
     private static final Sprite          userSprite             =
@@ -248,7 +258,8 @@ public class User extends BasePlayer {
         new TextureRegion(getUserSprite().getTexture(), 77, 97, getUserSwimWidth(), getUserSwimHeight())
     };
     /**
-     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is moving at a steady pace.
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and
+     * is moving at a steady pace.
      */
     private static final Animation[]     userWalk               = new Animation[] {
         AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {189, 135, 206, 135}, 6,
@@ -262,9 +273,10 @@ public class User extends BasePlayer {
     )
     };
     /**
-     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and is quickly moving.
+     * The {@link Animation} array representing all of the movement frames for when the {@code User} is on land and
+     * is quickly moving.
      */
-    private static final Animation[] userRun         = new Animation[] {
+    private static final Animation[]     userRun                = new Animation[] {
         AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {153, 135, 172, 135}, 6,
                                       getUserWalkWidth(), getUserWalkHeight()
         ), AnimationManager.getAnimation(getUserSprite().getTexture(), 4, 0.1f, new int[] {27, 62, 45, 62}, 49,
@@ -278,7 +290,7 @@ public class User extends BasePlayer {
     /**
      * The {@link Animation} array representing all of the movement frames for when the {@code User} is on water.
      */
-    private static final Animation[] userSwim        = new Animation[] {
+    private static final Animation[]     userSwim               = new Animation[] {
         AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {192, 170}, 97,
                                       getUserSwimWidth(), getUserSwimHeight()
         ), AnimationManager.getAnimation(getUserSprite().getTexture(), 2, 0.1f, new int[] {147, 125}, 97,
@@ -291,11 +303,13 @@ public class User extends BasePlayer {
     };
     
     /**
-     * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move the {@code User}.
+     * The current time that a movement key has been pressed to check if the amount of time pressed is enough to move
+     * the {@code User}.
      */
     private float          movementKeyHeldDownTime;
     /**
-     * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which action animation should be drawn.
+     * The {@code boolean} instance representing if the {@code User} is currently on top of the water to note which
+     * action animation should be drawn.
      */
     private boolean        swimming;
     /**
@@ -304,7 +318,8 @@ public class User extends BasePlayer {
     private MainGameScreen mainGameScreen;
     
     /**
-     * Main class constructor that initializes all non-static-final representatives to ensure no {@link NullPointerException} occurs, which prepares the
+     * Main class constructor that initializes all non-static-final representatives to ensure no
+     * {@link NullPointerException} occurs, which prepares the
      * {@code User} for movement and animation.
      *
      * @param mainGameScreen The screen the {@code User} is in when performing all actions.
@@ -315,10 +330,12 @@ public class User extends BasePlayer {
     public User(final MainGameScreen mainGameScreen) {
         setName("User");
         setPreviousState(
-            findCurrentState()); //Initializes previousState as the action that happens at the start, which should always be IDLE.
+            findCurrentState()); //Initializes previousState as the action that happens at the start, which should
+        // always be IDLE.
         setAnimationTimer(0f); //Initializes stateTimer to a neutral value of zero representing a 'reset' to the timer.
         setCurrentDirection(
-            getDOWN()); //Initializes direction to have the User pointing downwards at the start by default.  No main reason to be looking down.
+            getDOWN()); //Initializes direction to have the User pointing downwards at the start by default.  No main
+        // reason to be looking down.
         setFlags(getDefaultFlags());
         setSwimming(
             false); //Initializes swimming to false because the User should start on land at the beginning of the game.
@@ -370,7 +387,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the horizontal pixel value when the {@code User} is in a {@link #getSWIMMING()} state or {@link #getIDLE()} state when on water.
+     * Returns the horizontal pixel value when the {@code User} is in a {@link #getSWIMMING()} state or
+     * {@link #getIDLE()} state when on water.
      *
      * @return {@link #USER_SWIM_WIDTH}
      */
@@ -379,7 +397,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the vertical pixel value when the {@code User} is in a {@link #getSWIMMING()} state or {@link #getIDLE()} state when on water.
+     * Returns the vertical pixel value when the {@code User} is in a {@link #getSWIMMING()} state or
+     * {@link #getIDLE()} state when on water.
      *
      * @return {@link #USER_SWIM_HEIGHT}
      */
@@ -388,7 +407,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link String} instance representing the file path of the information Texture Packer that is used for the corresponding image.
+     * Returns the {@link String} instance representing the file path of the information Texture Packer that is used
+     * for the corresponding image.
      *
      * @return {@link #USER_INFORMATION}
      */
@@ -397,7 +417,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the horizontal pixel value when the {@code User} is in a {@link #getWALKING()} state or {@link #getIDLE()} state when on land.
+     * Returns the horizontal pixel value when the {@code User} is in a {@link #getWALKING()} state or
+     * {@link #getIDLE()} state when on land.
      *
      * @return {@link #USER_WALK_WIDTH}
      */
@@ -406,7 +427,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the vertical pixel value when the {@code User} is in a {@link #getWALKING()} state of {@link #getIDLE()} state when on land.
+     * Returns the vertical pixel value when the {@code User} is in a {@link #getWALKING()} state of
+     * {@link #getIDLE()} state when on land.
      *
      * @return {@link #USER_WALK_HEIGHT}
      */
@@ -415,7 +437,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link Animation} array representing the frames for when the {@code User} is animating on land at a quick pace.
+     * Returns the {@link Animation} array representing the frames for when the {@code User} is animating on land at
+     * a quick pace.
      *
      * @return {@link #userRun}
      */
@@ -424,7 +447,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link #getIDLE()}
+     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to
+     * be used as {@link #getIDLE()}
      * positions for when the {@code User} is not moving in water.
      *
      * @return {@link #userIdleOnWater}
@@ -452,7 +476,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to be used as {@link #getIDLE()}
+     * Returns the {@link TextureRegion} array representing the rectangles in the {@link #USER_INFORMATION} files to
+     * be used as {@link #getIDLE()}
      * positions for when the {@code User} is not moving on land.
      *
      * @return {@link #userIdleOnLand}
@@ -507,7 +532,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Alters {@link #currentCollisionRectangle} using {@link #setCurrentCollisionRectangle(Rectangle)} according to the position of the {@code User} and
+     * Alters {@link #currentCollisionRectangle} using {@link #setCurrentCollisionRectangle(Rectangle)} according to
+     * the position of the {@code User} and
      * tile size.  This method is called every frame to ensure no undesired movements.
      */
     private void updateCurrentCollisionRectangle() {
@@ -533,7 +559,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the {@code User} position to it.  Also, the {@link MapCreator} will be
+     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the
+     * {@code User} position to it.  Also, the {@link MapCreator} will be
      * changed if {@code resetMapCreator} is true.
      *
      * @see MapCreator
@@ -541,9 +568,11 @@ public class User extends BasePlayer {
      */
     public void resetPosition() {
         setX((int)(MapCreator.getStartPosition().x + getUserWalkWidth() /
-                                                     2)); //Set the x-position of the User to the x-position of the User of the new mapCreator.
+                                                     2)); //Set the x-position of the User to the x-position of the
+        // User of the new mapCreator.
         setY((int)(MapCreator.getStartPosition().y + getUserWalkHeight() /
-                                                     2)); //Set the y-position of the User to the y-position of the User of the new mapCreator.
+                                                     2)); //Set the y-position of the User to the y-position of the
+        // User of the new mapCreator.
     }
     
     /**
@@ -560,32 +589,40 @@ public class User extends BasePlayer {
      */
     private void handleInput() {
         if(!isFlag(getIsAligned()) && !isFlag(getIsFutureCollision()) && !isFlag(
-            getIsRestrictedMovement())) { //Checks if the User is moving, allowed to move, and no collision that the User will be going into.
+            getIsRestrictedMovement())) { //Checks if the User is moving, allowed to move, and no collision that the
+            // User will be going into.
             if(getCurrentDirection() == getUP()) { //Checks if the current direction of the User if upwards.
                 setY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getY() + getSpeed(findCurrentState()) :
-                     getY()); //Move the User upwards a little bit according to if the up key has been pressed long enough and the type of action occuring.
+                     getY()); //Move the User upwards a little bit according to if the up key has been pressed long
+                // enough and the type of action occuring.
             } else if(getCurrentDirection() == getDOWN()) { //Checks if the current direction of the User is downwards.
                 setY(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getY() - getSpeed(findCurrentState()) :
-                     getY()); //Move the User downwards a little bit according to if the down key has been pressed long enough and the type of action occuring.
+                     getY()); //Move the User downwards a little bit according to if the down key has been pressed
+                // long enough and the type of action occuring.
             } else if(getCurrentDirection() ==
                       getRIGHT()) { //Checks if the current direction of the User is to the right.
                 setX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getX() + getSpeed(findCurrentState()) :
-                     getX()); //Move the User to the right a little bit according to if the right key has been pressed long enough and the type of action occuring.
+                     getX()); //Move the User to the right a little bit according to if the right key has been
+                // pressed long enough and the type of action occuring.
             } else if(getCurrentDirection() ==
                       getLEFT()) { //Checks if the current direction of the User is to the left.
                 setX(getMovementKeyHeldDownTime() >= getKeyPressToMoveTime() ? getX() - getSpeed(findCurrentState()) :
-                     getX()); //Move the User to the left a little bit according to if the left key has been pressed long enough and the type of action occuring.
+                     getX()); //Move the User to the left a little bit according to if the left key has been pressed
+                // long enough and the type of action occuring.
             }
         } else if(Gdx.input.isKeyJustPressed(Input.Keys.X) && !isFlag(
-            getIsRestrictedMovement())) { //If the User is not currently trying to move to a new location, check if the User is allowed to move when the X key is pressed.
-            //Shifts the User one tile if the User is pointing in the direction of water and is adjacent to that water in the corresponding direction.
+            getIsRestrictedMovement())) { //If the User is not currently trying to move to a new location, check if
+            // the User is allowed to move when the X key is pressed.
+            //Shifts the User one tile if the User is pointing in the direction of water and is adjacent to that
+            // water in the corresponding direction.
             Rectangle futureRectangle =
                 (getCurrentDirection() == getUP()) ? getFutureRectangle(0, Engine.getTileSize()) :
                 (getCurrentDirection() == getDOWN()) ? getFutureRectangle(0, -Engine.getTileSize()) :
                 (getCurrentDirection() == getRIGHT()) ? getFutureRectangle(Engine.getTileSize(), 0) :
                 getFutureRectangle(-Engine.getTileSize(),
                                    0
-                ); //Get the position of the User if the position change were applied, the direction checked to get the correct position.
+                ); //Get the position of the User if the position change were applied, the direction checked to get
+            // the correct position.
             
             if(isColliding(futureRectangle, false) && getCollidingTileObject(
                 futureRectangle) instanceof Water) { //Check if the tile the User would be going to is a water tile.
@@ -594,7 +631,7 @@ public class User extends BasePlayer {
                     @Override
                     public boolean act(float delta) {
                         Dialog.addTextAction(getMainGameScreen().getDialog(),
-                                             "The water is calm.\nWould you like to surf?", Input.Keys.X
+                                             "The water is calm.\nWould you like to surf?", Input.Keys.X, true
                         );
                         return true;
                     }
@@ -623,7 +660,7 @@ public class User extends BasePlayer {
                 addAction(Actions.sequence(new Action() {
                     @Override
                     public boolean act(float delta) {
-                        Dialog.addTextAction(getMainGameScreen().getDialog(), "Test", Input.Keys.X);
+                        Dialog.addTextAction(getMainGameScreen().getDialog(), "Test", Input.Keys.X, true);
                         return true;
                     }
                 }, new Action() {
@@ -646,8 +683,9 @@ public class User extends BasePlayer {
                 addAction(Actions.sequence(new Action() {
                     @Override
                     public boolean act(float delta) {
-                        Dialog
-                            .addTextAction(getMainGameScreen().getDialog(), "Would you like to battle?", Input.Keys.X);
+                        Dialog.addTextAction(getMainGameScreen().getDialog(), "Would you like to battle?", Input.Keys.X,
+                                             true
+                        );
                         return true;
                     }
                 }, new Action() {
@@ -675,7 +713,8 @@ public class User extends BasePlayer {
      * Gets the {@link CollidableTileObject} that has the same positions as the {@link Rectangle} instance inputted.  A
      * null value is returned if no object ends up being found from the current map.
      *
-     * @param rectangle {@link Rectangle} instance to check if there is a similar {@link CollidableTileObject} in the current map.
+     * @param rectangle {@link Rectangle} instance to check if there is a similar {@link CollidableTileObject} in the
+     *                                  current map.
      *
      * @return {@link CollidableTileObject} that has similar values to the inputted {@link Rectangle}, or an {@code NPC}
      *         if the {@code User} is colliding with one, otherwise this {@code Method} returns {@code null}.
@@ -701,7 +740,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Method for drawing the {@code User} onto the {@link Screen}, based on the movement and action of the {@code User}.
+     * Method for drawing the {@code User} onto the {@link Screen}, based on the movement and action of the {@code
+     * User}.
      *
      * @param batch       Drawing tool.
      * @param parentAlpha Alpha value to add transparency to all children.
@@ -795,7 +835,8 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if {@link #handleInput()} gets no feedback.
+     * Checks if the {@code User} if correctly placed onto a tile so the {@code User} knows to stop moving if
+     * {@link #handleInput()} gets no feedback.
      */
     private void updateAlignment() {
         if((getX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
@@ -823,11 +864,13 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Gets the current {@link TextureRegion} representing the frame that the {@code User} is at according to its {@link #findCurrentState()} value and time that has passed by.
+     * Gets the current {@link TextureRegion} representing the frame that the {@code User} is at according to its
+     * {@link #findCurrentState()} value and time that has passed by.
      *
      * @param deltaTime Amount of time between each frame.
      *
-     * @return {@link TextureRegion} instance of the frame the {@link User} will use to draw onto the {@link #mainGameScreen}.
+     * @return {@link TextureRegion} instance of the frame the {@link User} will use to draw onto the
+     * {@link #mainGameScreen}.
      */
     private TextureRegion getFrame(final float deltaTime) {
         float stateTime = getAnimationTimer() * getAnimationSpeed();

@@ -1,6 +1,7 @@
 package com.horse.pokemon.amethyst.graphics.battle.system;
 
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.horse.pokemon.amethyst.data.pokemon.Pokemon;
 import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
 
@@ -27,7 +28,11 @@ public class BattleMain {
         setTimer(getTimer() + delta);
     
         if(isFirstIteration()) {
-            Dialog.addTextAction(getDialog(), "What would you like to do?", Input.Keys.X);
+            final SequenceAction mainSequence = new SequenceAction();
+            mainSequence
+                .addAction(Dialog.getTextAction(getDialog(), "What would you like to do?", Input.Keys.X, false));
+            mainSequence.addAction(Dialog.getTextAction(getDialog(), "Battle | Flee | Bag", Input.Keys.X, true));
+            getDialog().addAction(mainSequence);
         }
         
         getDialog().getStage().act(delta);

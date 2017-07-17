@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.actions.SequenceAction;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.horse.pokemon.amethyst.Engine;
@@ -67,8 +68,7 @@ public class Dialog extends Actor implements Disposable {
     public Dialog(int dialogXPosition, int dialogYPosition, int dialogWidth, int dialogHeight, TextSpeeds textSpeed,
                   String unparsedTextToWrite, boolean isVisible, SpriteBatch spriteBatch, Stage stage) {
         this(new Rectangle(dialogXPosition, dialogYPosition, dialogWidth, dialogHeight), textSpeed, unparsedTextToWrite,
-             isVisible, spriteBatch,
-             new Stage(new FitViewport(Engine.getvWidth(), Engine.getvHeight(), new OrthographicCamera()))
+             isVisible, spriteBatch, stage
         );
     }
     
@@ -111,9 +111,9 @@ public class Dialog extends Actor implements Disposable {
         setUnparsedTextToWrite(unparsedTextToWrite);
     }
     
-    public static void addTextAction(final Dialog dialog, final String unparsedTextToWrite,
-                                     final int visibilityTrigger) {
-        dialog.addAction(Actions.sequence(new Action() {
+    public static SequenceAction getTextAction(final Dialog dialog, final String unparsedTextToWrite,
+                                               final int dialogEndTrigger, final boolean endWithInvisibility) {
+        SequenceAction sequenceAction = Actions.sequence(new Action() {
             @Override
             public boolean act(float delta) {
                 dialog.setUnparsedTextToWrite(unparsedTextToWrite);
@@ -124,15 +124,26 @@ public class Dialog extends Actor implements Disposable {
         }, new Action() {
             @Override
             public boolean act(float delta) {
-                return Gdx.input.isKeyJustPressed(visibilityTrigger);
+                return Gdx.input.isKeyJustPressed(dialogEndTrigger);
             }
-        }, new Action() {
-            @Override
-            public boolean act(float delta) {
-                dialog.setVisible(false);
-                return true;
-            }
-        }));
+        });
+        
+        if(endWithInvisibility) {
+            sequenceAction.addAction(new Action() {
+                @Override
+                public boolean act(float delta) {
+                    dialog.setVisible(false);
+                    return true;
+                }
+            });
+        }
+        
+        return sequenceAction;
+    }
+    
+    public static void addTextAction(final Dialog dialog, final String unparsedTextToWrite, final int visibilityTrigger,
+                                     final boolean endWithInvisibility) {
+        dialog.addAction(getTextAction(dialog, unparsedTextToWrite, visibilityTrigger, endWithInvisibility));
     }
     
     public static Texture getDialogArrowTexture() {

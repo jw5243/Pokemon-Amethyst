@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
 import com.horse.pokemon.amethyst.Engine;
+import com.horse.pokemon.amethyst.data.characters.NPCPositionInformation;
 import com.horse.pokemon.amethyst.data.characters.User;
 import com.horse.pokemon.amethyst.data.objects.Barrier;
 import com.horse.pokemon.amethyst.data.objects.CollidableTileObject;
@@ -29,6 +30,17 @@ public class MapCreator {
     private static Vector2                         startPosition         = new Vector2();
     private static User           user;
     private static MainGameScreen screen;
+    
+    private static ArrayList<NPCPositionInformation> npcPositionInformationArrayList = new ArrayList<>(0);
+    
+    public static ArrayList<NPCPositionInformation> getNpcPositionInformationArrayList() {
+        return npcPositionInformationArrayList;
+    }
+    
+    public static void setNpcPositionInformationArrayList(ArrayList<NPCPositionInformation>
+                                                              npcPositionInformationArrayList) {
+        MapCreator.npcPositionInformationArrayList = npcPositionInformationArrayList;
+    }
     
     public static User getUser() {
         return user;

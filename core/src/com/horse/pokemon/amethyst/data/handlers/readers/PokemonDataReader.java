@@ -23,7 +23,7 @@ public final class PokemonDataReader {
     /**
      * Data file containing all PokemonData information that is to be stored when the Constructor is called.
      */
-    private static final File pokemonFileData = new File("core\\assets\\PokemonData\\PokemonData.dat");
+    private static final File pokemonFileData = new File("PokemonData\\PokemonData.dat");
     
     /**
      * Map for easy access to PokemonData when initialized by the no parameter Constructor.
@@ -33,8 +33,8 @@ public final class PokemonDataReader {
     static {
         //long start = System.nanoTime();
         pokemonData = new HashMap<>();
-    
-        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
+        
+        /*try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
             String pokemon = bufferedReader.readLine();
             while(pokemon != null) {
                 if(pokemon.charAt(0) != '#') {
@@ -46,7 +46,20 @@ public final class PokemonDataReader {
         } catch(IOException e) {
             e.printStackTrace();
         }
-        //long end = System.nanoTime();
+        long end = System.nanoTime();
+        System.out.println(end - start);
+        
+        start = System.nanoTime();*/
+        try(BufferedReader bufferedReader = new BufferedReader(new FileReader(pokemonFileData))) {
+            bufferedReader.lines().filter((final String string) -> string.charAt(0) != '#')
+                          .forEach((final String string) -> {
+                              String[] data = string.split(";");
+                              pokemonData.put(data[0], getPokemon(data));
+                          });
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+        //end = System.nanoTime();
         //System.out.println(end - start);
     }
     
@@ -130,6 +143,8 @@ public final class PokemonDataReader {
         pokemon.updateStats();
         pokemon.getInformation()
                .setCurrentExperience(new PokemonExperience(pokemon.getInformation().getExperienceRate()));
+    
+        pokemon.setPokemonImages();
         
         return pokemon;
     }

@@ -234,7 +234,7 @@ public class MainGameScreen implements Screen {
         setDialog(new Dialog(0, 0, Engine.getvWidth(), 64, TextSpeeds.FAST,
                              "Test Character Writer\nABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line " +
                              "Test Character Writer ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789 Test to wrap to the next line",
-                             false, getEngine().getBatch(), getStage()
+                             false, getEngine().getBatch()
         ));
     }
     
