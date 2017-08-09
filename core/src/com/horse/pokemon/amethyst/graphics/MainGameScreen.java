@@ -257,8 +257,9 @@ public class MainGameScreen implements Screen {
         
         getStage().act(delta);
     
-        for(int i = 0; i < MapCreator.getNpcPositions().size(); i++) {
-            if(MapCreator.getUser().getY() > MapCreator.getNpcPositions().get(i).getY()) {
+        for(int i = 0; i < MapCreator.getNpcPositionInformationArrayList().size(); i++) {
+            if(MapCreator.getUser().getY() >
+               MapCreator.getNpcPositionInformationArrayList().get(i).getCollisionRectangle().getY()) {
                 MapCreator.getUser().setZIndex(0);
                 getNpc().setZIndex(1);
             } else {

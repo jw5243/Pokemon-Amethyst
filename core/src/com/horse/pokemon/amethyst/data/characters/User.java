@@ -730,9 +730,9 @@ public class User extends BasePlayer {
             }
         }
     
-        for(Rectangle collidingRectangle : MapCreator.getNpcPositions()) {
-            if(collidingRectangle.overlaps(rectangle)) {
-                return getMainGameScreen().getNpc(); //TODO Add a storage method in MapCreator to get a single NPC.
+        for(NPCPositionInformation npc : MapCreator.getNpcPositionInformationArrayList()) {
+            if(npc.getCollisionRectangle().overlaps(rectangle)) {
+                return npc.getNpc();
             }
         }
         

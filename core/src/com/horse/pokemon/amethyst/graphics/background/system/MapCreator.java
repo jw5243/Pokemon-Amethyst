@@ -23,7 +23,6 @@ import java.util.HashMap;
  * The {@code MapCreator} acts as the container and background handler for the game.
  */
 public class MapCreator {
-    private static ArrayList<Rectangle>            npcPositions          = new ArrayList<>(0);
     private static ArrayList<CollidableTileObject> collidableTileObjects = new ArrayList<>();
     private static HashMap<String, Vector2>        npcStartPositions     = new HashMap<>();
     private static Array<ConnectionInformation>    connections           = new Array<>();
@@ -37,25 +36,12 @@ public class MapCreator {
         return npcPositionInformationArrayList;
     }
     
-    public static void setNpcPositionInformationArrayList(ArrayList<NPCPositionInformation>
-                                                              npcPositionInformationArrayList) {
-        MapCreator.npcPositionInformationArrayList = npcPositionInformationArrayList;
-    }
-    
     public static User getUser() {
         return user;
     }
     
     public static void setUser(User user) {
         MapCreator.user = user;
-    }
-    
-    public static ArrayList<Rectangle> getNpcPositions() {
-        return npcPositions;
-    }
-    
-    public static void setNpcPositions(ArrayList<Rectangle> npcPositions) {
-        MapCreator.npcPositions = npcPositions;
     }
     
     public static HashMap<String, Vector2> getNpcStartPositions() {

@@ -25,13 +25,16 @@ public class NPC extends BasePlayer {
     private final Animation[]     movingFrames;
     private final int             positionID;
     
+    private NPCPositionInformation positionInformation;
+    
     public NPC(String npcSpriteSheetPath) {
         this.npcSpriteSheetPath = npcSpriteSheetPath;
         this.npcSprite = new Sprite(new Texture(getNpcSpriteSheetPath()));
         setCurrentDirection(getDOWN());
         resetPosition();
-        positionID = MapCreator.getNpcPositions().size();
-        MapCreator.getNpcPositions().add(getPositionID(), getCurrentCollisionRectangle());
+        positionID = MapCreator.getNpcPositionInformationArrayList().size();
+        setPositionInformation(new NPCPositionInformation(this, getCurrentCollisionRectangle()));
+        MapCreator.getNpcPositionInformationArrayList().add(getPositionID(), getPositionInformation());
         idleFrames = new TextureRegion[4];
         movingFrames = new Animation[4];
         initializeAnimation();
@@ -57,6 +60,14 @@ public class NPC extends BasePlayer {
     
     public static int getDefaultHeight() {
         return DEFAULT_HEIGHT;
+    }
+    
+    public NPCPositionInformation getPositionInformation() {
+        return positionInformation;
+    }
+    
+    public void setPositionInformation(NPCPositionInformation positionInformation) {
+        this.positionInformation = positionInformation;
     }
     
     public int getPositionID() {
@@ -135,6 +146,12 @@ public class NPC extends BasePlayer {
         }
     }
     
+    @Override
+    public void setCurrentCollisionRectangle(Rectangle currentCollisionRectangle) {
+        super.setCurrentCollisionRectangle(currentCollisionRectangle);
+        getPositionInformation().setCollisionRectangle(getCurrentCollisionRectangle());
+    }
+    
     private void updateAlignment() {
         if((getX() + (Engine.getHalfTileSize())) % Engine.getTileSize() == 0 &&
            (getY() + (Engine.getHalfTileSize())) % Engine.getTileSize() - 4 == 0) {
@@ -153,7 +170,7 @@ public class NPC extends BasePlayer {
     }
     
     private void updateGlobalPosition() {
-        MapCreator.getNpcPositions().set(getPositionID(), getCurrentCollisionRectangle());
+        MapCreator.getNpcPositionInformationArrayList().set(getPositionID(), getPositionInformation());
     }
     
     @Override

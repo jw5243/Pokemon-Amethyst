@@ -234,8 +234,8 @@ public abstract class BasePlayer extends Actor {
      */
     boolean isColliding(final Rectangle rectangle, final boolean activateCollisionMethod) {
         if(this instanceof User) {
-            for(Rectangle collidingRectangle : MapCreator.getNpcPositions()) {
-                if(collidingRectangle.overlaps(rectangle)) {
+            for(NPCPositionInformation npc : MapCreator.getNpcPositionInformationArrayList()) {
+                if(npc.getCollisionRectangle().overlaps(rectangle)) {
                     return true;
                 }
             }
