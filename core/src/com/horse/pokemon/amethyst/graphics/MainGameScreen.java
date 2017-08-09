@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.horse.pokemon.amethyst.Engine;
 import com.horse.pokemon.amethyst.data.characters.NPC;
+import com.horse.pokemon.amethyst.data.characters.NPCPositionInformation;
 import com.horse.pokemon.amethyst.data.characters.User;
 import com.horse.pokemon.amethyst.data.objects.Door;
 import com.horse.pokemon.amethyst.graphics.audio.AudioData;
@@ -60,20 +61,11 @@ public class MainGameScreen implements Screen {
     private ArrayList<TiledMapTileLayer.Cell> doorsInMap;
     private HashIntObjMap<TiledMapTile>       doorTiles;
     private Door                              doorToOpen;
-    private NPC                               npc;
     private int                               currentDoorFrameCount;
     
     public MainGameScreen(Engine engine) {
         setEngine(engine);
         fpsLogger = new FPSLogger();
-    }
-    
-    public NPC getNpc() {
-        return npc;
-    }
-    
-    public void setNpc(NPC npc) {
-        this.npc = npc;
     }
     
     public AudioData getSound() {
@@ -189,7 +181,7 @@ public class MainGameScreen implements Screen {
     
         MapCreator.setUser(new User(this));
     
-        setNpc(new NPC("Characters\\NPCSpriteSheets\\NPC 01.png"));
+        final NPC npc = new NPC("Characters\\NPCSpriteSheets\\NPC 01.png");
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0
@@ -197,7 +189,11 @@ public class MainGameScreen implements Screen {
         
         setStage(new Stage(getViewport(), getEngine().getBatch()));
         getStage().addActor(MapCreator.getUser());
-        getStage().addActor(getNpc());
+    
+        for(NPCPositionInformation npcInformation : MapCreator.getNpcPositionInformationArrayList()) {
+            getStage().addActor(npcInformation.getNpc());
+        }
+        
         getStage().setKeyboardFocus(MapCreator.getUser());
         
         Gdx.input.setInputProcessor(getStage());
@@ -261,10 +257,10 @@ public class MainGameScreen implements Screen {
             if(MapCreator.getUser().getY() >
                MapCreator.getNpcPositionInformationArrayList().get(i).getCollisionRectangle().getY()) {
                 MapCreator.getUser().setZIndex(0);
-                getNpc().setZIndex(1);
+                MapCreator.getNpcPositionInformationArrayList().get(i).getNpc().setZIndex(1);
             } else {
                 MapCreator.getUser().setZIndex(1);
-                getNpc().setZIndex(0);
+                MapCreator.getNpcPositionInformationArrayList().get(i).getNpc().setZIndex(0);
             }
         }
     
