@@ -17,7 +17,7 @@ public enum DialogCharacter {
     FOUR(24, 0), FIVE(30, 0), SIX(36, 0), SEVEN(42, 0), EIGHT(48, 0), NINE(54, 0), QUESTION_MARK(114, 43),
     SPACE(108, 0, 3),;
     
-    private static final String  FONT_PATH      = "Fonts\\dialogFont.png";
+    private static final String  FONT_PATH      = "Fonts/dialogFont.png";
     private static final int     DEFAULT_WIDTH  = 6;
     private static final int     DEFAULT_HEIGHT = 13;
     private static final Texture FONT_TEXTURE   = new Texture(Gdx.files.internal(getFontPath()));

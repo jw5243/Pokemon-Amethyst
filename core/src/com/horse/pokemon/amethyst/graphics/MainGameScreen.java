@@ -181,7 +181,7 @@ public class MainGameScreen implements Screen {
     
         MapCreator.setUser(new User(this));
     
-        final NPC npc = new NPC("Characters\\NPCSpriteSheets\\NPC 01.png");
+        final NPC npc = new NPC("Characters/NPCSpriteSheets/NPC 01.png");
     
         getCamera().position.set(getViewport().getWorldWidth() / Engine.getCameraZoomScale(),
                                  getViewport().getWorldHeight() / Engine.getCameraZoomScale(), 0

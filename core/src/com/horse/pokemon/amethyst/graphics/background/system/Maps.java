@@ -1,7 +1,7 @@
 package com.horse.pokemon.amethyst.graphics.background.system;
 
 public enum Maps {
-    TWINLEAF_TOWN("Maps\\TwinleafTown.tmx"), START_ROOM("Maps\\StartUserRoom.tmx"), ROUTE_201("Maps\\Route201.tmx");
+    TWINLEAF_TOWN("Maps/TwinleafTown.tmx"), START_ROOM("Maps/StartUserRoom.tmx"), ROUTE_201("Maps/Route201.tmx");
     
     private String tmxPath;
     

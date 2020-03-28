@@ -80,7 +80,7 @@ public class MapCreator {
                     String stringMapProperty = mapProperty.toString();
                     if(stringMapProperty.equalsIgnoreCase("Door")) {
                         if(object.getProperties().containsKey("Filename")) {
-                            String fileName = object.getProperties().get("Filename").toString();
+                            String fileName = object.getProperties().get("Filename").toString().replace('\\', '/');
                             getCollidableTileObjects().add(new Door(screen, rectangle, fileName));
                         } else {
                             getCollidableTileObjects().add(new Door(rectangle));
@@ -104,12 +104,12 @@ public class MapCreator {
                     } else if(stringMapProperty.equalsIgnoreCase("Start Position")) {
                         setStartPosition(new Vector2(rectangle.getX(), rectangle.getY()));
                     } else if(stringMapProperty.contains("NPC")) {
-                        getNpcStartPositions().put(object.getProperties().get("Filename").toString(),
+                        getNpcStartPositions().put(object.getProperties().get("Filename").toString().replace('\\', '/'),
                                                    new Vector2(rectangle.getX(), rectangle.getY())
                         );
                     } else if(stringMapProperty.equalsIgnoreCase("Connection")) {
                         getConnections().add(
-                            new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString()));
+                            new ConnectionInformation(rectangle, object.getProperties().get("Filename").toString().replace('\\', '/')));
                     }
                 }
             }

@@ -73,7 +73,7 @@ public class MultiTiledMap extends TiledMap {
     public String getConnectingMap() {
         for(MapObject object : getLayers().get("Collisions").getObjects().getByType(RectangleMapObject.class)) {
             if(object.getProperties().get("type").toString().equalsIgnoreCase("Connection")) {
-                return object.getProperties().get("Filename").toString();
+                return object.getProperties().get("Filename").toString().replace('\\', '/');
             }
         }
         return null;

@@ -23,7 +23,7 @@ public final class PokemonDataReader {
     /**
      * Data file containing all PokemonData information that is to be stored when the Constructor is called.
      */
-    private static final File pokemonFileData = new File("PokemonData\\PokemonData.dat");
+    private static final File pokemonFileData = new File("PokemonData/PokemonData.dat");
     
     /**
      * Map for easy access to PokemonData when initialized by the no parameter Constructor.

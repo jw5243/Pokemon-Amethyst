@@ -19,8 +19,8 @@ import java.util.ArrayList;
 
 public class Dialog extends Actor implements Disposable {
     private static final Texture DIALOG_TEXTURE       =
-        new Texture(Gdx.files.internal("DialogBoxes\\generalDialog.png"));
-    private static final Texture DIALOG_ARROW_TEXTURE = new Texture(Gdx.files.internal("DialogBoxes\\arrow.png"));
+        new Texture(Gdx.files.internal("DialogBoxes/generalDialog.png"));
+    private static final Texture DIALOG_ARROW_TEXTURE = new Texture(Gdx.files.internal("DialogBoxes/arrow.png"));
     
     private ArrayList<CharacterWriter> charactersToTypeArrayList;
     private SpriteBatch                spriteBatch;

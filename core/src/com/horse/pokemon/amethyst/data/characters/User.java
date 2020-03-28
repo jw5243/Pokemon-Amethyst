@@ -224,7 +224,7 @@ public class User extends BasePlayer {
      * The {@link String} representing the location of the Texture Packer file of all the compact images of the
      * {@code User}.
      */
-    private static final String USER_INFORMATION = "User\\GDX_Users\\User.pack";
+    private static final String USER_INFORMATION = "User/GDX_Users/User.pack";
     
     /**
      * The {@link String} representing the name of all the sprites of the {@code User} for all movements and standard

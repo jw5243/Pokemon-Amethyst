@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.util.HashMap;
 
 public class MoveDataReader {
-    private static final File moveFileData = new File("PokemonData\\MoveData.dat");
+    private static final File moveFileData = new File("PokemonData/MoveData.dat");
     private static final HashMap<String, Moves> moveData;
     
     static {
