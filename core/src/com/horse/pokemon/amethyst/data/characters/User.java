@@ -30,7 +30,7 @@ import com.horse.pokemon.amethyst.graphics.battle.system.BattleScreen;
 import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
 
 /**
- * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#camera} revolves
+ * The {@code User} class represents the protagonist of the Pokemon game.  The {@link MainGameScreen#getCamera()} revolves
  * around a {@code User} instance by following the {@code User} when moving.  The {@code User} moves by key presses of
  * the arrow keys, and other actions are represented with other various keys.
  * <p>
@@ -55,7 +55,7 @@ import com.horse.pokemon.amethyst.graphics.dialog.Dialog;
  *     The {@code User} can go through a battle and have {@link Pokemon} from progressing through the {@link Game}.
  *     {@link Pokemon} are obtained by the {@code User} by 'catching' them with things called Pokeballs, which can be
  *     bought from a store called the Pokemart.  There should only be a single {@code User} instance per {@link Game},
- *     otherwise the {@link MainGameScreen#camera} will have a hard time determining which {@code User} to follow and
+ *     otherwise the {@link MainGameScreen#getCamera()} will have a hard time determining which {@code User} to follow and
  *     all keyboard actions will cause both {@code User}s to act identically.
  * </p>
  * <p>
@@ -532,7 +532,7 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Alters {@link #currentCollisionRectangle} using {@link #setCurrentCollisionRectangle(Rectangle)} according to
+     * Alters {@link #getCurrentCollisionRectangle()} using {@link #setCurrentCollisionRectangle(Rectangle)} according to
      * the position of the {@code User} and
      * tile size.  This method is called every frame to ensure no undesired movements.
      */
@@ -559,12 +559,12 @@ public class User extends BasePlayer {
     }
     
     /**
-     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#startPosition} information to set the
+     * Takes a different {@link MapCreator} and extracts the {@link MapCreator#getStartPosition()} information to set the
      * {@code User} position to it.  Also, the {@link MapCreator} will be
      * changed if {@code resetMapCreator} is true.
      *
      * @see MapCreator
-     * @see MapCreator#startPosition
+     * @see MapCreator#getStartPosition()
      */
     public void resetPosition() {
         setX((int)(MapCreator.getStartPosition().x + getUserWalkWidth() /
